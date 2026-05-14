@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
-interface Props { title: string; subtitle?: string; children: ReactNode; back?: boolean }
+interface Props { title: string; subtitle?: string; children?: ReactNode; back?: boolean }
 
 export default function PageHeader({ title, subtitle, children, back = true }: Props) {
   const nav = useNavigate();
