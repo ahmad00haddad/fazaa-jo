@@ -31,8 +31,8 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </MobileLayout>
-      </Toaster>
-    </BrowserRouter>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
