@@ -1,224 +1,276 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Plus, Phone, MessageCircle, MapPin, Trash2, X, Send } from "lucide-react";
+import { MapPin, MessageCircleMore, Phone, Plus, Send, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
+import {
+  FAZAA_CATEGORIES,
+  FAZAA_URGENCY_OPTIONS,
+  buildMapsUrl,
+  buildWhatsAppUrl,
+  createFazaaRequest,
+  deleteMyFazaaRequest,
+  formatTimeAgo,
+  loadFazaaFeed,
+  urgencyVariant,
+  type FazaaRequest,
+  type NewFazaaRequest,
+} from "@/lib/fazaa";
 
-interface FazaaItem {
-  id: string;
-  name: string;
-  phone?: string;
-  need: string;
-  location?: string;
-  createdAt: number;
-  mine?: boolean;
+function badgeClass(variant: "primary" | "accent" | "secondary") {
+  if (variant === "primary") return "bg-primary/12 text-primary";
+  if (variant === "accent") return "bg-accent/12 text-accent";
+  return "bg-secondary text-secondary-foreground";
 }
 
-const STORAGE_KEY = "fazaa_local_feed";
-
-const seed: FazaaItem[] = [
-  { id: "s1", name: "أحمد", need: "تعطلت سيارتي على شارع المطار، أحتاج شخص لمساعدتي أو ونش", location: "عمّان - شارع المطار", phone: "0791234567", createdAt: Date.now() - 1000 * 60 * 5 },
-  { id: "s2", name: "سارة", need: "أحتاج دواء عاجل من صيدلية مفتوحة في الزرقاء", location: "الزرقاء - دوار الشهداء", phone: "0789876543", createdAt: Date.now() - 1000 * 60 * 18 },
-  { id: "s3", name: "عمر", need: "محتاج آلة حاسبة علمية لامتحان بكرا الصبح", location: "إربد - شارع الجامعة", createdAt: Date.now() - 1000 * 60 * 35 },
-];
-
-function timeAgo(t: number) {
-  const m = Math.floor((Date.now() - t) / 60000);
-  if (m < 1) return "الآن";
-  if (m < 60) return `قبل ${m} دقيقة`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `قبل ${h} ساعة`;
-  return `قبل ${Math.floor(h / 24)} يوم`;
-}
+const initialForm: NewFazaaRequest = {
+  name: "",
+  phone: "",
+  need: "",
+  category: "أخرى",
+  urgency: "عاجلة اليوم",
+  location: "",
+};
 
 export default function Fazaa() {
-  const [items, setItems] = useState<FazaaItem[]>([]);
-  const [showAdd, setShowAdd] = useState(false);
+  const [items, setItems] = useState<FazaaRequest[]>(() => loadFazaaFeed());
+  const [showComposer, setShowComposer] = useState(false);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const local: FazaaItem[] = stored ? JSON.parse(stored) : [];
-      setItems([...local, ...seed]);
-    } catch {
-      setItems(seed);
-    }
-  }, []);
+  const sortedItems = useMemo(() => [...items].sort((a, b) => b.createdAt - a.createdAt), [items]);
 
-  const saveLocal = (mine: FazaaItem[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(mine));
+  const handleAdd = (payload: NewFazaaRequest) => {
+    const next = createFazaaRequest(payload);
+    setItems((current) => [next, ...current]);
+    setShowComposer(false);
+    toast.success("تم نشر طلب الفزعة بنجاح");
   };
 
-  const addItem = (data: Omit<FazaaItem, "id" | "createdAt" | "mine">) => {
-    const item: FazaaItem = { ...data, id: crypto.randomUUID(), createdAt: Date.now(), mine: true };
-    const newItems = [item, ...items];
-    setItems(newItems);
-    saveLocal(newItems.filter((i) => i.mine));
-    setShowAdd(false);
-    toast.success("تم نشر طلب الفزعة");
-  };
-
-  const deleteItem = (id: string) => {
-    const newItems = items.filter((i) => i.id !== id);
-    setItems(newItems);
-    saveLocal(newItems.filter((i) => i.mine));
-    toast.success("تم الحذف");
+  const handleDelete = (id: string) => {
+    deleteMyFazaaRequest(id);
+    setItems(loadFazaaFeed());
+    toast.success("تم حذف الطلب");
   };
 
   return (
-    <div className="animate-fade-in min-h-screen relative">
-      <PageHeader title="فزعة المجتمع" subtitle="اطلب أو ساعد من حولك" back={false} />
+    <div className="min-h-screen pb-32 animate-fade-in">
+      <PageHeader title="فزعة المجتمع" subtitle="طلبات مباشرة قابلة للتنفيذ" back={false} />
 
-      <div className="p-4 space-y-3 pb-32">
-        {items.map((item) => (
-          <FazaaCard key={item.id} item={item} onDelete={deleteItem} />
-        ))}
-        {items.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground text-sm">
-            لا توجد طلبات حالياً. كن أول من يطلب أو يساعد!
-          </div>
-        )}
+      <div className="p-4 space-y-4">
+        <section className="rounded-3xl gradient-hero p-4 text-primary-foreground shadow-elevated">
+          <h2 className="font-display text-xl font-extrabold">إذا كنت بحاجة إلى مساعدة الآن</h2>
+          <p className="text-sm opacity-90 mt-2 leading-6">اكتب حاجتك بوضوح، أضف رقمك وموقعك، وسيظهر الطلب فوراً ضمن قائمة الفزعات.</p>
+          <button
+            type="button"
+            onClick={() => setShowComposer(true)}
+            className="mt-4 w-full rounded-2xl bg-white/15 py-3 font-semibold flex items-center justify-center gap-2 active:scale-[0.99] transition"
+          >
+            <Plus className="w-5 h-5" />
+            اطلب فزعة الآن
+          </button>
+        </section>
+
+        <section className="space-y-3">
+          {sortedItems.map((item) => (
+            <FazaaCard key={item.id} item={item} onDelete={handleDelete} />
+          ))}
+        </section>
       </div>
 
-      <button
-        onClick={() => setShowAdd(true)}
-        className="fixed bottom-24 left-1/2 -translate-x-1/2 max-w-[480px] w-[calc(100%-2rem)] mx-auto"
-        style={{ maxWidth: "calc(480px - 2rem)" }}
-      >
-        <div className="gradient-hero text-primary-foreground rounded-full py-3.5 px-6 font-display font-bold flex items-center justify-center gap-2 shadow-elevated active:scale-95 transition-transform">
-          <Plus className="w-5 h-5" />
-          اطلب فزعة
-        </div>
-      </button>
-
-      {showAdd && <AddSheet onClose={() => setShowAdd(false)} onAdd={addItem} />}
+      {showComposer && <RequestComposer onClose={() => setShowComposer(false)} onSubmit={handleAdd} />}
     </div>
   );
 }
 
-function FazaaCard({ item, onDelete }: { item: FazaaItem; onDelete: (id: string) => void }) {
-  const [open, setOpen] = useState<"none" | "right" | "left">("none");
-
-  const openMap = () => {
-    if (!item.location) return toast.error("لا يوجد موقع");
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location)}`, "_blank");
-  };
-
-  const call = () => {
-    if (!item.phone) return toast.error("لا يوجد رقم");
-    window.location.href = `tel:${item.phone}`;
-  };
-
-  const chat = () => {
-    if (!item.phone) return toast.error("لا يوجد رقم");
-    const num = item.phone.replace(/\D/g, "").replace(/^0/, "962");
-    window.open(`https://wa.me/${num}`, "_blank");
-  };
+function FazaaCard({ item, onDelete }: { item: FazaaRequest; onDelete: (id: string) => void }) {
+  const mapsUrl = buildMapsUrl(item);
+  const urgencyClass = badgeClass(urgencyVariant(item.urgency));
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-card shadow-card">
-      <div className="p-3 flex gap-3">
-        <div className="w-11 h-11 rounded-full gradient-hero text-primary-foreground flex items-center justify-center flex-shrink-0 font-display font-bold">
-          {item.name[0]}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-display font-bold text-sm">{item.name}</span>
-            <span className="text-[10px] text-muted-foreground">{timeAgo(item.createdAt)}</span>
+    <article className="rounded-3xl bg-card shadow-card p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-display text-sm font-extrabold">{item.name}</span>
+            <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${urgencyClass}`}>{item.urgency}</span>
+            <span className="rounded-full bg-secondary px-2 py-1 text-[11px] text-muted-foreground">{item.category}</span>
+            {item.mine && <span className="rounded-full bg-accent/12 px-2 py-1 text-[11px] text-accent">طلبي</span>}
           </div>
-          <p className="text-sm leading-relaxed mt-0.5">{item.need}</p>
+          <p className="mt-2 text-sm leading-6">{item.need}</p>
           {item.location && (
-            <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> {item.location}
+            <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>{item.location}</span>
             </div>
           )}
-          <div className="flex items-center gap-2 mt-2">
-            {item.phone && (
-              <>
-                <button onClick={call} className="flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded-full px-3 py-1.5 active:scale-95 transition">
-                  <Phone className="w-3 h-3" /> اتصال
-                </button>
-                <button onClick={chat} className="flex items-center gap-1 text-xs bg-primary/10 text-primary rounded-full px-3 py-1.5 active:scale-95 transition">
-                  <MessageCircle className="w-3 h-3" /> واتساب
-                </button>
-              </>
-            )}
-            {item.location && (
-              <button onClick={openMap} className="flex items-center gap-1 text-xs bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full px-3 py-1.5 active:scale-95 transition">
-                <MapPin className="w-3 h-3" /> الموقع
-              </button>
-            )}
-            {item.mine && (
-              <button onClick={() => onDelete(item.id)} className="flex items-center gap-1 text-xs bg-destructive/10 text-destructive rounded-full px-3 py-1.5 active:scale-95 transition mr-auto">
-                <Trash2 className="w-3 h-3" /> حذف
-              </button>
-            )}
-          </div>
         </div>
+        <span className="text-[11px] text-muted-foreground shrink-0">{formatTimeAgo(item.createdAt)}</span>
       </div>
-    </div>
+
+      <div className="grid grid-cols-3 gap-2 mt-4">
+        <a href={`tel:${item.phone}`} className="rounded-2xl bg-secondary py-3 text-center text-xs font-semibold">
+          <Phone className="w-4 h-4 mx-auto mb-1" />
+          اتصال
+        </a>
+        <a
+          href={buildWhatsAppUrl(item.phone, `مرحباً ${item.name}، أنا جاهز للمساعدة بخصوص طلب الفزعة.`)}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-2xl bg-secondary py-3 text-center text-xs font-semibold"
+        >
+          <MessageCircleMore className="w-4 h-4 mx-auto mb-1" />
+          واتساب
+        </a>
+        <a
+          href={mapsUrl || undefined}
+          target="_blank"
+          rel="noreferrer"
+          className={`rounded-2xl py-3 text-center text-xs font-semibold ${mapsUrl ? "bg-secondary" : "bg-muted text-muted-foreground pointer-events-none"}`}
+        >
+          <MapPin className="w-4 h-4 mx-auto mb-1" />
+          موقع
+        </a>
+      </div>
+
+      {item.mine && (
+        <button
+          type="button"
+          onClick={() => onDelete(item.id)}
+          className="mt-3 w-full rounded-2xl bg-destructive/10 py-3 text-sm font-semibold text-destructive flex items-center justify-center gap-2"
+        >
+          <Trash2 className="w-4 h-4" />
+          حذف الطلب
+        </button>
+      )}
+    </article>
   );
 }
 
-function AddSheet({ onClose, onAdd }: { onClose: () => void; onAdd: (d: Omit<FazaaItem, "id" | "createdAt" | "mine">) => void }) {
-  const [name, setName] = useState("");
-  const [need, setNeed] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
+function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit: (payload: NewFazaaRequest) => void }) {
+  const [form, setForm] = useState<NewFazaaRequest>(initialForm);
+  const [locating, setLocating] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !need.trim()) return toast.error("الاسم والوصف مطلوبان");
-    onAdd({ name: name.trim(), need: need.trim(), phone: phone.trim() || undefined, location: location.trim() || undefined });
+  const update = <K extends keyof NewFazaaRequest>(key: K, value: NewFazaaRequest[K]) => {
+    setForm((current) => ({ ...current, [key]: value }));
   };
 
-  const useGeo = () => {
-    if (!navigator.geolocation) return toast.error("الموقع غير مدعوم");
+  const canSubmit = form.name.trim() && form.phone.trim() && form.need.trim();
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("الموقع غير مدعوم على هذا الجهاز");
+      return;
+    }
+
+    setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => setLocation(`${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`),
-      () => toast.error("تعذّر الحصول على الموقع")
+      (position) => {
+        update("latitude", Number(position.coords.latitude.toFixed(5)));
+        update("longitude", Number(position.coords.longitude.toFixed(5)));
+        update("location", `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`);
+        setLocating(false);
+        toast.success("تم تحديد موقعك");
+      },
+      () => {
+        setLocating(false);
+        toast.error("تعذر تحديد الموقع");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
+  };
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!canSubmit) {
+      toast.error("الاسم، الهاتف، ووصف الحالة مطلوبة");
+      return;
+    }
+    onSubmit({
+      ...form,
+      name: form.name.trim(),
+      phone: form.phone.trim(),
+      need: form.need.trim(),
+      location: form.location?.trim() || undefined,
+    });
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={onClose}>
-      <div
-        className="w-full max-w-[480px] bg-card rounded-t-3xl p-5 safe-bottom animate-fade-in"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display font-bold text-lg">اطلب فزعة</h2>
-          <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-secondary flex items-center justify-center">
+      <div className="w-full max-w-[480px] rounded-t-[28px] bg-background p-5 safe-bottom" onClick={(event) => event.stopPropagation()}>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="font-display text-lg font-extrabold">طلب فزعة جديد</h2>
+            <p className="text-xs text-muted-foreground mt-1">كلما كان الوصف أوضح كانت الاستجابة أسرع</p>
+          </div>
+          <button type="button" onClick={onClose} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
             <X className="w-5 h-5" />
           </button>
         </div>
+
         <form onSubmit={submit} className="space-y-3">
           <input
-            value={name} onChange={(e) => setName(e.target.value)}
-            placeholder="اسمك *"
-            className="w-full bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
-          />
-          <textarea
-            value={need} onChange={(e) => setNeed(e.target.value)}
-            rows={3} placeholder="ماذا تحتاج؟ *"
-            className="w-full bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary resize-none"
+            value={form.name}
+            onChange={(e) => update("name", e.target.value)}
+            placeholder="الاسم الكامل"
+            className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
           />
           <input
-            value={phone} onChange={(e) => setPhone(e.target.value)}
-            placeholder="رقم الهاتف (اختياري)" type="tel"
-            className="w-full bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+            value={form.phone}
+            onChange={(e) => update("phone", e.target.value)}
+            type="tel"
+            placeholder="رقم الهاتف أو واتساب"
+            className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
           />
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
+            <select
+              value={form.category}
+              onChange={(e) => update("category", e.target.value as NewFazaaRequest["category"])}
+              className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              {FAZAA_CATEGORIES.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+            <select
+              value={form.urgency}
+              onChange={(e) => update("urgency", e.target.value as NewFazaaRequest["urgency"])}
+              className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              {FAZAA_URGENCY_OPTIONS.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+          <textarea
+            value={form.need}
+            onChange={(e) => update("need", e.target.value)}
+            placeholder="اكتب حاجتك بشكل مباشر: ماذا تحتاج؟ متى؟ ومن أين؟"
+            rows={4}
+            className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none resize-none focus:ring-2 focus:ring-primary"
+          />
+
+          <div className="grid grid-cols-[1fr_auto] gap-2">
             <input
-              value={location} onChange={(e) => setLocation(e.target.value)}
-              placeholder="الموقع (اختياري)"
-              className="flex-1 bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+              value={form.location ?? ""}
+              onChange={(e) => update("location", e.target.value)}
+              placeholder="المنطقة أو العنوان التقريبي"
+              className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
             />
-            <button type="button" onClick={useGeo} className="bg-secondary rounded-xl px-3 text-xs font-display font-bold flex items-center gap-1">
-              <MapPin className="w-4 h-4" /> الآن
+            <button
+              type="button"
+              onClick={useCurrentLocation}
+              className="rounded-2xl bg-secondary px-4 text-sm font-semibold"
+              disabled={locating}
+            >
+              {locating ? "جارٍ..." : "موقعي"}
             </button>
           </div>
-          <button type="submit" className="w-full gradient-hero text-primary-foreground rounded-2xl py-3 font-display font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition">
-            <Send className="w-4 h-4" /> نشر الفزعة
+
+          <button
+            type="submit"
+            className="w-full rounded-2xl gradient-hero py-3.5 text-primary-foreground font-display font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+            disabled={!canSubmit}
+          >
+            <Send className="w-4 h-4" />
+            نشر الفزعة
           </button>
         </form>
       </div>

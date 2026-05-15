@@ -1,4 +1,3 @@
-// Edge function: streaming AI chat
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -10,19 +9,25 @@ Deno.serve(async (req) => {
 
   try {
     const { messages, system } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
+    if (!lovableApiKey) throw new Error("LOVABLE_API_KEY not configured");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
+        "Lovable-API-Key": lovableApiKey,
+        "X-Lovable-AIG-SDK": "vercel-ai-sdk",
       },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: system || "أنت مساعد ذكي ودود يجيب بالعربية الفصحى المبسطة بشكل عملي ومختصر. تعرف اللهجة الأردنية وثقافة المجتمع العربي." },
+          {
+            role: "system",
+            content:
+              system ||
+              "أنت مساعد متخصص في تطبيق فزعة، تساعد في صياغة طلبات المساعدة، ترتيب الأولويات، وكتابة رسائل سريعة للمواقف العاجلة في المجتمع العربي والأردني.",
+          },
           ...(messages || []),
         ],
         stream: true,
@@ -31,29 +36,35 @@ Deno.serve(async (req) => {
 
     if (response.status === 429) {
       return new Response(JSON.stringify({ error: "تم تجاوز الحد المسموح." }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
     if (response.status === 402) {
       return new Response(JSON.stringify({ error: "نفد الرصيد." }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
     if (!response.ok || !response.body) {
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
+      const text = await response.text();
+      console.error("chat gateway error", response.status, text);
       return new Response(JSON.stringify({ error: "خطأ في خدمة الذكاء الاصطناعي" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
-  } catch (e) {
-    console.error("chat error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "خطأ" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+  } catch (error) {
+    console.error("chat error", error);
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "خطأ" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
