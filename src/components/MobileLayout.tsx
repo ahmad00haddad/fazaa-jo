@@ -11,7 +11,7 @@ const tabs = [
   { to: "/services", icon: ListChecks, label: "الطلبات" },
   { to: "/chat", icon: MessageCircleMore, label: "المساعد" },
   { to: "/fazaa", icon: Users, label: "اطلب فزعة" },
-  { to: "/me", icon: User, label: "عن فزعة" },
+  { to: "/me", icon: User, label: "حسابي" },
 ];
 
 export default function MobileLayout({ children }: Props) {

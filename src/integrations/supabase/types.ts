@@ -14,13 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      fazaa_requests: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          need: string
+          requester_gender: string
+          requester_name: string
+          urgency: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          need: string
+          requester_gender: string
+          requester_name: string
+          urgency: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          need?: string
+          requester_gender?: string
+          requester_name?: string
+          urgency?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fazaa_responses: {
+        Row: {
+          accepted: boolean
+          created_at: string
+          id: string
+          message: string | null
+          request_id: string
+          responder_id: string
+          responder_name: string
+        }
+        Insert: {
+          accepted?: boolean
+          created_at?: string
+          id?: string
+          message?: string | null
+          request_id: string
+          responder_id: string
+          responder_name: string
+        }
+        Update: {
+          accepted?: boolean
+          created_at?: string
+          id?: string
+          message?: string | null
+          request_id?: string
+          responder_id?: string
+          responder_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fazaa_responses_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "fazaa_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          gender: string
+          id: string
+          name: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          gender: string
+          id: string
+          name: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          gender?: string
+          id?: string
+          name?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_request_owner: {
+        Args: { _request_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
