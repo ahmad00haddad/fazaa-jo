@@ -7,6 +7,8 @@ export interface Profile {
   name: string;
   phone: string;
   gender: "male" | "female";
+  verified: boolean;
+  city: string | null;
 }
 
 interface AuthContextValue {

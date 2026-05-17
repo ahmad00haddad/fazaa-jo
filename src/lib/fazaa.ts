@@ -5,9 +5,32 @@ export type FazaaCategory =
   | "دواء عاجل"
   | "مشتريات ضرورية"
   | "توصيل ومشاوير"
-  | "تعليم"
+  | "توصيل من/إلى المطار"
+  | "مشوار للمستشفى"
+  | "فزعة جامعية"
+  | "طوارئ منزل"
+  | "تعليم ودراسة"
+  | "فزعة رمضان"
   | "أخرى";
+
 export type FazaaUrgency = "حرجة" | "عاجلة اليوم" | "عادية";
+export type FazaaStatus = "active" | "completed" | "cancelled";
+
+export const JORDAN_CITIES = [
+  "عمّان",
+  "إربد",
+  "الزرقاء",
+  "العقبة",
+  "السلط",
+  "المفرق",
+  "الكرك",
+  "مأدبا",
+  "جرش",
+  "عجلون",
+  "الطفيلة",
+  "معان",
+] as const;
+export type JordanCity = (typeof JORDAN_CITIES)[number];
 
 export interface FazaaRequest {
   id: string;
@@ -21,6 +44,9 @@ export interface FazaaRequest {
   latitude: number | null;
   longitude: number | null;
   created_at: string;
+  female_only: boolean;
+  city: string | null;
+  status: FazaaStatus;
 }
 
 export interface FazaaResponse {
@@ -40,6 +66,8 @@ export interface NewFazaaInput {
   location?: string;
   latitude?: number;
   longitude?: number;
+  female_only?: boolean;
+  city?: string | null;
 }
 
 export const FAZAA_CATEGORIES: FazaaCategory[] = [
@@ -47,7 +75,12 @@ export const FAZAA_CATEGORIES: FazaaCategory[] = [
   "دواء عاجل",
   "مشتريات ضرورية",
   "توصيل ومشاوير",
-  "تعليم",
+  "توصيل من/إلى المطار",
+  "مشوار للمستشفى",
+  "فزعة جامعية",
+  "طوارئ منزل",
+  "تعليم ودراسة",
+  "فزعة رمضان",
   "أخرى",
 ];
 
@@ -80,6 +113,8 @@ export async function createRequest(
       location: input.location ?? null,
       latitude: input.latitude ?? null,
       longitude: input.longitude ?? null,
+      female_only: !!input.female_only,
+      city: input.city ?? null,
     })
     .select()
     .single();
@@ -89,6 +124,11 @@ export async function createRequest(
 
 export async function deleteRequest(id: string) {
   const { error } = await supabase.from("fazaa_requests").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function updateRequestStatus(id: string, status: FazaaStatus) {
+  const { error } = await supabase.from("fazaa_requests").update({ status }).eq("id", id);
   if (error) throw error;
 }
 
@@ -150,6 +190,12 @@ export async function fetchResponderPhone(responderId: string): Promise<string |
   return data?.phone ?? null;
 }
 
+export async function markSelfVerified(): Promise<boolean> {
+  const { data, error } = await supabase.rpc("mark_self_verified");
+  if (error) throw error;
+  return !!data;
+}
+
 export function formatTimeAgo(iso: string) {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
   if (minutes < 1) return "الآن";
@@ -179,4 +225,19 @@ export function urgencyVariant(urgency: string) {
   if (urgency === "حرجة") return "primary" as const;
   if (urgency === "عاجلة اليوم") return "accent" as const;
   return "secondary" as const;
+}
+
+// Haversine distance in km
+export function distanceKm(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
 }
