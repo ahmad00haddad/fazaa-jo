@@ -98,8 +98,22 @@ export default function Fazaa() {
     }
   };
 
+  const handleComplete = async (id: string) => {
+    try {
+      await updateRequestStatus(id, "completed");
+      toast.success("تم إغلاق الفزعة بنجاح، شكراً للمتعاونين");
+      await refresh();
+    } catch (e: any) {
+      toast.error(e?.message ?? "تعذر الإغلاق");
+    }
+  };
+
   const handleOffer = async (req: FazaaRequest) => {
     if (!user || !profile) return;
+    if (req.female_only && profile.gender !== "female") {
+      toast.error("هذه الفزعة للبنات فقط");
+      return;
+    }
     try {
       await offerHelp(req.id, user.id, profile.name, "أنا جاهز للمساعدة");
       toast.success("تم إرسال استجابتك. سيتواصل معك صاحب الفزعة إذا قبل");
