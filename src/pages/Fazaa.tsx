@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Check, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, Trash2, UserCheck, X } from "lucide-react";
+import { Check, CheckCircle2, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, ShieldCheck, Trash2, UserCheck, Venus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   FAZAA_CATEGORIES,
   FAZAA_URGENCY_OPTIONS,
+  JORDAN_CITIES,
   acceptResponse,
   buildMapsUrl,
   buildWhatsAppUrl,
@@ -17,6 +18,7 @@ import {
   fetchResponsesForRequest,
   formatTimeAgo,
   offerHelp,
+  updateRequestStatus,
   urgencyVariant,
   type FazaaCategory,
   type FazaaRequest,
@@ -24,6 +26,7 @@ import {
   type FazaaUrgency,
   type NewFazaaInput,
 } from "@/lib/fazaa";
+import { supabase } from "@/integrations/supabase/client";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -36,6 +39,8 @@ const initialForm: NewFazaaInput = {
   category: "أخرى",
   urgency: "عاجلة اليوم",
   location: "",
+  female_only: false,
+  city: null,
 };
 
 export default function Fazaa() {
