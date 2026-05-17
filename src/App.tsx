@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
+import CompleteProfile from "./pages/CompleteProfile";
 import Fazaa from "./pages/Fazaa";
 import Home from "./pages/Home";
 import Me from "./pages/Me";
@@ -25,6 +26,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route
               path="*"
               element={
