@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -62,6 +63,20 @@ export default function Auth() {
     } catch (err: any) {
       toast.error(err?.message ?? "حدث خطأ");
     } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      nav("/", { replace: true });
+    } catch (err: any) {
+      toast.error(err?.message ?? "تعذر الدخول عبر Google");
       setBusy(false);
     }
   };
