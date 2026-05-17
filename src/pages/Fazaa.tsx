@@ -443,7 +443,8 @@ function ResponseRow({
 }
 
 function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit: (p: NewFazaaInput) => void }) {
-  const [form, setForm] = useState<NewFazaaInput>(initialForm);
+  const { profile } = useAuth();
+  const [form, setForm] = useState<NewFazaaInput>({ ...initialForm, city: profile?.city ?? null });
   const [locating, setLocating] = useState(false);
 
   const update = <K extends keyof NewFazaaInput>(k: K, v: NewFazaaInput[K]) =>
@@ -533,6 +534,30 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
               {locating ? "..." : "موقعي"}
             </button>
           </div>
+          <select
+            value={form.city ?? ""}
+            onChange={(e) => update("city", (e.target.value || null) as any)}
+            className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="">اختر المدينة</option>
+            {JORDAN_CITIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+          {profile?.gender === "female" && (
+            <label className="flex items-center justify-between gap-3 rounded-2xl bg-secondary px-4 py-3 text-sm cursor-pointer">
+              <span className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-pink-600" />
+                للبنات فقط (لن يستجيب لها إلا الإناث)
+              </span>
+              <input
+                type="checkbox"
+                checked={!!form.female_only}
+                onChange={(e) => update("female_only", e.target.checked)}
+                className="w-5 h-5 accent-primary"
+              />
+            </label>
+          )}
           <button
             type="submit"
             className="w-full rounded-2xl gradient-hero py-3.5 text-primary-foreground font-display font-bold flex items-center justify-center gap-2 disabled:opacity-50"
