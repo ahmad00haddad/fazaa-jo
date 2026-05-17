@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
 import CompleteProfile from "./pages/CompleteProfile";
 import Fazaa from "./pages/Fazaa";
+import History from "./pages/History";
 import Home from "./pages/Home";
 import Me from "./pages/Me";
 import NotFound from "./pages/NotFound";
