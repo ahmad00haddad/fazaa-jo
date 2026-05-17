@@ -26,7 +26,7 @@ import {
   type FazaaUrgency,
   type NewFazaaInput,
 } from "@/lib/fazaa";
-import { supabase } from "@/integrations/supabase/client";
+
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
