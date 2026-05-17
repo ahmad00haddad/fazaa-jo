@@ -166,6 +166,7 @@ export default function Fazaa() {
                 open={openResponses === item.id}
                 onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
                 onDelete={() => handleDelete(item.id)}
+                onComplete={() => handleComplete(item.id)}
                 onAccept={async (rid) => {
                   await acceptResponse(rid);
                   toast.success("تم قبول الاستجابة، يمكنك التواصل الآن");
