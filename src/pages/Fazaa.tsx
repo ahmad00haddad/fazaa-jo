@@ -202,6 +202,26 @@ export default function Fazaa() {
   );
 }
 
+function MetaBadges({ item }: { item: FazaaRequest }) {
+  return (
+    <>
+      {item.requester_verified && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-1 text-[11px] font-semibold">
+          <ShieldCheck className="w-3 h-3" /> موثّق
+        </span>
+      )}
+      {item.female_only && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-pink-500/15 text-pink-600 px-2 py-1 text-[11px] font-semibold">
+          <Heart className="w-3 h-3" /> للبنات فقط
+        </span>
+      )}
+      {item.city && (
+        <span className="rounded-full bg-secondary px-2 py-1 text-[11px] text-muted-foreground">{item.city}</span>
+      )}
+    </>
+  );
+}
+
 function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () => void }) {
   const mapsUrl = buildMapsUrl(item);
   const urgencyClass = badgeClass(urgencyVariant(item.urgency));
@@ -213,6 +233,7 @@ function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () =
             <span className="font-display text-sm font-extrabold">{item.requester_name}</span>
             <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${urgencyClass}`}>{item.urgency}</span>
             <span className="rounded-full bg-secondary px-2 py-1 text-[11px] text-muted-foreground">{item.category}</span>
+            <MetaBadges item={item} />
           </div>
           <p className="mt-2 text-sm leading-6">{item.need}</p>
           {item.location && (
@@ -257,6 +278,7 @@ function MyRequestCard({
   open,
   onToggle,
   onDelete,
+  onComplete,
   onAccept,
   onDecline,
 }: {
@@ -265,6 +287,7 @@ function MyRequestCard({
   open: boolean;
   onToggle: () => void;
   onDelete: () => void;
+  onComplete: () => void;
   onAccept: (rid: string) => void;
   onDecline: (rid: string) => void;
 }) {
@@ -278,6 +301,7 @@ function MyRequestCard({
             <span className="font-display text-sm font-extrabold">{item.requester_name}</span>
             <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${urgencyClass}`}>{item.urgency}</span>
             <span className="rounded-full bg-accent/12 px-2 py-1 text-[11px] text-accent">طلبي</span>
+            <MetaBadges item={item} />
           </div>
           <p className="mt-2 text-sm leading-6">{item.need}</p>
           {item.location && (
@@ -317,7 +341,7 @@ function MyRequestCard({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 mt-3">
+      <div className="grid grid-cols-3 gap-2 mt-3">
         <a
           href={mapsUrl || undefined}
           target="_blank"
@@ -329,11 +353,19 @@ function MyRequestCard({
         </a>
         <button
           type="button"
+          onClick={onComplete}
+          className="rounded-2xl bg-primary/10 text-primary py-3 text-xs font-semibold"
+        >
+          <CheckCircle2 className="w-4 h-4 mx-auto mb-1" />
+          تم بنجاح
+        </button>
+        <button
+          type="button"
           onClick={onDelete}
           className="rounded-2xl bg-destructive/10 text-destructive py-3 text-xs font-semibold"
         >
           <Trash2 className="w-4 h-4 mx-auto mb-1" />
-          حذف عند الانتهاء
+          إلغاء
         </button>
       </div>
     </article>
