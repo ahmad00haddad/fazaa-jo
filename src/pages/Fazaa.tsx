@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Check, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, Trash2, UserCheck, X } from "lucide-react";
+import { Check, CheckCircle2, Heart, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, ShieldCheck, Trash2, UserCheck, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   FAZAA_CATEGORIES,
   FAZAA_URGENCY_OPTIONS,
+  JORDAN_CITIES,
   acceptResponse,
   buildMapsUrl,
   buildWhatsAppUrl,
@@ -17,6 +18,7 @@ import {
   fetchResponsesForRequest,
   formatTimeAgo,
   offerHelp,
+  updateRequestStatus,
   urgencyVariant,
   type FazaaCategory,
   type FazaaRequest,
@@ -24,6 +26,7 @@ import {
   type FazaaUrgency,
   type NewFazaaInput,
 } from "@/lib/fazaa";
+
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -36,6 +39,8 @@ const initialForm: NewFazaaInput = {
   category: "أخرى",
   urgency: "عاجلة اليوم",
   location: "",
+  female_only: false,
+  city: null,
 };
 
 export default function Fazaa() {
@@ -67,8 +72,14 @@ export default function Fazaa() {
     refresh();
   }, [user?.id]);
 
-  const myItems = useMemo(() => items.filter((i) => i.user_id === user?.id), [items, user?.id]);
-  const otherItems = useMemo(() => items.filter((i) => i.user_id !== user?.id), [items, user?.id]);
+  const myItems = useMemo(
+    () => items.filter((i) => i.user_id === user?.id && i.status === "active"),
+    [items, user?.id],
+  );
+  const otherItems = useMemo(
+    () => items.filter((i) => i.user_id !== user?.id && i.status === "active"),
+    [items, user?.id],
+  );
 
   const handleAdd = async (payload: NewFazaaInput) => {
     if (!user || !profile) return;
@@ -93,8 +104,22 @@ export default function Fazaa() {
     }
   };
 
+  const handleComplete = async (id: string) => {
+    try {
+      await updateRequestStatus(id, "completed");
+      toast.success("تم إغلاق الفزعة بنجاح، شكراً للمتعاونين");
+      await refresh();
+    } catch (e: any) {
+      toast.error(e?.message ?? "تعذر الإغلاق");
+    }
+  };
+
   const handleOffer = async (req: FazaaRequest) => {
     if (!user || !profile) return;
+    if (req.female_only && profile.gender !== "female") {
+      toast.error("هذه الفزعة للبنات فقط");
+      return;
+    }
     try {
       await offerHelp(req.id, user.id, profile.name, "أنا جاهز للمساعدة");
       toast.success("تم إرسال استجابتك. سيتواصل معك صاحب الفزعة إذا قبل");
@@ -141,6 +166,7 @@ export default function Fazaa() {
                 open={openResponses === item.id}
                 onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
                 onDelete={() => handleDelete(item.id)}
+                onComplete={() => handleComplete(item.id)}
                 onAccept={async (rid) => {
                   await acceptResponse(rid);
                   toast.success("تم قبول الاستجابة، يمكنك التواصل الآن");
@@ -176,6 +202,26 @@ export default function Fazaa() {
   );
 }
 
+function MetaBadges({ item }: { item: FazaaRequest }) {
+  return (
+    <>
+      {item.requester_verified && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-1 text-[11px] font-semibold">
+          <ShieldCheck className="w-3 h-3" /> موثّق
+        </span>
+      )}
+      {item.female_only && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-pink-500/15 text-pink-600 px-2 py-1 text-[11px] font-semibold">
+          <Heart className="w-3 h-3" /> للبنات فقط
+        </span>
+      )}
+      {item.city && (
+        <span className="rounded-full bg-secondary px-2 py-1 text-[11px] text-muted-foreground">{item.city}</span>
+      )}
+    </>
+  );
+}
+
 function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () => void }) {
   const mapsUrl = buildMapsUrl(item);
   const urgencyClass = badgeClass(urgencyVariant(item.urgency));
@@ -187,6 +233,7 @@ function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () =
             <span className="font-display text-sm font-extrabold">{item.requester_name}</span>
             <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${urgencyClass}`}>{item.urgency}</span>
             <span className="rounded-full bg-secondary px-2 py-1 text-[11px] text-muted-foreground">{item.category}</span>
+            <MetaBadges item={item} />
           </div>
           <p className="mt-2 text-sm leading-6">{item.need}</p>
           {item.location && (
@@ -231,6 +278,7 @@ function MyRequestCard({
   open,
   onToggle,
   onDelete,
+  onComplete,
   onAccept,
   onDecline,
 }: {
@@ -239,6 +287,7 @@ function MyRequestCard({
   open: boolean;
   onToggle: () => void;
   onDelete: () => void;
+  onComplete: () => void;
   onAccept: (rid: string) => void;
   onDecline: (rid: string) => void;
 }) {
@@ -252,6 +301,7 @@ function MyRequestCard({
             <span className="font-display text-sm font-extrabold">{item.requester_name}</span>
             <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${urgencyClass}`}>{item.urgency}</span>
             <span className="rounded-full bg-accent/12 px-2 py-1 text-[11px] text-accent">طلبي</span>
+            <MetaBadges item={item} />
           </div>
           <p className="mt-2 text-sm leading-6">{item.need}</p>
           {item.location && (
@@ -291,7 +341,7 @@ function MyRequestCard({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 mt-3">
+      <div className="grid grid-cols-3 gap-2 mt-3">
         <a
           href={mapsUrl || undefined}
           target="_blank"
@@ -303,11 +353,19 @@ function MyRequestCard({
         </a>
         <button
           type="button"
+          onClick={onComplete}
+          className="rounded-2xl bg-primary/10 text-primary py-3 text-xs font-semibold"
+        >
+          <CheckCircle2 className="w-4 h-4 mx-auto mb-1" />
+          تم بنجاح
+        </button>
+        <button
+          type="button"
           onClick={onDelete}
           className="rounded-2xl bg-destructive/10 text-destructive py-3 text-xs font-semibold"
         >
           <Trash2 className="w-4 h-4 mx-auto mb-1" />
-          حذف عند الانتهاء
+          إلغاء
         </button>
       </div>
     </article>
@@ -385,7 +443,8 @@ function ResponseRow({
 }
 
 function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit: (p: NewFazaaInput) => void }) {
-  const [form, setForm] = useState<NewFazaaInput>(initialForm);
+  const { profile } = useAuth();
+  const [form, setForm] = useState<NewFazaaInput>({ ...initialForm, city: profile?.city ?? null });
   const [locating, setLocating] = useState(false);
 
   const update = <K extends keyof NewFazaaInput>(k: K, v: NewFazaaInput[K]) =>
@@ -475,6 +534,30 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
               {locating ? "..." : "موقعي"}
             </button>
           </div>
+          <select
+            value={form.city ?? ""}
+            onChange={(e) => update("city", (e.target.value || null) as any)}
+            className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="">اختر المدينة</option>
+            {JORDAN_CITIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+          {profile?.gender === "female" && (
+            <label className="flex items-center justify-between gap-3 rounded-2xl bg-secondary px-4 py-3 text-sm cursor-pointer">
+              <span className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-pink-600" />
+                للبنات فقط (لن يستجيب لها إلا الإناث)
+              </span>
+              <input
+                type="checkbox"
+                checked={!!form.female_only}
+                onChange={(e) => update("female_only", e.target.checked)}
+                className="w-5 h-5 accent-primary"
+              />
+            </label>
+          )}
           <button
             type="submit"
             className="w-full rounded-2xl gradient-hero py-3.5 text-primary-foreground font-display font-bold flex items-center justify-center gap-2 disabled:opacity-50"

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import { Home, ListChecks, MessageCircleMore, User, Users } from "lucide-react";
+import { Clock, Home, ListChecks, MessageCircleMore, User, Users } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 
 interface Props {
   children: ReactNode;
@@ -15,6 +16,7 @@ const tabs = [
 ];
 
 export default function MobileLayout({ children }: Props) {
+  useRealtimeFazaa();
   const location = useLocation();
   const hideNav = location.pathname === "/chat";
 

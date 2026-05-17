@@ -17,7 +17,9 @@ export type Database = {
       fazaa_requests: {
         Row: {
           category: string
+          city: string | null
           created_at: string
+          female_only: boolean
           id: string
           latitude: number | null
           location: string | null
@@ -25,12 +27,16 @@ export type Database = {
           need: string
           requester_gender: string
           requester_name: string
+          requester_verified: boolean
+          status: string
           urgency: string
           user_id: string
         }
         Insert: {
           category: string
+          city?: string | null
           created_at?: string
+          female_only?: boolean
           id?: string
           latitude?: number | null
           location?: string | null
@@ -38,12 +44,16 @@ export type Database = {
           need: string
           requester_gender: string
           requester_name: string
+          requester_verified?: boolean
+          status?: string
           urgency: string
           user_id: string
         }
         Update: {
           category?: string
+          city?: string | null
           created_at?: string
+          female_only?: boolean
           id?: string
           latitude?: number | null
           location?: string | null
@@ -51,6 +61,8 @@ export type Database = {
           need?: string
           requester_gender?: string
           requester_name?: string
+          requester_verified?: boolean
+          status?: string
           urgency?: string
           user_id?: string
         }
@@ -96,28 +108,34 @@ export type Database = {
       }
       profiles: {
         Row: {
+          city: string | null
           created_at: string
           gender: string
           id: string
           name: string
           phone: string
           updated_at: string
+          verified: boolean
         }
         Insert: {
+          city?: string | null
           created_at?: string
           gender: string
           id: string
           name: string
           phone: string
           updated_at?: string
+          verified?: boolean
         }
         Update: {
+          city?: string | null
           created_at?: string
           gender?: string
           id?: string
           name?: string
           phone?: string
           updated_at?: string
+          verified?: boolean
         }
         Relationships: []
       }
@@ -126,8 +144,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_gender: { Args: { _user_id: string }; Returns: string }
       is_request_owner: {
         Args: { _request_id: string; _user_id: string }
+        Returns: boolean
+      }
+      mark_self_verified: { Args: never; Returns: boolean }
+      request_is_female_only: {
+        Args: { _request_id: string }
         Returns: boolean
       }
     }

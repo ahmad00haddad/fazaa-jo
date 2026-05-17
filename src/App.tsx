@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
 import CompleteProfile from "./pages/CompleteProfile";
 import Fazaa from "./pages/Fazaa";
+import History from "./pages/History";
 import Home from "./pages/Home";
 import Me from "./pages/Me";
 import NotFound from "./pages/NotFound";
@@ -38,6 +39,7 @@ const App = () => (
                       <Route path="/chat" element={<Chat />} />
                       <Route path="/fazaa" element={<Fazaa />} />
                       <Route path="/me" element={<Me />} />
+                      <Route path="/history" element={<History />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </MobileLayout>
