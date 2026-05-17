@@ -47,6 +47,7 @@ export interface FazaaRequest {
   female_only: boolean;
   city: string | null;
   status: FazaaStatus;
+  requester_verified: boolean;
 }
 
 export interface FazaaResponse {
