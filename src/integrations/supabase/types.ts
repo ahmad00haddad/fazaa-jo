@@ -27,6 +27,7 @@ export type Database = {
           need: string
           requester_gender: string
           requester_name: string
+          requester_verified: boolean
           status: string
           urgency: string
           user_id: string
@@ -43,6 +44,7 @@ export type Database = {
           need: string
           requester_gender: string
           requester_name: string
+          requester_verified?: boolean
           status?: string
           urgency: string
           user_id: string
@@ -59,6 +61,7 @@ export type Database = {
           need?: string
           requester_gender?: string
           requester_name?: string
+          requester_verified?: boolean
           status?: string
           urgency?: string
           user_id?: string
