@@ -72,8 +72,14 @@ export default function Fazaa() {
     refresh();
   }, [user?.id]);
 
-  const myItems = useMemo(() => items.filter((i) => i.user_id === user?.id), [items, user?.id]);
-  const otherItems = useMemo(() => items.filter((i) => i.user_id !== user?.id), [items, user?.id]);
+  const myItems = useMemo(
+    () => items.filter((i) => i.user_id === user?.id && i.status === "active"),
+    [items, user?.id],
+  );
+  const otherItems = useMemo(
+    () => items.filter((i) => i.user_id !== user?.id && i.status === "active"),
+    [items, user?.id],
+  );
 
   const handleAdd = async (payload: NewFazaaInput) => {
     if (!user || !profile) return;
