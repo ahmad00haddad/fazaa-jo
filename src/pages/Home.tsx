@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck } from "lucide-react";
+import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchFeed, formatTimeAgo, urgencyVariant, type FazaaRequest } from "@/lib/fazaa";
+import {
+  fetchFeed,
+  formatTimeAgo,
+  urgencyVariant,
+  fetchJordanStats,
+  fetchMyActiveWatch,
+  startAreaWatch,
+  stopAreaWatch,
+  JORDAN_CITIES,
+  type FazaaRequest,
+  type JordanStats,
+  type AreaWatcher,
+} from "@/lib/fazaa";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
