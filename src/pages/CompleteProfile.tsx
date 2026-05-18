@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function CompleteProfile() {
-  const { user, profile, loading, refreshProfile } = useAuth();
+  const { user, profile, loading, refreshProfile, signOut } = useAuth();
   const nav = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
