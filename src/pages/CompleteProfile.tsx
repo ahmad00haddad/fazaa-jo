@@ -63,6 +63,9 @@ export default function CompleteProfile() {
         <div className="text-center mb-5">
           <h1 className="font-display text-2xl font-extrabold">أكمل بياناتك</h1>
           <p className="text-sm text-muted-foreground mt-1">نحتاج رقم هاتفك للتواصل عند قبول الفزعة (يبقى مخفياً)</p>
+          {user.email && (
+            <p className="text-xs text-muted-foreground mt-2" dir="ltr">{user.email}</p>
+          )}
         </div>
         <form onSubmit={submit} className="space-y-3">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="الاسم الكامل" className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary" />
