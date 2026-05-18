@@ -25,15 +25,50 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 
 export default function Home() {
   const nav = useNavigate();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [items, setItems] = useState<FazaaRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<JordanStats | null>(null);
+  const [myWatch, setMyWatch] = useState<AreaWatcher | null>(null);
+  const [watchCity, setWatchCity] = useState<string>(profile?.city ?? "عمّان");
+  const [watchBusy, setWatchBusy] = useState(false);
+
+  const loadAll = async () => {
+    const [feed, s] = await Promise.all([fetchFeed(), fetchJordanStats()]);
+    setItems(feed);
+    setStats(s);
+    if (user) setMyWatch(await fetchMyActiveWatch(user.id));
+  };
 
   useEffect(() => {
-    fetchFeed()
-      .then(setItems)
-      .finally(() => setLoading(false));
-  }, []);
+    loadAll().finally(() => setLoading(false));
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (profile?.city && !myWatch) setWatchCity(profile.city);
+  }, [profile?.city, myWatch]);
+
+  const toggleWatch = async () => {
+    if (!user || !profile) return;
+    setWatchBusy(true);
+    try {
+      if (myWatch) {
+        await stopAreaWatch(user.id);
+        setMyWatch(null);
+        toast.success("تم إيقاف وضع التواجد");
+      } else {
+        const w = await startAreaWatch(user.id, profile.name, watchCity);
+        setMyWatch(w);
+        toast.success(`أنت الآن متواجد في ${watchCity} لمدة 4 ساعات`);
+      }
+      const s = await fetchJordanStats();
+      setStats(s);
+    } catch (e: any) {
+      toast.error(e?.message ?? "تعذر التحديث");
+    } finally {
+      setWatchBusy(false);
+    }
+  };
 
   return (
     <div className="min-h-screen pb-28 animate-fade-in">
