@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function CompleteProfile() {
-  const { user, profile, loading, refreshProfile } = useAuth();
+  const { user, profile, loading, refreshProfile, signOut } = useAuth();
   const nav = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -63,6 +63,9 @@ export default function CompleteProfile() {
         <div className="text-center mb-5">
           <h1 className="font-display text-2xl font-extrabold">أكمل بياناتك</h1>
           <p className="text-sm text-muted-foreground mt-1">نحتاج رقم هاتفك للتواصل عند قبول الفزعة (يبقى مخفياً)</p>
+          {user.email && (
+            <p className="text-xs text-muted-foreground mt-2" dir="ltr">{user.email}</p>
+          )}
         </div>
         <form onSubmit={submit} className="space-y-3">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="الاسم الكامل" className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary" />
@@ -76,6 +79,17 @@ export default function CompleteProfile() {
             حفظ ومتابعة
           </button>
         </form>
+        <button
+          type="button"
+          onClick={async () => {
+            await signOut();
+            nav("/auth", { replace: true });
+          }}
+          className="w-full mt-3 rounded-2xl bg-secondary py-3 text-sm font-semibold flex items-center justify-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          تسجيل الخروج واستخدام حساب آخر
+        </button>
       </div>
     </div>
   );
