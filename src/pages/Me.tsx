@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
-import { Bell, ClipboardList, LogOut, MapPin, Phone, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Bell, ClipboardList, LogOut, MapPin, Phone, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
