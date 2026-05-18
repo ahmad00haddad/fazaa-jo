@@ -79,6 +79,17 @@ export default function CompleteProfile() {
             حفظ ومتابعة
           </button>
         </form>
+        <button
+          type="button"
+          onClick={async () => {
+            await signOut();
+            nav("/auth", { replace: true });
+          }}
+          className="w-full mt-3 rounded-2xl bg-secondary py-3 text-sm font-semibold flex items-center justify-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          تسجيل الخروج واستخدام حساب آخر
+        </button>
       </div>
     </div>
   );
