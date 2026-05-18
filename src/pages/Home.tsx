@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck } from "lucide-react";
+import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchFeed, formatTimeAgo, urgencyVariant, type FazaaRequest } from "@/lib/fazaa";
+import {
+  fetchFeed,
+  formatTimeAgo,
+  urgencyVariant,
+  fetchJordanStats,
+  fetchMyActiveWatch,
+  startAreaWatch,
+  stopAreaWatch,
+  JORDAN_CITIES,
+  type FazaaRequest,
+  type JordanStats,
+  type AreaWatcher,
+} from "@/lib/fazaa";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -12,15 +25,50 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 
 export default function Home() {
   const nav = useNavigate();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [items, setItems] = useState<FazaaRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<JordanStats | null>(null);
+  const [myWatch, setMyWatch] = useState<AreaWatcher | null>(null);
+  const [watchCity, setWatchCity] = useState<string>(profile?.city ?? "عمّان");
+  const [watchBusy, setWatchBusy] = useState(false);
+
+  const loadAll = async () => {
+    const [feed, s] = await Promise.all([fetchFeed(), fetchJordanStats()]);
+    setItems(feed);
+    setStats(s);
+    if (user) setMyWatch(await fetchMyActiveWatch(user.id));
+  };
 
   useEffect(() => {
-    fetchFeed()
-      .then(setItems)
-      .finally(() => setLoading(false));
-  }, []);
+    loadAll().finally(() => setLoading(false));
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (profile?.city && !myWatch) setWatchCity(profile.city);
+  }, [profile?.city, myWatch]);
+
+  const toggleWatch = async () => {
+    if (!user || !profile) return;
+    setWatchBusy(true);
+    try {
+      if (myWatch) {
+        await stopAreaWatch(user.id);
+        setMyWatch(null);
+        toast.success("تم إيقاف وضع التواجد");
+      } else {
+        const w = await startAreaWatch(user.id, profile.name, watchCity);
+        setMyWatch(w);
+        toast.success(`أنت الآن متواجد في ${watchCity} لمدة 4 ساعات`);
+      }
+      const s = await fetchJordanStats();
+      setStats(s);
+    } catch (e: any) {
+      toast.error(e?.message ?? "تعذر التحديث");
+    } finally {
+      setWatchBusy(false);
+    }
+  };
 
   return (
     <div className="min-h-screen pb-28 animate-fade-in">
@@ -32,6 +80,12 @@ export default function Home() {
               <p className="text-sm text-muted-foreground mt-1">
                 {profile ? `أهلاً ${profile.name}` : "مساعدة فورية بين الناس"}
               </p>
+              {profile && (
+                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-accent/12 text-accent px-2.5 py-1 text-[11px] font-bold">
+                  <Trophy className="w-3 h-3" />
+                  {profile.points ?? 0} نقطة فزعة
+                </div>
+              )}
             </div>
             <button
               onClick={() => nav("/chat")}
@@ -60,6 +114,55 @@ export default function Home() {
             </div>
           </div>
         </button>
+
+        {/* Area Watch */}
+        <div className="rounded-3xl bg-card shadow-card p-4">
+          <div className="flex items-start gap-3">
+            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${myWatch ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
+              {myWatch ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-base font-bold">أنا بالمنطقة</h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {myWatch
+                  ? `أنت متواجد في ${myWatch.city} — مستعد لأي فزعة قريبة`
+                  : "فعّل التواجد لتظهر للناس أنك جاهز للفزعة في منطقتك"}
+              </p>
+            </div>
+          </div>
+          {!myWatch && (
+            <select
+              value={watchCity}
+              onChange={(e) => setWatchCity(e.target.value)}
+              className="mt-3 w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              {JORDAN_CITIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          )}
+          <button
+            type="button"
+            onClick={toggleWatch}
+            disabled={watchBusy || !profile}
+            className={`mt-3 w-full rounded-2xl py-3 text-sm font-semibold disabled:opacity-50 ${myWatch ? "bg-destructive/10 text-destructive" : "bg-primary text-primary-foreground"}`}
+          >
+            {watchBusy ? "..." : myWatch ? "إيقاف التواجد" : "أنا متواجد الآن (4 ساعات)"}
+          </button>
+        </div>
+
+        {/* Jordan Stats */}
+        <div className="grid grid-cols-3 gap-2">
+          <StatTile icon={<Activity className="w-4 h-4" />} label="فزعات نشطة" value={stats?.activeNow ?? 0} tone="primary" />
+          <StatTile icon={<Trophy className="w-4 h-4" />} label="أُنجزت هذا الأسبوع" value={stats?.completedWeek ?? 0} tone="accent" />
+          <StatTile icon={<UsersIcon className="w-4 h-4" />} label="متواجدون الآن" value={stats?.watchersNow ?? 0} tone="secondary" />
+        </div>
+        {stats?.topCity && (
+          <div className="rounded-2xl bg-card shadow-card px-4 py-3 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">أكثر مدينة تحتاج فزعة الآن</span>
+            <span className="font-display font-extrabold text-sm">{stats.topCity.city} · {stats.topCity.count}</span>
+          </div>
+        )}
 
         <div className="rounded-3xl bg-card shadow-card p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
@@ -139,5 +242,21 @@ function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void 
         افتح للاستجابة
       </div>
     </button>
+  );
+}
+
+function StatTile({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: number; tone: "primary" | "accent" | "secondary" }) {
+  const toneClass =
+    tone === "primary"
+      ? "bg-primary/10 text-primary"
+      : tone === "accent"
+      ? "bg-accent/12 text-accent"
+      : "bg-secondary text-foreground";
+  return (
+    <div className="rounded-2xl bg-card shadow-card p-3 text-center">
+      <div className={`mx-auto w-9 h-9 rounded-xl flex items-center justify-center ${toneClass}`}>{icon}</div>
+      <div className="mt-2 font-display text-xl font-extrabold">{value}</div>
+      <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{label}</div>
+    </div>
   );
 }
