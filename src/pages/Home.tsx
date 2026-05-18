@@ -244,3 +244,19 @@ function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void 
     </button>
   );
 }
+
+function StatTile({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: number; tone: "primary" | "accent" | "secondary" }) {
+  const toneClass =
+    tone === "primary"
+      ? "bg-primary/10 text-primary"
+      : tone === "accent"
+      ? "bg-accent/12 text-accent"
+      : "bg-secondary text-foreground";
+  return (
+    <div className="rounded-2xl bg-card shadow-card p-3 text-center">
+      <div className={`mx-auto w-9 h-9 rounded-xl flex items-center justify-center ${toneClass}`}>{icon}</div>
+      <div className="mt-2 font-display text-xl font-extrabold">{value}</div>
+      <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{label}</div>
+    </div>
+  );
+}
