@@ -115,6 +115,55 @@ export default function Home() {
           </div>
         </button>
 
+        {/* Area Watch */}
+        <div className="rounded-3xl bg-card shadow-card p-4">
+          <div className="flex items-start gap-3">
+            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${myWatch ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
+              {myWatch ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-base font-bold">أنا بالمنطقة</h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {myWatch
+                  ? `أنت متواجد في ${myWatch.city} — مستعد لأي فزعة قريبة`
+                  : "فعّل التواجد لتظهر للناس أنك جاهز للفزعة في منطقتك"}
+              </p>
+            </div>
+          </div>
+          {!myWatch && (
+            <select
+              value={watchCity}
+              onChange={(e) => setWatchCity(e.target.value)}
+              className="mt-3 w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              {JORDAN_CITIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          )}
+          <button
+            type="button"
+            onClick={toggleWatch}
+            disabled={watchBusy || !profile}
+            className={`mt-3 w-full rounded-2xl py-3 text-sm font-semibold disabled:opacity-50 ${myWatch ? "bg-destructive/10 text-destructive" : "bg-primary text-primary-foreground"}`}
+          >
+            {watchBusy ? "..." : myWatch ? "إيقاف التواجد" : "أنا متواجد الآن (4 ساعات)"}
+          </button>
+        </div>
+
+        {/* Jordan Stats */}
+        <div className="grid grid-cols-3 gap-2">
+          <StatTile icon={<Activity className="w-4 h-4" />} label="فزعات نشطة" value={stats?.activeNow ?? 0} tone="primary" />
+          <StatTile icon={<Trophy className="w-4 h-4" />} label="أُنجزت هذا الأسبوع" value={stats?.completedWeek ?? 0} tone="accent" />
+          <StatTile icon={<UsersIcon className="w-4 h-4" />} label="متواجدون الآن" value={stats?.watchersNow ?? 0} tone="secondary" />
+        </div>
+        {stats?.topCity && (
+          <div className="rounded-2xl bg-card shadow-card px-4 py-3 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">أكثر مدينة تحتاج فزعة الآن</span>
+            <span className="font-display font-extrabold text-sm">{stats.topCity.city} · {stats.topCity.count}</span>
+          </div>
+        )}
+
         <div className="rounded-3xl bg-card shadow-card p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div>
