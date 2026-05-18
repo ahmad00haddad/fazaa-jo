@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      area_watch: {
+        Row: {
+          city: string
+          created_at: string
+          expires_at: string
+          id: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          user_id: string
+          user_name: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       fazaa_requests: {
         Row: {
           category: string
@@ -114,6 +141,7 @@ export type Database = {
           id: string
           name: string
           phone: string
+          points: number
           updated_at: string
           verified: boolean
         }
@@ -124,6 +152,7 @@ export type Database = {
           id: string
           name: string
           phone: string
+          points?: number
           updated_at?: string
           verified?: boolean
         }
@@ -134,6 +163,7 @@ export type Database = {
           id?: string
           name?: string
           phone?: string
+          points?: number
           updated_at?: string
           verified?: boolean
         }
