@@ -85,6 +85,16 @@ export default function Me() {
               <div className="text-xs text-muted-foreground mt-1" dir="ltr">{user?.email}</div>
             </div>
           </div>
+          <div className="mt-4 rounded-2xl gradient-hero p-4 text-primary-foreground flex items-center justify-between">
+            <div>
+              <div className="text-xs opacity-90">نقاط الفزعة</div>
+              <div className="font-display text-3xl font-extrabold mt-1">{profile?.points ?? 0}</div>
+              <div className="text-[11px] opacity-90 mt-1">+10 نقاط لكل فزعة أنجزتها بقبول صاحبها</div>
+            </div>
+            <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
+              <Trophy className="w-7 h-7" />
+            </div>
+          </div>
 
           {!editing ? (
             <div className="mt-4 grid gap-2 text-sm">
