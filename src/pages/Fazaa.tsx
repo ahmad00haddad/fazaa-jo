@@ -121,14 +121,17 @@ export default function Fazaa() {
     }
   };
 
-  const handleOffer = async (req: FazaaRequest) => {
+  const handleOffer = async (req: FazaaRequest, offeredPrice: number | null) => {
     if (!user || !profile) return;
     if (req.female_only && profile.gender !== "female") {
       toast.error("هذه الفزعة للبنات فقط");
       return;
     }
     try {
-      await offerHelp(req.id, user.id, profile.name, "أنا جاهز للمساعدة");
+      const msg = offeredPrice !== null && offeredPrice !== Number(req.price_jod)
+        ? `أنا جاهز للمساعدة. أقترح سعر ${offeredPrice} د.أ`
+        : "أنا جاهز للمساعدة";
+      await offerHelp(req.id, user.id, profile.name, msg, offeredPrice);
       toast.success("تم إرسال استجابتك. سيتواصل معك صاحب الفزعة إذا قبل");
     } catch (e: any) {
       if (e?.code === "23505") toast.info("سبق وأرسلت استجابة لهذا الطلب");
