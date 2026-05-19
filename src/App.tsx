@@ -41,6 +41,7 @@ const App = () => (
                       <Route path="/fazaa" element={<Fazaa />} />
                       <Route path="/me" element={<Me />} />
                       <Route path="/history" element={<History />} />
+                      <Route path="/leaderboard" element={<Leaderboard />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </MobileLayout>
