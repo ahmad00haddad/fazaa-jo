@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeJordanPhone, buildJordanWhatsAppUrl } from "@/lib/phone";
 
 export type FazaaCategory =
   | "تعطل مركبة"
