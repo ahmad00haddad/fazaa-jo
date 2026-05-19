@@ -12,6 +12,7 @@ import CompleteProfile from "./pages/CompleteProfile";
 import Fazaa from "./pages/Fazaa";
 import History from "./pages/History";
 import Home from "./pages/Home";
+import Leaderboard from "./pages/Leaderboard";
 import Me from "./pages/Me";
 import NotFound from "./pages/NotFound";
 import Services from "./pages/Services";
