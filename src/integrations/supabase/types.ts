@@ -52,6 +52,7 @@ export type Database = {
           location: string | null
           longitude: number | null
           need: string
+          price_jod: number
           requester_gender: string
           requester_name: string
           requester_verified: boolean
@@ -69,6 +70,7 @@ export type Database = {
           location?: string | null
           longitude?: number | null
           need: string
+          price_jod?: number
           requester_gender: string
           requester_name: string
           requester_verified?: boolean
@@ -86,6 +88,7 @@ export type Database = {
           location?: string | null
           longitude?: number | null
           need?: string
+          price_jod?: number
           requester_gender?: string
           requester_name?: string
           requester_verified?: boolean
@@ -101,6 +104,7 @@ export type Database = {
           created_at: string
           id: string
           message: string | null
+          offered_price_jod: number | null
           request_id: string
           responder_id: string
           responder_name: string
@@ -110,6 +114,7 @@ export type Database = {
           created_at?: string
           id?: string
           message?: string | null
+          offered_price_jod?: number | null
           request_id: string
           responder_id: string
           responder_name: string
@@ -119,6 +124,7 @@ export type Database = {
           created_at?: string
           id?: string
           message?: string | null
+          offered_price_jod?: number | null
           request_id?: string
           responder_id?: string
           responder_name?: string
@@ -133,6 +139,33 @@ export type Database = {
           },
         ]
       }
+      phone_verifications: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          phone: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           city: string | null
@@ -141,6 +174,7 @@ export type Database = {
           id: string
           name: string
           phone: string
+          phone_verified: boolean
           points: number
           updated_at: string
           verified: boolean
@@ -152,6 +186,7 @@ export type Database = {
           id: string
           name: string
           phone: string
+          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
@@ -163,6 +198,7 @@ export type Database = {
           id?: string
           name?: string
           phone?: string
+          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
@@ -180,9 +216,30 @@ export type Database = {
         Returns: boolean
       }
       mark_self_verified: { Args: never; Returns: boolean }
+      monthly_top_helper: {
+        Args: never
+        Returns: {
+          city: string
+          completed_count: number
+          name: string
+          user_id: string
+        }[]
+      }
+      normalize_jordan_phone: { Args: { p: string }; Returns: string }
       request_is_female_only: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      user_completed_count: { Args: { _user_id: string }; Returns: number }
+      weekly_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          city: string
+          completed_count: number
+          name: string
+          user_id: string
+          verified: boolean
+        }[]
       }
     }
     Enums: {
