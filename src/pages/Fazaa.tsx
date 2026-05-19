@@ -41,7 +41,14 @@ const initialForm: NewFazaaInput = {
   location: "",
   female_only: false,
   city: null,
+  price_jod: 0,
 };
+
+function formatPrice(p: number | null | undefined) {
+  const n = Number(p ?? 0);
+  if (!n || n <= 0) return "تطوعية (مجاناً)";
+  return `${n} د.أ`;
+}
 
 export default function Fazaa() {
   const { user, profile } = useAuth();
