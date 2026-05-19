@@ -164,6 +164,15 @@ export default function Home() {
           </div>
         )}
 
+        <button
+          type="button"
+          onClick={() => nav("/leaderboard")}
+          className="w-full rounded-2xl bg-accent/10 text-accent py-3 text-sm font-semibold flex items-center justify-center gap-2"
+        >
+          <Trophy className="w-4 h-4" />
+          شوف لوحة شرف الأسبوع و"أبو الفزعات"
+        </button>
+
         <div className="rounded-3xl bg-card shadow-card p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div>
