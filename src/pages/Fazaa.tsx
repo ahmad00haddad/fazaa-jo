@@ -213,6 +213,7 @@ export default function Fazaa() {
 }
 
 function MetaBadges({ item }: { item: FazaaRequest }) {
+  const price = Number(item.price_jod ?? 0);
   return (
     <>
       {item.requester_verified && (
@@ -220,6 +221,14 @@ function MetaBadges({ item }: { item: FazaaRequest }) {
           <ShieldCheck className="w-3 h-3" /> موثّق
         </span>
       )}
+      <span
+        className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-bold ${
+          price > 0 ? "bg-accent/15 text-accent" : "bg-emerald-500/15 text-emerald-700"
+        }`}
+      >
+        <Coins className="w-3 h-3" />
+        {formatPrice(price)}
+      </span>
       {item.female_only && (
         <span className="inline-flex items-center gap-1 rounded-full bg-pink-500/15 text-pink-600 px-2 py-1 text-[11px] font-semibold">
           <Heart className="w-3 h-3" /> للبنات فقط
@@ -232,9 +241,23 @@ function MetaBadges({ item }: { item: FazaaRequest }) {
   );
 }
 
-function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () => void }) {
+function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: (price: number | null) => void | Promise<void> }) {
   const mapsUrl = buildMapsUrl(item);
   const urgencyClass = badgeClass(urgencyVariant(item.urgency));
+  const askedPrice = Number(item.price_jod ?? 0);
+  const [negotiate, setNegotiate] = useState(false);
+  const [counter, setCounter] = useState<string>(String(askedPrice));
+
+  const submitCounter = () => {
+    const n = Number(counter);
+    if (Number.isNaN(n) || n < 0) {
+      toast.error("أدخل سعراً صحيحاً");
+      return;
+    }
+    onOffer(n);
+    setNegotiate(false);
+  };
+
   return (
     <article className="rounded-3xl bg-card shadow-card p-4">
       <div className="flex items-start justify-between gap-3">
@@ -259,11 +282,11 @@ function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () =
       <div className="grid grid-cols-2 gap-2 mt-4">
         <button
           type="button"
-          onClick={onOffer}
+          onClick={() => onOffer(askedPrice)}
           className="rounded-2xl bg-primary text-primary-foreground py-3 text-sm font-semibold flex items-center justify-center gap-2"
         >
           <UserCheck className="w-4 h-4" />
-          أنا جاهز للمساعدة
+          {askedPrice > 0 ? `أقبل بـ ${askedPrice} د.أ` : "أنا جاهز (تطوعي)"}
         </button>
         <a
           href={mapsUrl || undefined}
@@ -275,8 +298,50 @@ function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffer: () =
           الموقع
         </a>
       </div>
+
+      {!negotiate ? (
+        <button
+          type="button"
+          onClick={() => setNegotiate(true)}
+          className="mt-2 w-full rounded-2xl bg-accent/10 text-accent py-2.5 text-xs font-semibold flex items-center justify-center gap-2"
+        >
+          <HandCoins className="w-4 h-4" />
+          تفاوض على السعر
+        </button>
+      ) : (
+        <div className="mt-2 rounded-2xl bg-background border border-border p-3 space-y-2">
+          <label className="text-[11px] text-muted-foreground">سعرك المقترح بالدينار</label>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+            <input
+              type="number"
+              min={0}
+              step={0.5}
+              inputMode="decimal"
+              value={counter}
+              onChange={(e) => setCounter(e.target.value)}
+              className="rounded-xl bg-secondary px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
+              dir="ltr"
+            />
+            <button
+              type="button"
+              onClick={submitCounter}
+              className="rounded-xl bg-primary text-primary-foreground px-3 py-2 text-xs font-semibold"
+            >
+              إرسال العرض
+            </button>
+            <button
+              type="button"
+              onClick={() => setNegotiate(false)}
+              className="rounded-xl bg-secondary px-3 py-2 text-xs font-semibold"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      )}
+
       <p className="text-[11px] text-muted-foreground mt-2 text-center">
-        رقم صاحب الفزعة مخفي. هو من سيتواصل معك إذا قبل استجابتك.
+        الدفع كاش بينكما عند اللقاء. رقم صاحب الفزعة مخفي وهو من يتواصل معك إذا قبل.
       </p>
     </article>
   );
