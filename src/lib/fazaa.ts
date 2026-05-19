@@ -120,6 +120,7 @@ export async function createRequest(
       longitude: input.longitude ?? null,
       female_only: !!input.female_only,
       city: input.city ?? null,
+      price_jod: input.price_jod ?? 0,
     })
     .select()
     .single();
