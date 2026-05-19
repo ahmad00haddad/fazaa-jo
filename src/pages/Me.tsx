@@ -62,7 +62,7 @@ export default function Me() {
     const phoneChanged = normalized !== (profile?.phone ?? "");
     setBusy(true);
     try {
-      const updates: Record<string, any> = { city: city || null, phone: normalized };
+      const updates: { city: string | null; phone: string; phone_verified?: boolean } = { city: city || null, phone: normalized };
       if (phoneChanged) updates.phone_verified = false;
       const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
       if (error) throw error;
