@@ -630,6 +630,45 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
+
+          {/* Price */}
+          <div className="rounded-2xl bg-secondary p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold flex items-center gap-2">
+                <Coins className="w-4 h-4 text-accent" />
+                عربون الشكر (د.أ)
+              </span>
+              <span className="text-[11px] text-muted-foreground">0 = تطوعية</span>
+            </div>
+            <div className="grid grid-cols-6 gap-1 mb-2">
+              {[0, 1, 2, 5, 10, 20].map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => update("price_jod", v)}
+                  className={`rounded-xl py-2 text-xs font-bold ${
+                    Number(form.price_jod) === v ? "bg-primary text-primary-foreground" : "bg-background"
+                  }`}
+                >
+                  {v === 0 ? "مجاناً" : v}
+                </button>
+              ))}
+            </div>
+            <input
+              type="number"
+              min={0}
+              step={0.5}
+              inputMode="decimal"
+              value={form.price_jod}
+              onChange={(e) => update("price_jod", Number(e.target.value) || 0)}
+              className="w-full rounded-xl bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
+              dir="ltr"
+            />
+            <p className="text-[11px] text-muted-foreground mt-2 leading-5">
+              المبلغ يُدفع كاش بينك وبين الفازع عند اللقاء. يمكن للفازع أن يفاوضك على السعر قبل القبول.
+            </p>
+          </div>
+
           {profile?.gender === "female" && (
             <label className="flex items-center justify-between gap-3 rounded-2xl bg-secondary px-4 py-3 text-sm cursor-pointer">
               <span className="flex items-center gap-2">
