@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 
 type Mode = "login" | "signup";
 
