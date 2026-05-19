@@ -96,6 +96,16 @@ export default function Me() {
                     <ShieldCheck className="w-3 h-3" /> موثّق
                   </span>
                 )}
+                {profile?.phone_verified && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 text-emerald-700 px-2 py-1 text-[11px] font-semibold">
+                    <Phone className="w-3 h-3" /> رقم مؤكد
+                  </span>
+                )}
+                {isVerifiedHelper && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 text-accent px-2 py-1 text-[11px] font-bold">
+                    <Award className="w-3 h-3" /> فزّيع موثّق
+                  </span>
+                )}
               </div>
               <div className="text-xs text-muted-foreground mt-1" dir="ltr">{user?.email}</div>
             </div>
@@ -105,6 +115,10 @@ export default function Me() {
               <div className="text-xs opacity-90">نقاط الفزعة</div>
               <div className="font-display text-3xl font-extrabold mt-1">{profile?.points ?? 0}</div>
               <div className="text-[11px] opacity-90 mt-1">+10 نقاط لكل فزعة أنجزتها بقبول صاحبها</div>
+              <div className="text-[11px] opacity-90 mt-0.5">
+                {completed} فزعة منجزة
+                {!isVerifiedHelper && ` · ${VERIFIED_HELPER_THRESHOLD - completed} لشارة فزّيع موثّق`}
+              </div>
             </div>
             <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
               <Trophy className="w-7 h-7" />
@@ -115,7 +129,7 @@ export default function Me() {
             <div className="mt-4 grid gap-2 text-sm">
               <div className="rounded-2xl bg-secondary px-4 py-3 flex items-center justify-between">
                 <span className="text-muted-foreground">الهاتف</span>
-                <span dir="ltr" className="font-semibold">{profile?.phone ?? "—"}</span>
+                <span dir="ltr" className="font-semibold">{profile?.phone ? formatJordanPhoneDisplay(profile.phone) : "—"}</span>
               </div>
               <div className="rounded-2xl bg-secondary px-4 py-3 flex items-center justify-between">
                 <span className="text-muted-foreground">المدينة</span>
