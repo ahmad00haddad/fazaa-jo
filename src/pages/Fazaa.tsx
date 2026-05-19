@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Check, CheckCircle2, Heart, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, ShieldCheck, Trash2, UserCheck, X } from "lucide-react";
+import { Check, CheckCircle2, Coins, Heart, HandCoins, Loader2, MapPin, MessageCircleMore, Phone, Plus, Send, ShieldCheck, Trash2, UserCheck, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {
