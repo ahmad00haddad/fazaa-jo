@@ -49,6 +49,7 @@ export interface FazaaRequest {
   city: string | null;
   status: FazaaStatus;
   requester_verified: boolean;
+  price_jod: number;
 }
 
 export interface FazaaResponse {
@@ -59,6 +60,7 @@ export interface FazaaResponse {
   message: string | null;
   accepted: boolean;
   created_at: string;
+  offered_price_jod: number | null;
 }
 
 export interface NewFazaaInput {
@@ -70,6 +72,7 @@ export interface NewFazaaInput {
   longitude?: number;
   female_only?: boolean;
   city?: string | null;
+  price_jod: number;
 }
 
 export const FAZAA_CATEGORIES: FazaaCategory[] = [
