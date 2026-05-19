@@ -201,7 +201,7 @@ export default function Fazaa() {
               </div>
             )}
             {otherItems.map((item) => (
-              <OtherRequestCard key={item.id} item={item} onOffer={() => handleOffer(item)} />
+              <OtherRequestCard key={item.id} item={item} onOffer={(price) => handleOffer(item, price)} />
             ))}
           </section>
         )}
