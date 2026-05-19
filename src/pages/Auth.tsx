@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 
 type Mode = "login" | "signup";
 
@@ -40,12 +41,18 @@ export default function Auth() {
           setBusy(false);
           return;
         }
+        if (!isValidJordanPhone(phone)) {
+          toast.error("الرقم يجب أن يكون أردني صحيح (مثال: 0791234567)");
+          setBusy(false);
+          return;
+        }
+        const normalizedPhone = normalizeJordanPhone(phone);
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
-            data: { name: name.trim(), phone: phone.trim(), gender },
+            data: { name: name.trim(), phone: normalizedPhone, gender },
           },
         });
         if (error) throw error;
@@ -121,8 +128,9 @@ export default function Auth() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 type="tel"
-                placeholder="رقم الهاتف (مخفي عن الآخرين)"
+                placeholder="رقم الواتساب الأردني (مثال: 0791234567)"
                 className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+                dir="ltr"
               />
               <div className="grid grid-cols-2 gap-2">
                 <button

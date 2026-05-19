@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeJordanPhone, buildJordanWhatsAppUrl } from "@/lib/phone";
 
 export type FazaaCategory =
   | "تعطل مركبة"
@@ -48,6 +49,7 @@ export interface FazaaRequest {
   city: string | null;
   status: FazaaStatus;
   requester_verified: boolean;
+  price_jod: number;
 }
 
 export interface FazaaResponse {
@@ -58,6 +60,7 @@ export interface FazaaResponse {
   message: string | null;
   accepted: boolean;
   created_at: string;
+  offered_price_jod: number | null;
 }
 
 export interface NewFazaaInput {
@@ -69,6 +72,7 @@ export interface NewFazaaInput {
   longitude?: number;
   female_only?: boolean;
   city?: string | null;
+  price_jod: number;
 }
 
 export const FAZAA_CATEGORIES: FazaaCategory[] = [
@@ -116,6 +120,7 @@ export async function createRequest(
       longitude: input.longitude ?? null,
       female_only: !!input.female_only,
       city: input.city ?? null,
+      price_jod: input.price_jod ?? 0,
     })
     .select()
     .single();
@@ -138,12 +143,14 @@ export async function offerHelp(
   responderId: string,
   responderName: string,
   message?: string,
+  offeredPriceJod?: number | null,
 ) {
   const { error } = await supabase.from("fazaa_responses").insert({
     request_id: requestId,
     responder_id: responderId,
     responder_name: responderName,
     message: message ?? null,
+    offered_price_jod: offeredPriceJod ?? null,
   });
   if (error) throw error;
 }
@@ -297,9 +304,76 @@ export function formatTimeAgo(iso: string) {
 }
 
 export function buildWhatsAppUrl(phone: string, message?: string) {
-  const normalized = phone.replace(/\D/g, "").replace(/^0/, "962");
-  const text = message ? `?text=${encodeURIComponent(message)}` : "";
-  return `https://wa.me/${normalized}${text}`;
+  return buildJordanWhatsAppUrl(phone, message);
+}
+
+// ---------- Leaderboard ----------
+export interface LeaderRow {
+  user_id: string;
+  name: string;
+  city: string | null;
+  completed_count: number;
+  verified: boolean;
+}
+
+export async function fetchWeeklyLeaderboard(limit = 10): Promise<LeaderRow[]> {
+  const { data, error } = await supabase.rpc("weekly_leaderboard", { _limit: limit });
+  if (error) throw error;
+  return ((data ?? []) as any[]).map((r) => ({
+    user_id: r.user_id,
+    name: r.name,
+    city: r.city,
+    completed_count: Number(r.completed_count ?? 0),
+    verified: !!r.verified,
+  }));
+}
+
+export async function fetchMonthlyTopHelper(): Promise<{ user_id: string; name: string; city: string | null; completed_count: number } | null> {
+  const { data, error } = await supabase.rpc("monthly_top_helper");
+  if (error) throw error;
+  const arr = (data ?? []) as any[];
+  if (!arr.length) return null;
+  const r = arr[0];
+  return {
+    user_id: r.user_id,
+    name: r.name,
+    city: r.city,
+    completed_count: Number(r.completed_count ?? 0),
+  };
+}
+
+export async function fetchUserCompletedCount(userId: string): Promise<number> {
+  const { data, error } = await supabase.rpc("user_completed_count", { _user_id: userId });
+  if (error) return 0;
+  return Number(data ?? 0);
+}
+
+export const VERIFIED_HELPER_THRESHOLD = 5;
+
+// ---------- Phone verification (WhatsApp self-send) ----------
+export async function createPhoneVerification(userId: string, phone: string, code: string) {
+  await supabase.from("phone_verifications").delete().eq("user_id", userId);
+  const { error } = await supabase
+    .from("phone_verifications")
+    .insert({ user_id: userId, phone, code });
+  if (error) throw error;
+}
+
+export async function confirmPhoneVerification(userId: string, phone: string, code: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("phone_verifications")
+    .select("id, code, phone, expires_at")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data) return false;
+  if (data.phone !== phone) return false;
+  if (new Date(data.expires_at).getTime() < Date.now()) return false;
+  if (data.code !== code.trim()) return false;
+  await supabase.from("profiles").update({ phone_verified: true }).eq("id", userId);
+  await supabase.from("phone_verifications").delete().eq("user_id", userId);
+  return true;
 }
 
 export function buildMapsUrl(req: FazaaRequest) {

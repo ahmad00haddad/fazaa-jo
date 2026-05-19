@@ -14,7 +14,12 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
     );
   }
   if (!session) return <Navigate to="/auth" replace />;
-  const needsProfile = !profile || !profile.phone?.trim() || !profile.name || profile.name === "مستخدم";
+  const needsProfile =
+    !profile ||
+    !profile.phone?.trim() ||
+    !profile.name ||
+    profile.name === "مستخدم" ||
+    !profile.phone_verified;
   if (needsProfile && location.pathname !== "/complete-profile") {
     return <Navigate to="/complete-profile" replace />;
   }

@@ -10,6 +10,7 @@ export interface Profile {
   verified: boolean;
   city: string | null;
   points: number;
+  phone_verified: boolean;
 }
 
 interface AuthContextValue {
