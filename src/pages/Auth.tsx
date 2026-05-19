@@ -128,8 +128,9 @@ export default function Auth() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 type="tel"
-                placeholder="رقم الهاتف (مخفي عن الآخرين)"
+                placeholder="رقم الواتساب الأردني (مثال: 0791234567)"
                 className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+                dir="ltr"
               />
               <div className="grid grid-cols-2 gap-2">
                 <button
