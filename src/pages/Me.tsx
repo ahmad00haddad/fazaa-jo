@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
-import { Bell, ClipboardList, LogOut, MapPin, Phone, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
+import { Award, Bell, ClipboardList, Crown, LogOut, Phone, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { JORDAN_CITIES, markSelfVerified } from "@/lib/fazaa";
+import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified } from "@/lib/fazaa";
+import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 import { requestNotificationPermission } from "@/hooks/useRealtimeFazaa";
 
 export default function Me() {
@@ -15,6 +16,11 @@ export default function Me() {
   const [editing, setEditing] = useState(false);
   const [city, setCity] = useState(profile?.city ?? "");
   const [phone, setPhone] = useState(profile?.phone ?? "");
+  const [completed, setCompleted] = useState<number>(0);
+
+  useEffect(() => {
+    if (user) fetchUserCompletedCount(user.id).then(setCompleted);
+  }, [user?.id]);
 
   const handleLogout = async () => {
     await signOut();
