@@ -53,22 +53,31 @@ export default function Me() {
 
   const saveProfile = async () => {
     if (!user) return;
+    const newPhone = phone.trim();
+    if (newPhone && !isValidJordanPhone(newPhone)) {
+      toast.error("الرقم يجب أن يكون أردني صحيح (مثال: 0791234567)");
+      return;
+    }
+    const normalized = normalizeJordanPhone(newPhone);
+    const phoneChanged = normalized !== (profile?.phone ?? "");
     setBusy(true);
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ city: city || null, phone: phone.trim() })
-        .eq("id", user.id);
+      const updates: Record<string, any> = { city: city || null, phone: normalized };
+      if (phoneChanged) updates.phone_verified = false;
+      const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
       if (error) throw error;
       await refreshProfile();
       setEditing(false);
-      toast.success("تم الحفظ");
+      toast.success(phoneChanged ? "تم الحفظ — أعد تأكيد رقمك الجديد" : "تم الحفظ");
+      if (phoneChanged) nav("/complete-profile");
     } catch (e: any) {
       toast.error(e?.message ?? "تعذر الحفظ");
     } finally {
       setBusy(false);
     }
   };
+
+  const isVerifiedHelper = completed >= VERIFIED_HELPER_THRESHOLD;
 
   return (
     <div className="animate-fade-in pb-28">
