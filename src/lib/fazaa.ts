@@ -143,12 +143,14 @@ export async function offerHelp(
   responderId: string,
   responderName: string,
   message?: string,
+  offeredPriceJod?: number | null,
 ) {
   const { error } = await supabase.from("fazaa_responses").insert({
     request_id: requestId,
     responder_id: responderId,
     responder_name: responderName,
     message: message ?? null,
+    offered_price_jod: offeredPriceJod ?? null,
   });
   if (error) throw error;
 }
