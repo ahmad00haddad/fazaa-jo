@@ -210,6 +210,15 @@ export default function Me() {
 
         <button
           type="button"
+          onClick={() => nav("/leaderboard")}
+          className="w-full rounded-2xl bg-accent/10 text-accent py-3.5 font-semibold flex items-center justify-center gap-2"
+        >
+          <Crown className="w-4 h-4" />
+          لوحة شرف الأسبوع وأبو الفزعات
+        </button>
+
+        <button
+          type="button"
           onClick={() => nav("/history")}
           className="w-full rounded-2xl bg-secondary py-3.5 font-semibold flex items-center justify-center gap-2"
         >
