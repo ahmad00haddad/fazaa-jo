@@ -14,10 +14,13 @@ import {
   declineResponse,
   deleteRequest,
   fetchFeed,
+  filterActiveFeed,
   fetchResponderPhone,
   fetchResponsesForRequest,
   formatTimeAgo,
+  isFazaaExpired,
   offerHelp,
+  suggestFazaaTags,
   updateRequestStatus,
   urgencyVariant,
   type FazaaCategory,
@@ -26,6 +29,7 @@ import {
   type FazaaUrgency,
   type NewFazaaInput,
 } from "@/lib/fazaa";
+import { Sparkles } from "lucide-react";
 
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
@@ -37,7 +41,7 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 const initialForm: NewFazaaInput = {
   need: "",
   category: "أخرى",
-  urgency: "عاجلة اليوم",
+  urgency: "عادية", // الافتراضي: عادية (ليست عاجلة أو حرجة)
   location: "",
   female_only: false,
   city: null,
@@ -61,7 +65,9 @@ export default function Fazaa() {
   const refresh = async () => {
     try {
       const feed = await fetchFeed();
-      setItems(feed);
+      // أخفِ "العاجلة اليوم" التي تجاوزت 24 ساعة (تبقى طلبات صاحبها مرئية له)
+      const visible = feed.filter((r) => r.user_id === user?.id || !isFazaaExpired(r));
+      setItems(visible);
       const mine = feed.filter((r) => r.user_id === user?.id);
       const map: Record<string, FazaaResponse[]> = {};
       for (const req of mine) {
