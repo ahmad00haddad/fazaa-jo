@@ -15,7 +15,6 @@ import {
   deleteRequest,
   fetchFeed,
   fetchResponderPhone,
-  fetchResponderPhone,
   fetchResponsesForRequest,
   formatTimeAgo,
   isFazaaExpired,
