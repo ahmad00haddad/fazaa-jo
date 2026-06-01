@@ -91,6 +91,17 @@ export const FAZAA_CATEGORIES: FazaaCategory[] = [
 
 export const FAZAA_URGENCY_OPTIONS: FazaaUrgency[] = ["حرجة", "عاجلة اليوم", "عادية"];
 
+// "عاجلة اليوم" تنتهي تلقائياً بعد 24 ساعة من النشر
+export function isFazaaExpired(req: Pick<FazaaRequest, "urgency" | "created_at">): boolean {
+  if (req.urgency !== "عاجلة اليوم") return false;
+  const ageMs = Date.now() - new Date(req.created_at).getTime();
+  return ageMs > 24 * 60 * 60 * 1000;
+}
+
+export function filterActiveFeed(items: FazaaRequest[]): FazaaRequest[] {
+  return items.filter((r) => r.status === "active" && !isFazaaExpired(r));
+}
+
 export async function fetchFeed(): Promise<FazaaRequest[]> {
   const { data, error } = await supabase
     .from("fazaa_requests")
@@ -99,6 +110,79 @@ export async function fetchFeed(): Promise<FazaaRequest[]> {
   if (error) throw error;
   return (data ?? []) as FazaaRequest[];
 }
+
+// ---------- AI category/urgency suggestion ----------
+export interface FazaaSuggestion {
+  category: FazaaCategory;
+  urgency: FazaaUrgency;
+}
+
+export async function suggestFazaaTags(need: string): Promise<FazaaSuggestion | null> {
+  if (!need || need.trim().length < 5) return null;
+  const system = `أنت مصنّف لطلبات مساعدة مجتمعية في الأردن (تطبيق "فزعة").
+- صنّف الطلب إلى فئة واحدة من: ${FAZAA_CATEGORIES.join("، ")}.
+- صنّف درجة الاستعجال إلى واحدة من: حرجة، عاجلة اليوم، عادية.
+- "حرجة" = خطر على حياة أو صحة فورية (نزيف، حادث، مريض حرج، حريق).
+- "عاجلة اليوم" = يحتاج خلال ساعات (دواء اليوم، توصيل لمطار قريب، تعطل سيارة).
+- "عادية" = يمكن تأجيله أيام (مشتريات، مساعدة دراسية، خدمة غير طارئة) — هذا هو الافتراضي إذا لم يكن واضحاً.
+أعِد JSON فقط بهذا الشكل بدون أي شرح:
+{"category":"...","urgency":"..."}`;
+  try {
+    const { data, error } = await supabase.functions.invoke("ai", {
+      body: { system, prompt: need.trim() },
+    });
+    if (error || !data?.text) return null;
+    const raw = String(data.text).trim();
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    const parsed = JSON.parse(match[0]) as Partial<FazaaSuggestion>;
+    if (!parsed.category || !parsed.urgency) return null;
+    const category = (FAZAA_CATEGORIES as readonly string[]).includes(parsed.category)
+      ? (parsed.category as FazaaCategory)
+      : "أخرى";
+    const urgency = (FAZAA_URGENCY_OPTIONS as readonly string[]).includes(parsed.urgency)
+      ? (parsed.urgency as FazaaUrgency)
+      : "عادية";
+    return { category, urgency };
+  } catch {
+    return null;
+  }
+}
+
+// ---------- Avatar upload (compressed client-side) ----------
+async function compressImage(file: File, maxDim = 400, quality = 0.82): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+  const w = Math.round(bitmap.width * scale);
+  const h = Math.round(bitmap.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas not supported");
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  return await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("compression failed"))), "image/jpeg", quality);
+  });
+}
+
+export async function uploadAvatar(userId: string, file: File): Promise<string> {
+  const blob = await compressImage(file, 400, 0.82);
+  const path = `${userId}/avatar.jpg`;
+  const { error: upErr } = await supabase.storage
+    .from("avatars")
+    .upload(path, blob, { upsert: true, contentType: "image/jpeg", cacheControl: "3600" });
+  if (upErr) throw upErr;
+  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+  const url = `${data.publicUrl}?v=${Date.now()}`; // cache-bust
+  const { error: profErr } = await supabase
+    .from("profiles")
+    .update({ avatar_url: url })
+    .eq("id", userId);
+  if (profErr) throw profErr;
+  return url;
+}
+
 
 export async function createRequest(
   userId: string,
