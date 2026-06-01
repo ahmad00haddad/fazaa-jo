@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
-import { Award, Bell, ClipboardList, Crown, LogOut, Phone, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
+import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified } from "@/lib/fazaa";
+import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified, uploadAvatar } from "@/lib/fazaa";
 import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 import { requestNotificationPermission } from "@/hooks/useRealtimeFazaa";
 
@@ -17,6 +17,8 @@ export default function Me() {
   const [city, setCity] = useState(profile?.city ?? "");
   const [phone, setPhone] = useState(profile?.phone ?? "");
   const [completed, setCompleted] = useState<number>(0);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) fetchUserCompletedCount(user.id).then(setCompleted);
@@ -59,21 +61,44 @@ export default function Me() {
       return;
     }
     const normalized = normalizeJordanPhone(newPhone);
-    const phoneChanged = normalized !== (profile?.phone ?? "");
     setBusy(true);
     try {
-      const updates: { city: string | null; phone: string; phone_verified?: boolean } = { city: city || null, phone: normalized };
-      if (phoneChanged) updates.phone_verified = false;
-      const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ city: city || null, phone: normalized })
+        .eq("id", user.id);
       if (error) throw error;
       await refreshProfile();
       setEditing(false);
-      toast.success(phoneChanged ? "تم الحفظ — أعد تأكيد رقمك الجديد" : "تم الحفظ");
-      if (phoneChanged) nav("/complete-profile");
+      toast.success("تم الحفظ");
     } catch (e: any) {
       toast.error(e?.message ?? "تعذر الحفظ");
     } finally {
       setBusy(false);
+    }
+  };
+
+  const onAvatarPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("اختر صورة فقط");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error("الصورة كبيرة جداً (الحد 8MB قبل الضغط)");
+      return;
+    }
+    setAvatarUploading(true);
+    try {
+      await uploadAvatar(user.id, file);
+      await refreshProfile();
+      toast.success("تم تحديث صورتك");
+    } catch (err: any) {
+      toast.error(err?.message ?? "تعذر رفع الصورة");
+    } finally {
+      setAvatarUploading(false);
     }
   };
 
@@ -85,20 +110,44 @@ export default function Me() {
       <div className="p-4 space-y-3">
         <section className="rounded-3xl bg-card shadow-card p-4">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-              <UserIcon className="w-6 h-6" />
-            </div>
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={avatarUploading}
+              className="relative w-16 h-16 rounded-2xl overflow-hidden bg-primary/10 text-primary flex items-center justify-center shrink-0 group"
+              aria-label="تغيير الصورة الشخصية"
+            >
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="صورتي" className="w-full h-full object-cover" />
+              ) : (
+                <UserIcon className="w-7 h-7" />
+              )}
+              <span className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                {avatarUploading ? (
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-5 h-5 text-white" />
+                )}
+              </span>
+              {avatarUploading && (
+                <span className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                </span>
+              )}
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={onAvatarPick}
+            />
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="font-display font-extrabold">{profile?.name ?? "—"}</div>
                 {profile?.verified && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-1 text-[11px] font-semibold">
                     <ShieldCheck className="w-3 h-3" /> موثّق
-                  </span>
-                )}
-                {profile?.phone_verified && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 text-emerald-700 px-2 py-1 text-[11px] font-semibold">
-                    <Phone className="w-3 h-3" /> رقم مؤكد
                   </span>
                 )}
                 {isVerifiedHelper && (
@@ -108,6 +157,13 @@ export default function Me() {
                 )}
               </div>
               <div className="text-xs text-muted-foreground mt-1" dir="ltr">{user?.email}</div>
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="text-[11px] text-primary mt-1 font-semibold"
+              >
+                {profile?.avatar_url ? "تغيير الصورة" : "إضافة صورة شخصية"}
+              </button>
             </div>
           </div>
           <div className="mt-4 rounded-2xl gradient-hero p-4 text-primary-foreground flex items-center justify-between">
@@ -129,7 +185,9 @@ export default function Me() {
             <div className="mt-4 grid gap-2 text-sm">
               <div className="rounded-2xl bg-secondary px-4 py-3 flex items-center justify-between">
                 <span className="text-muted-foreground">الهاتف</span>
-                <span dir="ltr" className="font-semibold">{profile?.phone ? formatJordanPhoneDisplay(profile.phone) : "—"}</span>
+                <span dir="ltr" className="font-semibold">
+                  {profile?.phone ? formatJordanPhoneDisplay(profile.phone) : "—"}
+                </span>
               </div>
               <div className="rounded-2xl bg-secondary px-4 py-3 flex items-center justify-between">
                 <span className="text-muted-foreground">المدينة</span>
@@ -234,18 +292,6 @@ export default function Me() {
             <h2 className="font-display text-sm font-extrabold">خصوصيتك محمية</h2>
             <p className="text-sm text-muted-foreground mt-1 leading-6">
               رقم هاتفك مخفي تماماً. فقط صاحب الفزعة يرى رقم من قبل استجابته، وصاحب الفزعة هو من يبادر بالتواصل. الفزعات المعلّمة "للبنات فقط" لا يستطيع الذكور الاستجابة لها.
-            </p>
-          </div>
-        </section>
-
-        <section className="rounded-3xl bg-card shadow-card p-4 flex items-start gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-            <Phone className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="font-display text-sm font-extrabold">كيف تعمل الاستجابة</h2>
-            <p className="text-sm text-muted-foreground mt-1 leading-6">
-              عندما ترى فزعة، اضغط "أنا جاهز للمساعدة". لن يظهر رقمك للعموم. صاحب الفزعة يرى استجابتك، يقبلها أو يرفضها، ثم يتواصل معك مباشرة.
             </p>
           </div>
         </section>
