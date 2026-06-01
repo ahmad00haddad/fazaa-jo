@@ -628,11 +628,28 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
           </div>
           <textarea
             value={form.need}
-            onChange={(e) => update("need", e.target.value)}
+            onChange={(e) => {
+              update("need", e.target.value);
+              if (suggested) setSuggested(false);
+            }}
             placeholder="اكتب حاجتك: ماذا تحتاج؟ متى؟ ومن أين؟"
             rows={4}
             className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none resize-none focus:ring-2 focus:ring-primary"
           />
+          <button
+            type="button"
+            onClick={runSuggest}
+            disabled={suggesting || form.need.trim().length < 5}
+            className="w-full rounded-2xl bg-accent/10 text-accent py-2.5 text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <Sparkles className="w-4 h-4" />
+            {suggesting
+              ? "جارٍ الاقتراح..."
+              : suggested
+              ? `✓ اقتراح ذكي: ${form.category} · ${form.urgency} (يمكن تعديله)`
+              : "اقتراح التصنيف والاستعجال بالذكاء الاصطناعي"}
+          </button>
+
           <div className="grid grid-cols-[1fr_auto] gap-2">
             <input
               value={form.location ?? ""}
