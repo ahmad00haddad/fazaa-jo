@@ -168,6 +168,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           city: string | null
           created_at: string
           gender: string
@@ -180,6 +181,7 @@ export type Database = {
           verified: boolean
         }
         Insert: {
+          avatar_url?: string | null
           city?: string | null
           created_at?: string
           gender: string
@@ -192,6 +194,7 @@ export type Database = {
           verified?: boolean
         }
         Update: {
+          avatar_url?: string | null
           city?: string | null
           created_at?: string
           gender?: string

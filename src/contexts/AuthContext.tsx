@@ -11,6 +11,7 @@ export interface Profile {
   city: string | null;
   points: number;
   phone_verified: boolean;
+  avatar_url: string | null;
 }
 
 interface AuthContextValue {

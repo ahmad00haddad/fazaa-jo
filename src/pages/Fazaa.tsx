@@ -17,7 +17,9 @@ import {
   fetchResponderPhone,
   fetchResponsesForRequest,
   formatTimeAgo,
+  isFazaaExpired,
   offerHelp,
+  suggestFazaaTags,
   updateRequestStatus,
   urgencyVariant,
   type FazaaCategory,
@@ -26,6 +28,7 @@ import {
   type FazaaUrgency,
   type NewFazaaInput,
 } from "@/lib/fazaa";
+import { Sparkles } from "lucide-react";
 
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
@@ -37,7 +40,7 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 const initialForm: NewFazaaInput = {
   need: "",
   category: "أخرى",
-  urgency: "عاجلة اليوم",
+  urgency: "عادية", // الافتراضي: عادية (ليست عاجلة أو حرجة)
   location: "",
   female_only: false,
   city: null,
@@ -61,7 +64,9 @@ export default function Fazaa() {
   const refresh = async () => {
     try {
       const feed = await fetchFeed();
-      setItems(feed);
+      // أخفِ "العاجلة اليوم" التي تجاوزت 24 ساعة (تبقى طلبات صاحبها مرئية له)
+      const visible = feed.filter((r) => r.user_id === user?.id || !isFazaaExpired(r));
+      setItems(visible);
       const mine = feed.filter((r) => r.user_id === user?.id);
       const map: Record<string, FazaaResponse[]> = {};
       for (const req of mine) {
@@ -532,9 +537,32 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
   const { profile } = useAuth();
   const [form, setForm] = useState<NewFazaaInput>({ ...initialForm, city: profile?.city ?? null });
   const [locating, setLocating] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggested, setSuggested] = useState(false);
 
   const update = <K extends keyof NewFazaaInput>(k: K, v: NewFazaaInput[K]) =>
     setForm((c) => ({ ...c, [k]: v }));
+
+  const runSuggest = async () => {
+    if (suggesting) return;
+    if (form.need.trim().length < 5) {
+      toast.info("اكتب وصف الحاجة أولاً");
+      return;
+    }
+    setSuggesting(true);
+    try {
+      const s = await suggestFazaaTags(form.need);
+      if (s) {
+        setForm((c) => ({ ...c, category: s.category, urgency: s.urgency }));
+        setSuggested(true);
+        toast.success(`اقتراح: ${s.category} · ${s.urgency}`);
+      } else {
+        toast.error("تعذّر الاقتراح. اختر يدوياً.");
+      }
+    } finally {
+      setSuggesting(false);
+    }
+  };
 
   const canSubmit = form.need.trim().length > 0;
 
@@ -599,11 +627,28 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
           </div>
           <textarea
             value={form.need}
-            onChange={(e) => update("need", e.target.value)}
+            onChange={(e) => {
+              update("need", e.target.value);
+              if (suggested) setSuggested(false);
+            }}
             placeholder="اكتب حاجتك: ماذا تحتاج؟ متى؟ ومن أين؟"
             rows={4}
             className="w-full rounded-2xl bg-secondary px-4 py-3 text-sm outline-none resize-none focus:ring-2 focus:ring-primary"
           />
+          <button
+            type="button"
+            onClick={runSuggest}
+            disabled={suggesting || form.need.trim().length < 5}
+            className="w-full rounded-2xl bg-accent/10 text-accent py-2.5 text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <Sparkles className="w-4 h-4" />
+            {suggesting
+              ? "جارٍ الاقتراح..."
+              : suggested
+              ? `✓ اقتراح ذكي: ${form.category} · ${form.urgency} (يمكن تعديله)`
+              : "اقتراح التصنيف والاستعجال بالذكاء الاصطناعي"}
+          </button>
+
           <div className="grid grid-cols-[1fr_auto] gap-2">
             <input
               value={form.location ?? ""}

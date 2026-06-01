@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   fetchFeed,
+  filterActiveFeed,
   formatTimeAgo,
   urgencyVariant,
   fetchJordanStats,
@@ -35,7 +36,7 @@ export default function Home() {
 
   const loadAll = async () => {
     const [feed, s] = await Promise.all([fetchFeed(), fetchJordanStats()]);
-    setItems(feed);
+    setItems(filterActiveFeed(feed));
     setStats(s);
     if (user) setMyWatch(await fetchMyActiveWatch(user.id));
   };
