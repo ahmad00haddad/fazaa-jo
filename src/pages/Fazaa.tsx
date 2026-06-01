@@ -14,7 +14,7 @@ import {
   declineResponse,
   deleteRequest,
   fetchFeed,
-  filterActiveFeed,
+  fetchResponderPhone,
   fetchResponderPhone,
   fetchResponsesForRequest,
   formatTimeAgo,
