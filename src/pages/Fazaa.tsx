@@ -538,9 +538,32 @@ function RequestComposer({ onClose, onSubmit }: { onClose: () => void; onSubmit:
   const { profile } = useAuth();
   const [form, setForm] = useState<NewFazaaInput>({ ...initialForm, city: profile?.city ?? null });
   const [locating, setLocating] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggested, setSuggested] = useState(false);
 
   const update = <K extends keyof NewFazaaInput>(k: K, v: NewFazaaInput[K]) =>
     setForm((c) => ({ ...c, [k]: v }));
+
+  const runSuggest = async () => {
+    if (suggesting) return;
+    if (form.need.trim().length < 5) {
+      toast.info("اكتب وصف الحاجة أولاً");
+      return;
+    }
+    setSuggesting(true);
+    try {
+      const s = await suggestFazaaTags(form.need);
+      if (s) {
+        setForm((c) => ({ ...c, category: s.category, urgency: s.urgency }));
+        setSuggested(true);
+        toast.success(`اقتراح: ${s.category} · ${s.urgency}`);
+      } else {
+        toast.error("تعذّر الاقتراح. اختر يدوياً.");
+      }
+    } finally {
+      setSuggesting(false);
+    }
+  };
 
   const canSubmit = form.need.trim().length > 0;
 
