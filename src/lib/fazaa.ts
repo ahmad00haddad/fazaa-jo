@@ -273,13 +273,9 @@ export async function declineResponse(responseId: string) {
 }
 
 export async function fetchResponderPhone(responderId: string): Promise<string | null> {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("phone, name")
-    .eq("id", responderId)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("get_responder_phone", { _responder_id: responderId });
   if (error) return null;
-  return data?.phone ?? null;
+  return (data as string) ?? null;
 }
 
 // ---------- Area Watch ----------

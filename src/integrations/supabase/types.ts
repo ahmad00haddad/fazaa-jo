@@ -213,6 +213,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_my_phone: { Args: never; Returns: string }
+      get_responder_phone: { Args: { _responder_id: string }; Returns: string }
       get_user_gender: { Args: { _user_id: string }; Returns: string }
       is_request_owner: {
         Args: { _request_id: string; _user_id: string }
