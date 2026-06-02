@@ -32,8 +32,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadProfile = async (uid: string) => {
-    const { data } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
-    if (data) setProfile(data as Profile);
+    const { data } = await supabase
+      .from("profiles")
+      .select("id,name,gender,city,verified,points,phone_verified,avatar_url")
+      .eq("id", uid)
+      .maybeSingle();
+    if (data) {
+      const { data: phoneData } = await supabase.rpc("get_my_phone");
+      setProfile({ ...(data as any), phone: (phoneData as string) ?? "" } as Profile);
+    }
   };
 
   useEffect(() => {
