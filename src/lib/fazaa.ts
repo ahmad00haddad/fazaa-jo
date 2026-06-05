@@ -98,8 +98,19 @@ export function isFazaaExpired(req: Pick<FazaaRequest, "urgency" | "created_at">
   return ageMs > 24 * 60 * 60 * 1000;
 }
 
-export function filterActiveFeed(items: FazaaRequest[]): FazaaRequest[] {
-  return items.filter((r) => r.status === "active" && !isFazaaExpired(r));
+export function filterActiveFeed(
+  items: FazaaRequest[],
+  opts?: { viewerGender?: string | null; viewerId?: string | null },
+): FazaaRequest[] {
+  const gender = opts?.viewerGender ?? null;
+  const viewerId = opts?.viewerId ?? null;
+  return items.filter((r) => {
+    if (r.status !== "active") return false;
+    if (isFazaaExpired(r)) return false;
+    // Hide female-only requests from non-female viewers (owner still sees own)
+    if (r.female_only && gender !== "female" && r.user_id !== viewerId) return false;
+    return true;
+  });
 }
 
 export async function fetchFeed(): Promise<FazaaRequest[]> {

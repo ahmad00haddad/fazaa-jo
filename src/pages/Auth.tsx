@@ -47,7 +47,7 @@ export default function Auth() {
           return;
         }
         const normalizedPhone = normalizeJordanPhone(phone);
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
@@ -56,8 +56,13 @@ export default function Auth() {
           },
         });
         if (error) throw error;
-        toast.success("تم إنشاء الحساب");
-        nav("/", { replace: true });
+        if (!data.session) {
+          toast.success("تم إنشاء الحساب. تحقق من بريدك لتأكيد الحساب ثم سجّل الدخول.");
+          setMode("login");
+        } else {
+          toast.success("تم إنشاء الحساب");
+          nav("/", { replace: true });
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
