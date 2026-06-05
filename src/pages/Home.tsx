@@ -17,6 +17,7 @@ import {
   type JordanStats,
   type AreaWatcher,
 } from "@/lib/fazaa";
+import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
