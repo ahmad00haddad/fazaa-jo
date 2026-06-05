@@ -36,14 +36,18 @@ export default function Home() {
 
   const loadAll = async () => {
     const [feed, s] = await Promise.all([fetchFeed(), fetchJordanStats()]);
-    setItems(filterActiveFeed(feed));
+    setItems(filterActiveFeed(feed, { viewerGender: profile?.gender, viewerId: user?.id }));
     setStats(s);
     if (user) setMyWatch(await fetchMyActiveWatch(user.id));
   };
 
   useEffect(() => {
     loadAll().finally(() => setLoading(false));
-  }, [user?.id]);
+  }, [user?.id, profile?.gender]);
+
+  useRealtimeFazaa((req) => {
+    setItems((prev) => (prev.find((p) => p.id === req.id) ? prev : [req, ...prev]));
+  });
 
   useEffect(() => {
     if (profile?.city && !myWatch) setWatchCity(profile.city);
