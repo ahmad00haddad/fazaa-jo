@@ -65,7 +65,13 @@ export default function Fazaa() {
     try {
       const feed = await fetchFeed();
       // أخفِ "العاجلة اليوم" التي تجاوزت 24 ساعة (تبقى طلبات صاحبها مرئية له)
-      const visible = feed.filter((r) => r.user_id === user?.id || !isFazaaExpired(r));
+      // وأخفِ "للبنات فقط" عن الذكور (إلا إذا كانت طلب نفس المستخدم)
+      const visible = feed.filter((r) => {
+        if (r.user_id === user?.id) return true;
+        if (isFazaaExpired(r)) return false;
+        if (r.female_only && profile?.gender !== "female") return false;
+        return true;
+      });
       setItems(visible);
       const mine = feed.filter((r) => r.user_id === user?.id);
       const map: Record<string, FazaaResponse[]> = {};
@@ -82,7 +88,11 @@ export default function Fazaa() {
 
   useEffect(() => {
     refresh();
-  }, [user?.id]);
+  }, [user?.id, profile?.gender]);
+
+  useRealtimeFazaa((req) => {
+    setItems((prev) => (prev.find((p) => p.id === req.id) ? prev : [req, ...prev]));
+  });
 
   const myItems = useMemo(
     () => items.filter((i) => i.user_id === user?.id && i.status === "active"),
