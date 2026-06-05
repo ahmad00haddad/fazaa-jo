@@ -29,6 +29,7 @@ import {
   type NewFazaaInput,
 } from "@/lib/fazaa";
 import { Sparkles } from "lucide-react";
+import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
