@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified, uploadAvatar } from "@/lib/fazaa";
 import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 import { requestNotificationPermission } from "@/hooks/useRealtimeFazaa";
+import InstallPWAButton from "@/components/InstallPWAButton";
 
 export default function Me() {
   const { profile, user, signOut, refreshProfile } = useAuth();
