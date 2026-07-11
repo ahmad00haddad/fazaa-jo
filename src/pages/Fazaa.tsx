@@ -68,8 +68,10 @@ export default function Fazaa() {
       // أخفِ "العاجلة اليوم" التي تجاوزت 24 ساعة (تبقى طلبات صاحبها مرئية له)
       // وأخفِ "للبنات فقط" عن الذكور (إلا إذا كانت طلب نفس المستخدم)
       const visible = feed.filter((r) => {
-        if (r.user_id === user?.id) return true;
+        // المنتهية (عاجلة اليوم > 24 ساعة) تُخفى عن الجميع بما فيهم صاحبها — تبقى في "السجل"
         if (isFazaaExpired(r)) return false;
+        if (r.status !== "active") return false;
+        if (r.user_id === user?.id) return true;
         if (r.female_only && profile?.gender !== "female") return false;
         return true;
       });
