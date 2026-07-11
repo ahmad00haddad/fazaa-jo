@@ -15,7 +15,7 @@ export function useRealtimeFazaa(onNew?: (req: FazaaRequest) => void) {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel("fazaa_requests_feed")
+      .channel(`fazaa_requests_feed_${user.id}_${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "fazaa_requests" },
