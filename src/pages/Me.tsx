@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified, uploadAvatar } from "@/lib/fazaa";
 import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 import { requestNotificationPermission } from "@/hooks/useRealtimeFazaa";
+import InstallPWAButton from "@/components/InstallPWAButton";
 
 export default function Me() {
   const { profile, user, signOut, refreshProfile } = useAuth();
@@ -265,6 +266,9 @@ export default function Me() {
           <Bell className="w-4 h-4" />
           تفعيل الإشعارات الفورية للفزعات الجديدة
         </button>
+
+        <InstallPWAButton />
+
 
         <button
           type="button"
