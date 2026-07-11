@@ -1,0 +1,19 @@
+{
+  "name": "فزعة - Fazaa",
+  "short_name": "فزعة",
+  "description": "مساعدة فورية بين الناس في الأردن",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#5e2ca5",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["social", "lifestyle", "utilities"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
