@@ -267,6 +267,9 @@ export default function Me() {
           تفعيل الإشعارات الفورية للفزعات الجديدة
         </button>
 
+        <InstallPWAButton />
+
+
         <button
           type="button"
           onClick={() => nav("/leaderboard")}
