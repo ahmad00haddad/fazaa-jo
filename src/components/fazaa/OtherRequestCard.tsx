@@ -128,6 +128,8 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
           <Share2 className="w-4 h-4" />
         </button>
       </div>
+        </>
+      )}
     </article>
   );
 }
