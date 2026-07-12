@@ -139,6 +139,36 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       phone_verifications: {
         Row: {
           code: string
@@ -226,6 +256,41 @@ export type Database = {
         }
         Relationships: []
       }
+      user_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rater_id: string
+          rating: number
+          request_id: string
+          responder_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rater_id: string
+          rating: number
+          request_id: string
+          responder_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rater_id?: string
+          rating?: number
+          request_id?: string
+          responder_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_ratings_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "fazaa_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -263,6 +328,17 @@ export type Database = {
         }[]
       }
       normalize_jordan_phone: { Args: { p: string }; Returns: string }
+      offer_help_rpc: {
+        Args: {
+          p_message: string
+          p_offered_price_jod: number
+          p_request_id: string
+          p_request_owner_id: string
+          p_responder_id: string
+          p_responder_name: string
+        }
+        Returns: undefined
+      }
       request_is_female_only: {
         Args: { _request_id: string }
         Returns: boolean
