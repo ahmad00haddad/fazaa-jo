@@ -62,11 +62,13 @@ export default function CompleteProfile() {
         .upsert({
           id: user.id,
           name: name.trim(),
-          phone: normalized,
           gender,
-          phone_verified: true, // الصيغة الأردنية صحيحة
         });
       if (error) throw error;
+      const { error: pErr } = await (supabase as any)
+        .from("user_private_data")
+        .upsert({ user_id: user.id, phone: normalized, phone_verified: true }, { onConflict: "user_id" });
+      if (pErr) throw pErr;
       await refreshProfile();
       toast.success("تم حفظ بياناتك");
       nav("/", { replace: true });

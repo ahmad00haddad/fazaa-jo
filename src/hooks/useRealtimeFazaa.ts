@@ -5,17 +5,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { isFazaaExpired, type FazaaRequest } from "@/lib/fazaa";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function useRealtimeFazaa() {
+export function useRealtimeFazaa(_onUpdate?: () => void) {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!user) return;
+    const city = profile?.city ?? "عمّان";
     const channel = supabase
       .channel(`fazaa_global_${user.id}_${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "fazaa_requests" },
+        { event: "*", schema: "public", table: "fazaa_requests", filter: `city=eq.${city}` },
         (payload) => {
           queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
           queryClient.invalidateQueries({ queryKey: ['active_feed_stats'] });
