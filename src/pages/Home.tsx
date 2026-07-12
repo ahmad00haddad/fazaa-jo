@@ -18,6 +18,8 @@ import {
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 import { FazaaMap } from "@/components/fazaa/FazaaMap";
+import { Bell } from "lucide-react";
+import InstallPWAButton from "@/components/InstallPWAButton";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -97,13 +99,23 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <button
-              onClick={() => nav("/chat")}
-              className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center"
-              aria-label="المساعد"
-            >
-              <MessageCircleMore className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <InstallPWAButton />
+              <button
+                onClick={() => nav("/chat")}
+                className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center"
+                aria-label="المساعد"
+              >
+                <MessageCircleMore className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => nav("/me")}
+                className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center relative"
+              >
+                <Bell className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </header>

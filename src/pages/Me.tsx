@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
-import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck, Trophy, User as UserIcon, Moon, Sun } from "lucide-react";
+import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck, Trophy, User as UserIcon, Moon, Sun, Settings, Share2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -292,6 +292,23 @@ export default function Me() {
 
         <InstallPWAButton />
 
+        <button
+          type="button"
+          onClick={() => {
+            const text = "حمل تطبيق فزعة الأردن وكن جزءاً من مجتمع الخير والمساعدة المتبادلة!";
+            const url = window.location.origin;
+            if (navigator.share) {
+              navigator.share({ title: "تطبيق فزعة", text, url });
+            } else {
+              navigator.clipboard.writeText(`${text}\n${url}`);
+              toast.success("تم نسخ الرابط");
+            }
+          }}
+          className="w-full rounded-2xl bg-primary/10 text-primary py-3.5 font-semibold flex items-center justify-center gap-2"
+        >
+          <Share2 className="w-4 h-4" />
+          انشر التطبيق واكسب الأجر
+        </button>
 
         <button
           type="button"
