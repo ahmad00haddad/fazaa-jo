@@ -174,8 +174,6 @@ export type Database = {
           gender: string
           id: string
           name: string
-          phone: string
-          phone_verified: boolean
           points: number
           updated_at: string
           verified: boolean
@@ -187,8 +185,6 @@ export type Database = {
           gender: string
           id: string
           name: string
-          phone: string
-          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
@@ -200,11 +196,33 @@ export type Database = {
           gender?: string
           id?: string
           name?: string
-          phone?: string
-          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
+        }
+        Relationships: []
+      }
+      user_private_data: {
+        Row: {
+          created_at: string
+          phone: string
+          phone_verified: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          phone?: string
+          phone_verified?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          phone?: string
+          phone_verified?: boolean
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -213,7 +231,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_response_rpc: {
+        Args: {
+          p_request_id: string
+          p_responder_id: string
+          p_response_id: string
+        }
+        Returns: undefined
+      }
       active_watchers_count: { Args: never; Returns: number }
+      confirm_fazaa_completion: {
+        Args: { p_request_id: string }
+        Returns: undefined
+      }
       expire_urgent_fazaa_requests: { Args: never; Returns: number }
       get_my_phone: { Args: never; Returns: string }
       get_responder_phone: { Args: { _responder_id: string }; Returns: string }
@@ -236,6 +266,10 @@ export type Database = {
       request_is_female_only: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      submit_rating: {
+        Args: { p_rating: number; p_request_id: string; p_responder_id: string }
+        Returns: undefined
       }
       user_completed_count: { Args: { _user_id: string }; Returns: number }
       weekly_leaderboard: {
