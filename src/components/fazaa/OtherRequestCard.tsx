@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, UserCheck, HandCoins } from "lucide-react";
+import { MapPin, UserCheck, HandCoins, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { buildMapsUrl, formatTimeAgo, FazaaRequest, urgencyVariant } from "@/lib/fazaa";
 import { badgeClass } from "./utils";
@@ -104,9 +104,22 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
         </div>
       )}
 
-      <p className="text-[11px] text-muted-foreground mt-2 text-center">
-        الدفع كاش بينكما عند اللقاء. رقم صاحب الفزعة مخفي وهو من يتواصل معك إذا قبل.
-      </p>
+      <div className="flex items-center gap-2 mt-2">
+        <p className="flex-1 text-[11px] text-muted-foreground leading-snug">
+          الدفع كاش بينكما عند اللقاء. رقم صاحب الفزعة مخفي وهو من يتواصل معك إذا قبل.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            const text = `فزعة عاجلة (${item.category}): ${item.need}\nالمدينة: ${item.city || 'الأردن'}\nرابط التطبيق: ${window.location.origin}`;
+            if (navigator.share) navigator.share({ title: "فزعة عاجلة", text });
+            else { navigator.clipboard.writeText(text); toast.success("تم نسخ نص الفزعة"); }
+          }}
+          className="rounded-xl bg-secondary p-2 text-muted-foreground flex items-center justify-center transition-colors hover:text-foreground shrink-0"
+        >
+          <Share2 className="w-4 h-4" />
+        </button>
+      </div>
     </article>
   );
 }

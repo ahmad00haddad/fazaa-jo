@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {

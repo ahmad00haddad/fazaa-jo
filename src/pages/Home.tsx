@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff, Map as MapIcon, List } from "lucide-react";
+import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff, Map as MapIcon, List, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -274,9 +274,22 @@ function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void 
         </div>
         <span className="text-[11px] text-muted-foreground shrink-0">{formatTimeAgo(item.created_at)}</span>
       </div>
-      <div className="mt-3 rounded-xl bg-secondary py-2 text-xs font-semibold text-center flex items-center justify-center gap-2">
-        <UserCheck className="w-4 h-4" />
-        افتح للاستجابة
+      <div className="mt-3 flex gap-2">
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            const text = `فزعة عاجلة (${item.category}): ${item.need}\nالمدينة: ${item.city || 'الأردن'}\nرابط التطبيق: ${window.location.origin}`;
+            if (navigator.share) navigator.share({ title: "فزعة عاجلة", text });
+            else { navigator.clipboard.writeText(text); toast.success("تم نسخ نص الفزعة"); }
+          }}
+          className="rounded-xl bg-secondary py-2 px-3 text-muted-foreground flex items-center justify-center transition-colors hover:text-foreground"
+        >
+          <Share2 className="w-4 h-4" />
+        </button>
+        <div className="flex-1 rounded-xl bg-primary/10 text-primary py-2 text-xs font-bold text-center flex items-center justify-center gap-2">
+          <UserCheck className="w-4 h-4" />
+          افتح للاستجابة
+        </div>
       </div>
     </button>
   );

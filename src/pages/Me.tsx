@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
-import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck, Trophy, User as UserIcon } from "lucide-react";
+import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck, Trophy, User as UserIcon, Moon, Sun } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +20,7 @@ export default function Me() {
   const [completed, setCompleted] = useState<number>(0);
   const [rating, setRating] = useState<{ average: number, count: number } | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -109,9 +110,20 @@ export default function Me() {
 
   const isVerifiedHelper = completed >= VERIFIED_HELPER_THRESHOLD;
 
+  const toggleTheme = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    setIsDarkMode(isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  };
+
   return (
     <div className="animate-fade-in pb-28">
-      <PageHeader title="حسابي" back={false} />
+      <div className="flex items-center justify-between safe-top px-4 pt-4 pb-2 border-b border-border bg-background sticky top-0 z-20">
+        <h1 className="font-display text-xl font-extrabold">حسابي</h1>
+        <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+          {isDarkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5" />}
+        </button>
+      </div>
       <div className="p-4 space-y-3">
         <section className="rounded-3xl bg-card shadow-card p-4">
           <div className="flex items-center gap-3">
