@@ -46,8 +46,8 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
       {item.status !== "active" ? (
         <div className="mt-4 rounded-2xl bg-secondary py-3 px-4 text-center text-sm text-muted-foreground">
           {item.status === "in_progress"
-            ? "هذه الفزعة قيد التنفيذ الآن"
-            : "هذه الفزعة انتهت"}
+            ? "هذه الفزعة قيد التنفيذ حالياً"
+            : "انتهت صلاحية هذه الفزعة"}
         </div>
       ) : (
         <>

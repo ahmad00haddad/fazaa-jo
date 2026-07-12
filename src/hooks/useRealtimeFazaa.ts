@@ -57,7 +57,7 @@ export function useRealtimeFazaa(_onUpdate?: () => void) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id, profile?.gender, queryClient]);
+  }, [user?.id, profile?.gender, profile?.city, queryClient]);
 }
 
 export async function requestNotificationPermission(): Promise<NotificationPermission> {

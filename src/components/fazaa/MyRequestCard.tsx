@@ -1,5 +1,7 @@
 import { MapPin, CheckCircle2, Trash2, PlayCircle, XCircle } from "lucide-react";
-import { buildMapsUrl, formatTimeAgo, FazaaRequest, FazaaResponse, urgencyVariant } from "@/lib/fazaa";
+import { buildMapsUrl, formatTimeAgo, FazaaRequest, FazaaResponse, urgencyVariant, confirmFazaaCompletion } from "@/lib/fazaa";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { badgeClass } from "./utils";
 import { MetaBadges } from "./MetaBadges";
 import { ResponseRow } from "./ResponseRow";
@@ -23,6 +25,7 @@ export function MyRequestCard({
   onAccept: (rid: string, responderId: string) => void;
   onDecline: (rid: string) => void;
 }) {
+  const queryClient = useQueryClient();
   const mapsUrl = buildMapsUrl(item);
   const urgencyClass = badgeClass(urgencyVariant(item.urgency));
   const isInProgress = item.status === "in_progress";
@@ -92,7 +95,16 @@ export function MyRequestCard({
         <div className="grid grid-cols-2 gap-2 mt-3">
           <button
             type="button"
-            onClick={onComplete}
+            onClick={async () => {
+              try {
+                await confirmFazaaCompletion(item.id);
+                toast.success("تم تأكيد إتمام الفزعة بنجاح");
+                queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
+                queryClient.invalidateQueries({ queryKey: ['my_requests_history'] });
+              } catch (error: any) {
+                toast.error(error.message);
+              }
+            }}
             className="rounded-2xl bg-primary text-primary-foreground py-3 text-sm font-bold"
           >
             <CheckCircle2 className="w-4 h-4 mx-auto mb-1" />

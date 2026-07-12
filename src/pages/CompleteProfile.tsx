@@ -57,18 +57,12 @@ export default function CompleteProfile() {
     if (!phoneValid) return toast.error("أدخل رقماً أردنياً صحيحاً (مثال: 0791234567)");
     setBusy(true);
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id,
-          name: name.trim(),
-          gender,
-        });
+      const { error } = await supabase.rpc("complete_my_profile", {
+        p_name: name.trim(),
+        p_gender: gender,
+        p_phone: normalized
+      });
       if (error) throw error;
-      const { error: pErr } = await (supabase as any)
-        .from("user_private_data")
-        .upsert({ user_id: user.id, phone: normalized, phone_verified: true }, { onConflict: "user_id" });
-      if (pErr) throw pErr;
       await refreshProfile();
       toast.success("تم حفظ بياناتك");
       nav("/", { replace: true });
