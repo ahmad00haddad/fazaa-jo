@@ -86,7 +86,7 @@ export default function Services() {
       return;
     }
     try {
-      await offerHelp(req.id, user.id, profile.name, "أنا جاهز للمساعدة");
+      await offerHelp(req.id, req.user_id, user.id, profile.name, "أنا جاهز للمساعدة");
       toast.success("تم إرسال استجابتك. سيتواصل معك صاحب الفزعة عند القبول");
     } catch (e: any) {
       if (e?.code === "23505") toast.info("سبق وأرسلت استجابة لهذا الطلب");

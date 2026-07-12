@@ -20,7 +20,7 @@ export function MyRequestCard({
   onToggle: () => void;
   onDelete: () => void;
   onComplete: () => void;
-  onAccept: (rid: string) => void;
+  onAccept: (rid: string, responderId: string) => void;
   onDecline: (rid: string) => void;
 }) {
   const mapsUrl = buildMapsUrl(item);
@@ -66,7 +66,7 @@ export function MyRequestCard({
               key={r.id}
               response={r}
               requestName={item.requester_name}
-              onAccept={() => onAccept(r.id)}
+              onAccept={() => onAccept(r.id, r.responder_id)}
               onDecline={() => onDecline(r.id)}
             />
           ))}

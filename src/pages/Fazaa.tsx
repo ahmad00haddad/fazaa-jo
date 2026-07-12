@@ -13,6 +13,7 @@ import {
   offerHelp,
   updateRequestStatus,
   isFazaaExpired,
+  submitRating,
   type NewFazaaInput,
   type FazaaRequest,
   type FazaaResponse
@@ -23,12 +24,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { OtherRequestCard } from "@/components/fazaa/OtherRequestCard";
 import { MyRequestCard } from "@/components/fazaa/MyRequestCard";
 import { RequestComposer } from "@/components/fazaa/RequestComposer";
+import { RatingModal } from "@/components/fazaa/RatingModal";
 
 export default function Fazaa() {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const [showComposer, setShowComposer] = useState(false);
   const [openResponses, setOpenResponses] = useState<string | null>(null);
+  const [ratingRequest, setRatingRequest] = useState<{ reqId: string, responderId: string, responderName: string } | null>(null);
 
   const { data: feed = [], isLoading } = useQuery({
     queryKey: ['fazaa_feed'],
@@ -93,6 +96,21 @@ export default function Fazaa() {
       queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
     },
     onError: (e: any) => toast.error(e?.message ?? "تعذر الإغلاق")
+  });
+
+  const submitRatingMutation = useMutation({
+    mutationFn: async (rating: number) => {
+      if (!ratingRequest || !user) return;
+      if (rating > 0) {
+        await submitRating(ratingRequest.reqId, user.id, ratingRequest.responderId, rating).catch(() => {});
+      }
+      await completeMutation.mutateAsync(ratingRequest.reqId);
+    },
+    onSuccess: () => {
+      toast.success("تم إغلاق الفزعة، شكراً لك!");
+      setRatingRequest(null);
+      queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
+    }
   });
 
   const offerMutation = useMutation({
@@ -161,19 +179,36 @@ export default function Fazaa() {
         {!isLoading && myItems.length > 0 && (
           <section className="space-y-3">
             <h3 className="font-display font-bold text-sm px-1">طلباتي ({myItems.length})</h3>
-            {myItems.map((item) => (
-              <MyRequestCard
-                key={item.id}
-                item={item}
-                responses={responsesByRequest[item.id] ?? []}
-                open={openResponses === item.id}
-                onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
-                onDelete={() => handleDelete(item.id)}
-                onComplete={() => completeMutation.mutate(item.id)}
-                onAccept={(rid) => acceptMutation.mutate({ rid, reqId: item.id })}
-                onDecline={(rid) => declineMutation.mutate(rid)}
-              />
-            ))}
+            {myItems.map((item) => {
+              const responses = responsesByRequest[item.id] ?? [];
+              const accepted = responses.find(r => r.accepted);
+              
+              const handleCompleteClick = () => {
+                if (accepted) {
+                  setRatingRequest({ 
+                    reqId: item.id, 
+                    responderId: accepted.responder_id, 
+                    responderName: accepted.responder_name 
+                  });
+                } else {
+                  completeMutation.mutate(item.id);
+                }
+              };
+
+              return (
+                <MyRequestCard
+                  key={item.id}
+                  item={item}
+                  responses={responses}
+                  open={openResponses === item.id}
+                  onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
+                  onDelete={() => handleDelete(item.id)}
+                  onComplete={handleCompleteClick}
+                  onAccept={(rid, responderId) => acceptMutation.mutate({ rid, reqId: item.id, respId: responderId })}
+                  onDecline={(rid) => declineMutation.mutate(rid)}
+                />
+              );
+            })}
           </section>
         )}
 
@@ -193,6 +228,14 @@ export default function Fazaa() {
       </div>
 
       {showComposer && <RequestComposer onClose={() => setShowComposer(false)} onSubmit={(payload) => createMutation.mutate(payload)} />}
+
+      <RatingModal
+        isOpen={!!ratingRequest}
+        responderName={ratingRequest?.responderName || ""}
+        loading={submitRatingMutation.isPending}
+        onClose={() => setRatingRequest(null)}
+        onSubmit={(rating) => submitRatingMutation.mutate(rating)}
+      />
     </div>
   );
 }

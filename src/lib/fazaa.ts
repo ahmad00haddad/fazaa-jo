@@ -63,6 +63,54 @@ export interface FazaaResponse {
   offered_price_jod: number | null;
 }
 
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  body: string;
+  link: string | null;
+  read: boolean;
+  created_at: string;
+}
+
+export async function fetchNotifications(userId: string): Promise<Notification[]> {
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(30);
+  if (error) return [];
+  return data as Notification[];
+}
+
+export async function markNotificationRead(id: string) {
+  await supabase.from("notifications").update({ read: true }).eq("id", id).catch(() => {});
+}
+
+export async function markAllNotificationsRead(userId: string) {
+  await supabase.from("notifications").update({ read: true }).eq("user_id", userId).eq("read", false).catch(() => {});
+}
+
+export async function sendNotification(userId: string, title: string, body: string, link?: string) {
+  await supabase.from("notifications").insert({
+    user_id: userId,
+    title,
+    body,
+    link: link ?? null,
+  }).catch(() => {});
+}
+
+export async function submitRating(requestId: string, raterId: string, responderId: string, rating: number) {
+  const { error } = await supabase.from("user_ratings").insert({
+    request_id: requestId,
+    rater_id: raterId,
+    responder_id: responderId,
+    rating,
+  });
+  if (error) throw error;
+}
+
 export interface NewFazaaInput {
   need: string;
   category: FazaaCategory;
@@ -247,6 +295,7 @@ export async function updateRequestStatus(id: string, status: FazaaStatus) {
 
 export async function offerHelp(
   requestId: string,
+  requestOwnerId: string,
   responderId: string,
   responderName: string,
   message?: string,
@@ -260,6 +309,7 @@ export async function offerHelp(
     offered_price_jod: offeredPriceJod ?? null,
   });
   if (error) throw error;
+  await sendNotification(requestOwnerId, "فزعة جديدة!", `${responderName} عرض تقديم المساعدة في طلبك`, "/fazaa");
 }
 
 export async function fetchResponsesForRequest(requestId: string): Promise<FazaaResponse[]> {
@@ -282,7 +332,7 @@ export async function fetchMyResponses(userId: string) {
   return data ?? [];
 }
 
-export async function acceptResponse(responseId: string, requestId: string) {
+export async function acceptResponse(responseId: string, requestId: string, responderId: string) {
   const { error } = await supabase
     .from("fazaa_responses")
     .update({ accepted: true })
@@ -290,6 +340,7 @@ export async function acceptResponse(responseId: string, requestId: string) {
   if (error) throw error;
 
   await supabase.from("fazaa_requests").update({ status: "completed" }).eq("id", requestId);
+  await sendNotification(responderId, "تم قبول استجابتك!", "تم اختيارك لتقديم الفزعة، تواصل مع صاحب الطلب الآن", "/history");
 }
 
 export async function declineResponse(responseId: string) {

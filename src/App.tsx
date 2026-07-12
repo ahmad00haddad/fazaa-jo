@@ -20,6 +20,7 @@ const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const Me = lazy(() => import("./pages/Me"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Services = lazy(() => import("./pages/Services"));
+const Notifications = lazy(() => import("./pages/Notifications"));
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
                           <Route path="/me" element={<Me />} />
                           <Route path="/history" element={<History />} />
                           <Route path="/leaderboard" element={<Leaderboard />} />
+                          <Route path="/notifications" element={<Notifications />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </MobileLayout>
