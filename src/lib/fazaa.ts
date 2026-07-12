@@ -92,14 +92,7 @@ export async function markAllNotificationsRead(userId: string) {
   await supabase.from("notifications").update({ read: true }).eq("user_id", userId).eq("read", false).catch(() => {});
 }
 
-export async function sendNotification(userId: string, title: string, body: string, link?: string) {
-  await supabase.from("notifications").insert({
-    user_id: userId,
-    title,
-    body,
-    link: link ?? null,
-  }).catch(() => {});
-}
+
 
 export async function submitRating(requestId: string, raterId: string, responderId: string, rating: number) {
   const { error } = await supabase.from("user_ratings").insert({
@@ -315,15 +308,15 @@ export async function offerHelp(
   message?: string,
   offeredPriceJod?: number | null,
 ) {
-  const { error } = await supabase.from("fazaa_responses").insert({
-    request_id: requestId,
-    responder_id: responderId,
-    responder_name: responderName,
-    message: message ?? null,
-    offered_price_jod: offeredPriceJod ?? null,
+  const { error } = await supabase.rpc("offer_help_rpc", {
+    p_request_id: requestId,
+    p_request_owner_id: requestOwnerId,
+    p_responder_id: responderId,
+    p_responder_name: responderName,
+    p_message: message ?? null,
+    p_offered_price_jod: offeredPriceJod ?? null,
   });
   if (error) throw error;
-  await sendNotification(requestOwnerId, "فزعة جديدة!", `${responderName} عرض تقديم المساعدة في طلبك`, "/fazaa");
 }
 
 export async function fetchResponsesForRequest(requestId: string): Promise<FazaaResponse[]> {
@@ -347,14 +340,12 @@ export async function fetchMyResponses(userId: string) {
 }
 
 export async function acceptResponse(responseId: string, requestId: string, responderId: string) {
-  const { error } = await supabase
-    .from("fazaa_responses")
-    .update({ accepted: true })
-    .eq("id", responseId);
+  const { error } = await supabase.rpc("accept_response_rpc", {
+    p_response_id: responseId,
+    p_request_id: requestId,
+    p_responder_id: responderId,
+  });
   if (error) throw error;
-
-  await supabase.from("fazaa_requests").update({ status: "completed" }).eq("id", requestId);
-  await sendNotification(responderId, "تم قبول استجابتك!", "تم اختيارك لتقديم الفزعة، تواصل مع صاحب الطلب الآن", "/history");
 }
 
 export async function declineResponse(responseId: string) {
