@@ -266,12 +266,34 @@ export async function uploadAvatar(userId: string, file: File): Promise<string> 
 }
 
 
+export function validateNewFazaaInput(input: NewFazaaInput): void {
+  const price = Number(input.price_jod ?? 0);
+  if (Number.isNaN(price) || price < 0 || price > 1000) {
+    throw new Error("السعر يجب أن يكون بين 0 و 1000 دينار");
+  }
+  if (input.latitude != null || input.longitude != null) {
+    const lat = Number(input.latitude);
+    const lng = Number(input.longitude);
+    if (Number.isNaN(lat) || Number.isNaN(lng)) throw new Error("إحداثيات غير صالحة");
+    if (
+      lat < JORDAN_BBOX.minLat || lat > JORDAN_BBOX.maxLat ||
+      lng < JORDAN_BBOX.minLng || lng > JORDAN_BBOX.maxLng
+    ) {
+      throw new Error("الإحداثيات يجب أن تكون داخل الأردن");
+    }
+  }
+  if (!input.need || input.need.trim().length < 3) {
+    throw new Error("وصف الحاجة قصير جداً");
+  }
+}
+
 export async function createRequest(
   userId: string,
   name: string,
   gender: string,
   input: NewFazaaInput,
 ): Promise<FazaaRequest> {
+  validateNewFazaaInput(input);
   const { count, error: countErr } = await supabase
     .from("fazaa_requests")
     .select("*", { count: "exact", head: true })
