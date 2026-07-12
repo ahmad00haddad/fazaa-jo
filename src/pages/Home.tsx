@@ -20,6 +20,7 @@ import {
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 import { FazaaMap } from "@/components/fazaa/FazaaMap";
 import InstallPWAButton from "@/components/InstallPWAButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -84,7 +85,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen pb-28 animate-fade-in">
-      <header className="safe-top border-b border-border bg-background sticky top-0 z-20">
+      <header className="safe-top border-b border-border/40 glass-strong sticky top-0 z-20">
         <div className="px-4 pt-4 pb-4 space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -100,18 +101,12 @@ export default function Home() {
               )}
             </div>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <InstallPWAButton />
               <button
-                onClick={() => nav("/chat")}
-                className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center"
-                aria-label="المساعد"
-              >
-                <MessageCircleMore className="w-5 h-5" />
-              </button>
-              <button
                 type="button"
-                onClick={() => nav("/me")}
-                className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center relative"
+                onClick={() => nav("/notifications")}
+                className="w-11 h-11 rounded-2xl glass-strong flex items-center justify-center relative"
               >
                 <Bell className="w-5 h-5" />
               </button>
@@ -138,7 +133,7 @@ export default function Home() {
         </button>
 
         {/* Area Watch */}
-        <div className="rounded-3xl bg-card shadow-card p-4">
+        <div className="rounded-2xl glass-ultra shadow-card p-4">
           <div className="flex items-start gap-3">
             <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${myWatch ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
               {myWatch ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
@@ -180,7 +175,7 @@ export default function Home() {
           <StatTile icon={<UsersIcon className="w-4 h-4" />} label="متواجدون الآن" value={stats?.watchersNow ?? 0} tone="secondary" />
         </div>
         {stats?.topCity && (
-          <div className="rounded-2xl bg-card shadow-card px-4 py-3 flex items-center justify-between">
+          <div className="rounded-2xl glass-ultra shadow-card px-4 py-3 flex items-center justify-between">
             <span className="text-xs text-muted-foreground">أكثر مدينة تحتاج فزعة الآن</span>
             <span className="font-display font-extrabold text-sm">{stats.topCity.city} · {stats.topCity.count}</span>
           </div>
@@ -195,7 +190,7 @@ export default function Home() {
           شوف لوحة شرف الأسبوع و"أبو الفزعات"
         </button>
 
-        <div className="rounded-3xl bg-card shadow-card p-4 space-y-3">
+        <div className="rounded-3xl glass-ultra shadow-card p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div>
               <h2 className="font-display text-base font-bold">آخر الفزعات</h2>

@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import MobileLayout from "./components/MobileLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -80,17 +81,18 @@ function InnerRoutes() {
 }
 
 const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="top-center" richColors />
-        <BrowserRouter>
-          <AuthProvider>
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/complete-profile" element={<CompleteProfile />} />
+  <ThemeProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner position="top-center" richColors />
+          <BrowserRouter>
+            <AuthProvider>
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/complete-profile" element={<CompleteProfile />} />
                 <Route
                   path="*"
                   element={
@@ -108,6 +110,7 @@ const App = () => (
       </TooltipProvider>
     </QueryClientProvider>
   </ErrorBoundary>
+</ThemeProvider>
 );
 
 export default App;
