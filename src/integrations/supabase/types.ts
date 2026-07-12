@@ -213,6 +213,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      active_watchers_count: { Args: never; Returns: number }
       expire_urgent_fazaa_requests: { Args: never; Returns: number }
       get_my_phone: { Args: never; Returns: string }
       get_responder_phone: { Args: { _responder_id: string }; Returns: string }

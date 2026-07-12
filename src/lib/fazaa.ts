@@ -353,10 +353,7 @@ export async function fetchJordanStats(): Promise<JordanStats> {
       .select("id", { count: "exact", head: true })
       .eq("status", "completed")
       .gte("created_at", weekAgo),
-    supabase
-      .from("area_watch")
-      .select("id", { count: "exact", head: true })
-      .gt("expires_at", new Date().toISOString()),
+    supabase.rpc("active_watchers_count"),
     supabase.from("fazaa_requests").select("city").eq("status", "active").not("city", "is", null),
   ]);
 
@@ -375,7 +372,7 @@ export async function fetchJordanStats(): Promise<JordanStats> {
     activeNow: active.count ?? 0,
     completedWeek: completed.count ?? 0,
     topCity,
-    watchersNow: watchers.count ?? 0,
+    watchersNow: Number((watchers as any)?.data ?? 0),
   };
 }
 
