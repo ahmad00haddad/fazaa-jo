@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface Profile {
   id: string;
@@ -31,17 +32,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = async (uid: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("id,name,gender,city,verified,points,phone_verified,avatar_url")
-      .eq("id", uid)
-      .maybeSingle();
-    if (data) {
-      const { data: phoneData } = await supabase.rpc("get_my_phone");
-      setProfile({ ...(data as any), phone: (phoneData as string) ?? "" } as Profile);
+  const loadProfile = async (userId: string) => {
+    try {
+      // دفاعياً: تأكد من وجود سجل user_private_data قبل أي استدعاء آخر
+      await supabase.rpc("ensure_user_private_data");
+
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error("فشل تحميل البروفايل:", profileError.message);
+        toast.error("حدث خطأ في تحميل بياناتك، حاول تسجيل الدخول مرة أخرى");
+        setLoading(false);
+        return;
+      }
+
+      if (!profileData) {
+        console.error("لا يوجد بروفايل لهذا المستخدم");
+        toast.error("لم يتم إيجاد حسابك، يرجى التواصل مع الدعم");
+        setLoading(false);
+        return;
+      }
+
+      const { data: phoneData, error: phoneError } = await supabase.rpc("get_my_phone");
+      if (phoneError) {
+        console.error("فشل تحميل رقم الهاتف:", phoneError.message);
+      }
+
+      setProfile({ ...profileData, phone: phoneData ?? "" });
+    } catch (err: any) {
+      console.error("خطأ غير متوقع عند تحميل البروفايل:", err?.message);
+      toast.error("حدث خطأ غير متوقع، حاول مرة أخرى");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
@@ -57,8 +86,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setUser(data.session?.user ?? null);
-      if (data.session?.user) loadProfile(data.session.user.id);
-      setLoading(false);
+      if (data.session?.user) {
+        loadProfile(data.session.user.id);
+      } else {
+        setLoading(false);
+      }
     });
 
     return () => sub.subscription.unsubscribe();
