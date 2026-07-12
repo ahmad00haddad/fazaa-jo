@@ -15,7 +15,10 @@ export type FazaaCategory =
   | "أخرى";
 
 export type FazaaUrgency = "حرجة" | "عاجلة اليوم" | "عادية";
-export type FazaaStatus = "active" | "completed" | "cancelled";
+export type FazaaStatus = "active" | "in_progress" | "completed" | "cancelled" | "expired";
+
+// Jordan bounding box (approx)
+export const JORDAN_BBOX = { minLat: 29.0, maxLat: 33.5, minLng: 34.9, maxLng: 39.4 };
 
 export const JORDAN_CITIES = [
   "عمّان",
@@ -74,47 +77,59 @@ export interface Notification {
 }
 
 export async function fetchNotifications(userId: string): Promise<Notification[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from("notifications")
     .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(30);
   if (error) return [];
-  return data as Notification[];
+  return (data ?? []) as Notification[];
 }
 
 export async function markNotificationRead(id: string) {
-  await supabase.from("notifications").update({ read: true }).eq("id", id).catch(() => {});
+  try {
+    await (supabase as any).from("notifications").update({ read: true }).eq("id", id);
+  } catch {}
 }
 
 export async function markAllNotificationsRead(userId: string) {
-  await supabase.from("notifications").update({ read: true }).eq("user_id", userId).eq("read", false).catch(() => {});
+  try {
+    await (supabase as any)
+      .from("notifications")
+      .update({ read: true })
+      .eq("user_id", userId)
+      .eq("read", false);
+  } catch {}
 }
 
+export async function submitRating(requestId: string, responderId: string, rating: number) {
+  const { error } = await supabase.rpc("submit_rating", {
+    p_request_id: requestId,
+    p_responder_id: responderId,
+    p_rating: rating,
+  });
+  if (error) throw error;
+}
 
-
-export async function submitRating(requestId: string, raterId: string, responderId: string, rating: number) {
-  const { error } = await supabase.from("user_ratings").insert({
-    request_id: requestId,
-    rater_id: raterId,
-    responder_id: responderId,
-    rating,
+export async function confirmFazaaCompletion(requestId: string) {
+  const { error } = await supabase.rpc("confirm_fazaa_completion", {
+    p_request_id: requestId,
   });
   if (error) throw error;
 }
 
 export async function fetchUserAverageRating(userId: string): Promise<{ average: number; count: number } | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from("user_ratings")
     .select("rating")
     .eq("responder_id", userId);
-  
   if (error || !data || data.length === 0) return null;
-  const sum = data.reduce((acc, r) => acc + r.rating, 0);
+  const rows = data as { rating: number }[];
+  const sum = rows.reduce((acc, r) => acc + r.rating, 0);
   return {
-    average: Number((sum / data.length).toFixed(1)),
-    count: data.length
+    average: Number((sum / rows.length).toFixed(1)),
+    count: rows.length,
   };
 }
 
