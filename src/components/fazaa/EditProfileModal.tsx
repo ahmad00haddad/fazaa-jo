@@ -38,19 +38,27 @@ export function EditProfileModal({ open, onOpenChange }: EditProfileModalProps) 
     setLoading(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ name: name.trim(), phone: phone.trim(), city: city.trim() })
+      .update({ name: name.trim(), city: city.trim() })
       .eq("id", user.id);
-      
+
+    let phoneErr: any = null;
+    if (!error) {
+      const res = await (supabase as any)
+        .from("user_private_data")
+        .upsert({ user_id: user.id, phone: phone.trim() }, { onConflict: "user_id" });
+      phoneErr = res.error;
+    }
+
     setLoading(false);
 
-    if (error) {
+    if (error || phoneErr) {
       toast.error("حدث خطأ أثناء التحديث");
-    } else {
-      toast.success("تم تحديث حسابك بنجاح");
-      queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
-      // Force page reload to reflect context changes if necessary
-      window.location.reload();
+      return;
     }
+
+    toast.success("تم تحديث حسابك بنجاح");
+    queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
+    window.location.reload();
   };
 
   return (

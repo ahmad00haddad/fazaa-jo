@@ -71,9 +71,15 @@ export default function Me() {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ city: city || null, phone: normalized })
+        .update({ city: city || null })
         .eq("id", user.id);
       if (error) throw error;
+      if (normalized) {
+        const { error: pErr } = await (supabase as any)
+          .from("user_private_data")
+          .upsert({ user_id: user.id, phone: normalized }, { onConflict: "user_id" });
+        if (pErr) throw pErr;
+      }
       await refreshProfile();
       setEditing(false);
       toast.success("تم الحفظ");

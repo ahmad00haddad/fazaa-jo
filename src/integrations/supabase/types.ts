@@ -139,6 +139,36 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       phone_verifications: {
         Row: {
           code: string
@@ -174,8 +204,6 @@ export type Database = {
           gender: string
           id: string
           name: string
-          phone: string
-          phone_verified: boolean
           points: number
           updated_at: string
           verified: boolean
@@ -187,8 +215,6 @@ export type Database = {
           gender: string
           id: string
           name: string
-          phone: string
-          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
@@ -200,20 +226,89 @@ export type Database = {
           gender?: string
           id?: string
           name?: string
-          phone?: string
-          phone_verified?: boolean
           points?: number
           updated_at?: string
           verified?: boolean
         }
         Relationships: []
       }
+      user_private_data: {
+        Row: {
+          created_at: string
+          phone: string
+          phone_verified: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          phone?: string
+          phone_verified?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          phone?: string
+          phone_verified?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rater_id: string
+          rating: number
+          request_id: string
+          responder_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rater_id: string
+          rating: number
+          request_id: string
+          responder_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rater_id?: string
+          rating?: number
+          request_id?: string
+          responder_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_ratings_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "fazaa_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      accept_response_rpc: {
+        Args: {
+          p_request_id: string
+          p_responder_id: string
+          p_response_id: string
+        }
+        Returns: undefined
+      }
       active_watchers_count: { Args: never; Returns: number }
+      confirm_fazaa_completion: {
+        Args: { p_request_id: string }
+        Returns: undefined
+      }
       expire_urgent_fazaa_requests: { Args: never; Returns: number }
       get_my_phone: { Args: never; Returns: string }
       get_responder_phone: { Args: { _responder_id: string }; Returns: string }
@@ -233,9 +328,24 @@ export type Database = {
         }[]
       }
       normalize_jordan_phone: { Args: { p: string }; Returns: string }
+      offer_help_rpc: {
+        Args: {
+          p_message: string
+          p_offered_price_jod: number
+          p_request_id: string
+          p_request_owner_id: string
+          p_responder_id: string
+          p_responder_name: string
+        }
+        Returns: undefined
+      }
       request_is_female_only: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      submit_rating: {
+        Args: { p_rating: number; p_request_id: string; p_responder_id: string }
+        Returns: undefined
       }
       user_completed_count: { Args: { _user_id: string }; Returns: number }
       weekly_leaderboard: {

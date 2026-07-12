@@ -43,6 +43,14 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
         <span className="text-[11px] text-muted-foreground shrink-0">{formatTimeAgo(item.created_at)}</span>
       </div>
 
+      {item.status !== "active" ? (
+        <div className="mt-4 rounded-2xl bg-secondary py-3 px-4 text-center text-sm text-muted-foreground">
+          {item.status === "in_progress"
+            ? "هذه الفزعة قيد التنفيذ الآن"
+            : "هذه الفزعة انتهت"}
+        </div>
+      ) : (
+        <>
       <div className="grid grid-cols-2 gap-2 mt-4">
         <button
           type="button"
@@ -120,6 +128,8 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
           <Share2 className="w-4 h-4" />
         </button>
       </div>
+        </>
+      )}
     </article>
   );
 }
