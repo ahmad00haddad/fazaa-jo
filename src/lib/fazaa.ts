@@ -372,7 +372,7 @@ export async function fetchJordanStats(): Promise<JordanStats> {
     activeNow: active.count ?? 0,
     completedWeek: completed.count ?? 0,
     topCity,
-    watchersNow: watchers.count ?? 0,
+    watchersNow: Number((watchers as any)?.data ?? 0),
   };
 }
 
