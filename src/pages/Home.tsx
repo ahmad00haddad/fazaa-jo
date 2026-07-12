@@ -116,21 +116,22 @@ export default function Home() {
       </header>
 
       <section className="px-4 pt-4 space-y-3">
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.97 }}
           onClick={() => nav("/fazaa")}
-          className="w-full rounded-3xl gradient-hero px-4 py-4 text-primary-foreground text-right shadow-elevated active:scale-[0.99] transition"
+          className="w-full btn-brand rounded-full px-6 py-5 text-primary-foreground text-right"
         >
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="font-display text-lg font-extrabold">أحتاج فزعة الآن</div>
-              <div className="text-sm opacity-90 mt-1">انشر طلبك، رقمك يبقى مخفياً</div>
+              <div className="text-sm opacity-90 mt-0.5">انشر طلبك، رقمك يبقى مخفياً</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center shrink-0">
-              <Plus className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+              <Plus className="w-5 h-5" />
             </div>
           </div>
-        </button>
+        </motion.button>
 
         {/* Area Watch */}
         <div className="rounded-2xl glass-ultra shadow-card p-4">
@@ -162,7 +163,11 @@ export default function Home() {
             type="button"
             onClick={() => toggleWatchMutation.mutate()}
             disabled={toggleWatchMutation.isPending || !profile}
-            className={`mt-3 w-full rounded-2xl py-3 text-sm font-semibold disabled:opacity-50 ${myWatch ? "bg-destructive/10 text-destructive" : "bg-primary text-primary-foreground"}`}
+            className={`mt-3 w-full rounded-full py-3.5 text-sm font-bold disabled:opacity-50 transition-all ${
+              myWatch
+                ? "bg-destructive/15 text-destructive"
+                : "btn-brand"
+            }`}
           >
             {toggleWatchMutation.isPending ? "..." : myWatch ? "إيقاف التواجد" : "أنا متواجد الآن (4 ساعات)"}
           </button>
@@ -181,14 +186,15 @@ export default function Home() {
           </div>
         )}
 
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.96 }}
           onClick={() => nav("/leaderboard")}
-          className="w-full rounded-2xl bg-accent/10 text-accent py-3 text-sm font-semibold flex items-center justify-center gap-2"
+          className="w-full rounded-2xl bg-secondary text-foreground/80 py-3.5 text-sm font-semibold flex items-center justify-center gap-2 shadow-card"
         >
-          <Trophy className="w-4 h-4" />
+          <Trophy className="w-4 h-4 text-accent" />
           شوف لوحة شرف الأسبوع و"أبو الفزعات"
-        </button>
+        </motion.button>
 
         <div className="rounded-3xl glass-ultra shadow-card p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
@@ -334,14 +340,14 @@ function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void 
 function StatTile({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: number; tone: "primary" | "accent" | "secondary" }) {
   const toneClass =
     tone === "primary"
-      ? "bg-primary/10 text-primary"
+      ? "bg-primary/15 text-primary"
       : tone === "accent"
-      ? "bg-accent/12 text-accent"
+      ? "bg-accent/15 text-accent"
       : "bg-secondary text-foreground";
   return (
     <div className="rounded-2xl bg-card shadow-card p-3 text-center">
-      <div className={`mx-auto w-9 h-9 rounded-xl flex items-center justify-center ${toneClass}`}>{icon}</div>
-      <div className="mt-2 font-display text-xl font-extrabold">{value}</div>
+      <div className={`mx-auto w-10 h-10 rounded-xl flex items-center justify-center ${toneClass}`}>{icon}</div>
+      <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
       <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{label}</div>
     </div>
   );
