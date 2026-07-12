@@ -1,73 +1,73 @@
-# Welcome to your Lovable project
+# مشروع فزعة - الأردن (Fazaa)
 
-## Project info
+تطبيق ويب تقدمي (PWA) يهدف إلى تقديم منصة للمساعدة المجتمعية السريعة (الفزعة) في الأردن. يتيح للمستخدمين طلب مساعدة عاجلة (مثل تعطل سيارة، احتياج لدواء، توصيلة طارئة) ويتيح للمتطوعين أو مقدمي الخدمات الاستجابة لهذه الطلبات.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## التقنيات المستخدمة
 
-## How can I edit this code?
+- **Frontend**: React (Vite), TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui
+- **State & Data Fetching**: React Query
+- **Backend & Auth**: Supabase (PostgreSQL, Realtime, Storage, Edge Functions)
+- **Routing**: React Router DOM
 
-There are several ways of editing your application.
+## متطلبات التشغيل
 
-**Use Lovable**
+- [Node.js](https://nodejs.org/) (إصدار 18 فما فوق)
+- [npm](https://www.npmjs.com/) أو [Bun](https://bun.sh/)
+- حساب وقاعدة بيانات على [Supabase](https://supabase.com/)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## إعداد المشروع محلياً
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+1. **استنساخ المستودع**
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+git clone https://github.com/ahmad00haddad/fazaa-jo.git
+cd fazaa-jo
 ```
 
-**Edit a file directly in GitHub**
+2. **تثبيت الحزم (Dependencies)**
+```sh
+npm install
+# أو
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. **إعداد المتغيرات البيئية (Environment Variables)**
+قم بنسخ ملف `.env.example` إلى `.env` وضع مفاتيح Supabase الخاصة بك:
+```sh
+cp .env.example .env
+```
+افتح ملف `.env` وقم بتعديل القيم التالية لتطابق إعدادات Supabase الخاصة بك:
+```env
+VITE_SUPABASE_PROJECT_ID="your_supabase_project_id"
+VITE_SUPABASE_PUBLISHABLE_KEY="your_supabase_anon_key"
+VITE_SUPABASE_URL="https://your_supabase_project_id.supabase.co"
+```
 
-**Use GitHub Codespaces**
+4. **تشغيل خادم التطوير**
+```sh
+npm run dev
+# أو
+bun run dev
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+سيتم تشغيل التطبيق على الرابط: `http://localhost:8080` (أو منفذ آخر إذا كان 8080 مستخدماً).
 
-## What technologies are used for this project?
+## إعدادات قاعدة البيانات والأمان (Supabase RLS)
 
-This project is built with:
+لضمان أمان البيانات (مثل طلبات الإناث الخاصة)، يجب تشغيل سكريبت سياسات الأمان المتوفر في المشروع:
+1. اذهب إلى لوحة تحكم Supabase الخاصة بك.
+2. انتقل إلى محرر SQL (SQL Editor).
+3. انسخ محتوى الملف `supabase_rls_policies.sql` وقم بتشغيله.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## بناء المشروع للإنتاج
 
-## How can I deploy this project?
+لإنشاء النسخة النهائية الجاهزة للنشر:
+```sh
+npm run build
+```
+سيتم توليد ملفات الإنتاج في مجلد `dist/`.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## ملاحظات إضافية
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- التطبيق مصمم بنمط **Mobile-First** مع أقصى عرض للشاشة `max-w-[480px]`.
+- توجد سياسات للتحقق من أرقام الهواتف الأردنية (`isValidJordanPhone`).

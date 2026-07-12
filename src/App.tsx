@@ -6,18 +6,27 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MobileLayout from "./components/MobileLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
-import Auth from "./pages/Auth";
-import Chat from "./pages/Chat";
-import CompleteProfile from "./pages/CompleteProfile";
-import Fazaa from "./pages/Fazaa";
-import History from "./pages/History";
-import Home from "./pages/Home";
-import Leaderboard from "./pages/Leaderboard";
-import Me from "./pages/Me";
-import NotFound from "./pages/NotFound";
-import Services from "./pages/Services";
+import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
+const Auth = lazy(() => import("./pages/Auth"));
+const Chat = lazy(() => import("./pages/Chat"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const Fazaa = lazy(() => import("./pages/Fazaa"));
+const History = lazy(() => import("./pages/History"));
+const Home = lazy(() => import("./pages/Home"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const Me = lazy(() => import("./pages/Me"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Services = lazy(() => import("./pages/Services"));
 
 const queryClient = new QueryClient();
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -26,29 +35,31 @@ const App = () => (
       <Sonner position="top-center" />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/complete-profile" element={<CompleteProfile />} />
-            <Route
-              path="*"
-              element={
-                <ProtectedRoute>
-                  <MobileLayout>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/services" element={<Services />} />
-                      <Route path="/chat" element={<Chat />} />
-                      <Route path="/fazaa" element={<Fazaa />} />
-                      <Route path="/me" element={<Me />} />
-                      <Route path="/history" element={<History />} />
-                      <Route path="/leaderboard" element={<Leaderboard />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </MobileLayout>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/complete-profile" element={<CompleteProfile />} />
+              <Route
+                path="*"
+                element={
+                  <ProtectedRoute>
+                    <MobileLayout>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/services" element={<Services />} />
+                        <Route path="/chat" element={<Chat />} />
+                        <Route path="/fazaa" element={<Fazaa />} />
+                        <Route path="/me" element={<Me />} />
+                        <Route path="/history" element={<History />} />
+                        <Route path="/leaderboard" element={<Leaderboard />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </MobileLayout>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
