@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff, Map as MapIcon, List, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff, Map as MapIcon, List, Share2, Bell } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,7 +19,6 @@ import {
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 import { FazaaMap } from "@/components/fazaa/FazaaMap";
-import { Bell } from "lucide-react";
 import InstallPWAButton from "@/components/InstallPWAButton";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
@@ -221,8 +221,23 @@ export default function Home() {
           </div>
 
           {loading && (
-            <div className="flex justify-center py-6">
-              <Loader2 className="w-5 h-5 animate-spin text-primary" />
+            <div className="space-y-3">
+              {[1,2,3].map((i) => (
+                <div key={i} className="rounded-2xl border border-border bg-background px-3 py-3 animate-pulse">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex gap-2">
+                        <div className="h-4 w-20 rounded-full bg-muted" />
+                        <div className="h-4 w-14 rounded-full bg-muted" />
+                      </div>
+                      <div className="h-3 w-full rounded bg-muted" />
+                      <div className="h-3 w-3/4 rounded bg-muted" />
+                    </div>
+                    <div className="h-3 w-10 rounded bg-muted shrink-0" />
+                  </div>
+                  <div className="mt-3 h-9 w-full rounded-xl bg-muted" />
+                </div>
+              ))}
             </div>
           )}
 
@@ -267,8 +282,21 @@ export default function Home() {
 
 function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void }) {
   const urgencyClass = badgeClass(urgencyVariant(item.urgency));
+
+  const handleOffer = () => {
+    // Haptic feedback on supported devices
+    if (navigator.vibrate) navigator.vibrate([8, 4, 8]);
+    onOpen();
+  };
+
   return (
-    <button type="button" onClick={onOpen} className="w-full text-right rounded-2xl border border-border bg-background px-3 py-3">
+    <motion.button
+      type="button"
+      onClick={handleOffer}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="w-full text-right rounded-2xl border border-border bg-background px-3 py-3 shadow-soft active:shadow-none transition-shadow"
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
@@ -287,23 +315,24 @@ function PreviewCard({ item, onOpen }: { item: FazaaRequest; onOpen: () => void 
         <span className="text-[11px] text-muted-foreground shrink-0">{formatTimeAgo(item.created_at)}</span>
       </div>
       <div className="mt-3 flex gap-2">
-        <button 
+        <motion.button
+          whileTap={{ scale: 0.92 }}
           onClick={(e) => {
             e.stopPropagation();
             const text = `فزعة عاجلة (${item.category}): ${item.need}\nالمدينة: ${item.city || 'الأردن'}\nرابط التطبيق: ${window.location.origin}`;
             if (navigator.share) navigator.share({ title: "فزعة عاجلة", text });
             else { navigator.clipboard.writeText(text); toast.success("تم نسخ نص الفزعة"); }
           }}
-          className="rounded-xl bg-secondary py-2 px-3 text-muted-foreground flex items-center justify-center transition-colors hover:text-foreground"
+          className="rounded-xl bg-secondary py-2 px-3 text-muted-foreground flex items-center justify-center transition-colors hover:text-foreground min-h-[44px]"
         >
           <Share2 className="w-4 h-4" />
-        </button>
-        <div className="flex-1 rounded-xl bg-primary/10 text-primary py-2 text-xs font-bold text-center flex items-center justify-center gap-2">
+        </motion.button>
+        <div className="flex-1 rounded-xl bg-primary/10 text-primary py-2 text-xs font-bold text-center flex items-center justify-center gap-2 min-h-[44px]">
           <UserCheck className="w-4 h-4" />
           افتح للاستجابة
         </div>
       </div>
-    </button>
+    </motion.button>
   );
 }
 
