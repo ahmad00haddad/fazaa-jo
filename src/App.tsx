@@ -15,6 +15,7 @@ const Auth            = lazy(() => import("./pages/Auth"));
 const Chat            = lazy(() => import("./pages/Chat"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const Fazaa           = lazy(() => import("./pages/Fazaa"));
+const Favorites       = lazy(() => import("./pages/Favorites"));
 const History         = lazy(() => import("./pages/History"));
 const Home            = lazy(() => import("./pages/Home"));
 const Leaderboard     = lazy(() => import("./pages/Leaderboard"));
@@ -69,6 +70,7 @@ function InnerRoutes() {
         <Route path="/fazaa" element={<AnimatedPage><Fazaa /></AnimatedPage>} />
         <Route path="/me" element={<AnimatedPage><Me /></AnimatedPage>} />
         <Route path="/history" element={<AnimatedPage><History /></AnimatedPage>} />
+        <Route path="/favorites" element={<AnimatedPage><Favorites /></AnimatedPage>} />
         <Route path="/leaderboard" element={<AnimatedPage><Leaderboard /></AnimatedPage>} />
         <Route path="/notifications" element={<AnimatedPage><Notifications /></AnimatedPage>} />
         <Route path="*" element={<AnimatedPage><NotFound /></AnimatedPage>} />
