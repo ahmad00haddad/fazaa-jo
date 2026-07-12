@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Loader2, Plus, Share2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   acceptResponse,
+  confirmFazaaCompletion,
   createRequest,
   declineResponse,
   deleteRequest,
@@ -31,22 +32,24 @@ export default function Fazaa() {
   const queryClient = useQueryClient();
   const [showComposer, setShowComposer] = useState(false);
   const [openResponses, setOpenResponses] = useState<string | null>(null);
-  const [ratingRequest, setRatingRequest] = useState<{ reqId: string, responderId: string, responderName: string } | null>(null);
+  const [ratingRequest, setRatingRequest] = useState<{ reqId: string; responderId: string; responderName: string } | null>(null);
 
   const { data: feed = [], isLoading } = useQuery({
     queryKey: ['fazaa_feed'],
     queryFn: fetchFeed,
   });
 
-  useRealtimeFazaa(() => {
-    queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
-  });
+  useRealtimeFazaa();
 
   const visibleItems = useMemo(() => {
     return feed.filter((r) => {
+      if (r.user_id === user?.id) {
+        // Owner sees own active + in_progress items
+        return r.status === "active" || r.status === "in_progress";
+      }
       if (isFazaaExpired(r)) return false;
       if (r.status !== "active") return false;
-      if (r.user_id === user?.id) return true;
+      // Female-only privacy: hide from males (and unknown gender). "هذه الفزعة للبنات فقط حفاظاً على الخصوصية"
       if (r.female_only && profile?.gender !== "female") return false;
       return true;
     });
@@ -90,7 +93,7 @@ export default function Fazaa() {
   });
 
   const completeMutation = useMutation({
-    mutationFn: (id: string) => updateRequestStatus(id, "completed"),
+    mutationFn: (id: string) => confirmFazaaCompletion(id),
     onSuccess: () => {
       toast.success("تم إغلاق الفزعة بنجاح، شكراً للمتعاونين");
       queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
@@ -98,13 +101,23 @@ export default function Fazaa() {
     onError: (e: any) => toast.error(e?.message ?? "تعذر الإغلاق")
   });
 
+  const cancelMutation = useMutation({
+    mutationFn: (id: string) => updateRequestStatus(id, "cancelled"),
+    onSuccess: () => {
+      toast.success("تم إلغاء الفزعة");
+      queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "تعذر الإلغاء")
+  });
+
   const submitRatingMutation = useMutation({
     mutationFn: async (rating: number) => {
-      if (!ratingRequest || !user) return;
-      if (rating > 0) {
-        await submitRating(ratingRequest.reqId, user.id, ratingRequest.responderId, rating).catch(() => {});
-      }
+      if (!ratingRequest) return;
+      // Complete the request first (atomic RPC), then rate
       await completeMutation.mutateAsync(ratingRequest.reqId);
+      if (rating > 0) {
+        await submitRating(ratingRequest.reqId, ratingRequest.responderId, rating).catch(() => {});
+      }
     },
     onSuccess: () => {
       toast.success("تم إغلاق الفزعة، شكراً لك!");
@@ -114,13 +127,13 @@ export default function Fazaa() {
   });
 
   const offerMutation = useMutation({
-    mutationFn: async ({ req, price }: { req: FazaaRequest, price: number | null }) => {
+    mutationFn: async ({ req, price }: { req: FazaaRequest; price: number | null }) => {
       if (!user || !profile) throw new Error("Not authenticated");
       if (req.female_only && profile.gender !== "female") throw new Error("هذه الفزعة للبنات فقط");
       const msg = price !== null && price !== Number(req.price_jod)
         ? `أنا جاهز للمساعدة. أقترح سعر ${price} د.أ`
         : "أنا جاهز للمساعدة";
-      return offerHelp(req.id, user.id, profile.name, msg, price);
+      return offerHelp(req.id, req.user_id, user.id, profile.name, msg, price);
     },
     onSuccess: () => toast.success("تم إرسال استجابتك. سيتواصل معك صاحب الفزعة إذا قبل"),
     onError: (e: any) => {
@@ -130,12 +143,14 @@ export default function Fazaa() {
   });
 
   const acceptMutation = useMutation({
-    mutationFn: ({ rid, reqId }: { rid: string; reqId: string }) => acceptResponse(rid, reqId),
+    mutationFn: ({ rid, reqId, respId }: { rid: string; reqId: string; respId: string }) =>
+      acceptResponse(rid, reqId, respId),
     onSuccess: () => {
-      toast.success("تم قبول الاستجابة بنجاح وإغلاق الفزعة، يمكنك التواصل الآن");
+      toast.success("تم قبول الاستجابة، الفزعة الآن قيد التنفيذ. تواصل معه الآن");
       queryClient.invalidateQueries({ queryKey: ['fazaa_responses_all'] });
       queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
-    }
+    },
+    onError: (e: any) => toast.error(e?.message ?? "تعذر القبول")
   });
 
   const declineMutation = useMutation({
@@ -146,8 +161,12 @@ export default function Fazaa() {
     }
   });
 
-  const handleDelete = (id: string) => {
-    if (confirm("حذف هذا الطلب؟")) deleteMutation.mutate(id);
+  const handleDelete = (id: string, status: string) => {
+    if (status === "in_progress") {
+      if (confirm("الفزعة قيد التنفيذ — هل تريد إلغاءها؟")) cancelMutation.mutate(id);
+    } else {
+      if (confirm("حذف هذا الطلب؟")) deleteMutation.mutate(id);
+    }
   };
 
   return (
@@ -182,13 +201,13 @@ export default function Fazaa() {
             {myItems.map((item) => {
               const responses = responsesByRequest[item.id] ?? [];
               const accepted = responses.find(r => r.accepted);
-              
+
               const handleCompleteClick = () => {
                 if (accepted) {
-                  setRatingRequest({ 
-                    reqId: item.id, 
-                    responderId: accepted.responder_id, 
-                    responderName: accepted.responder_name 
+                  setRatingRequest({
+                    reqId: item.id,
+                    responderId: accepted.responder_id,
+                    responderName: accepted.responder_name
                   });
                 } else {
                   completeMutation.mutate(item.id);
@@ -202,7 +221,7 @@ export default function Fazaa() {
                   responses={responses}
                   open={openResponses === item.id}
                   onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
-                  onDelete={() => handleDelete(item.id)}
+                  onDelete={() => handleDelete(item.id, item.status)}
                   onComplete={handleCompleteClick}
                   onAccept={(rid, responderId) => acceptMutation.mutate({ rid, reqId: item.id, respId: responderId })}
                   onDecline={(rid) => declineMutation.mutate(rid)}
