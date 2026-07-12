@@ -5,7 +5,7 @@ import { Award, Bell, Camera, ClipboardList, Crown, Loader2, LogOut, ShieldCheck
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, markSelfVerified, uploadAvatar } from "@/lib/fazaa";
+import { JORDAN_CITIES, VERIFIED_HELPER_THRESHOLD, fetchUserCompletedCount, fetchUserAverageRating, markSelfVerified, uploadAvatar } from "@/lib/fazaa";
 import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 import { requestNotificationPermission } from "@/hooks/useRealtimeFazaa";
 import InstallPWAButton from "@/components/InstallPWAButton";
@@ -18,11 +18,15 @@ export default function Me() {
   const [city, setCity] = useState(profile?.city ?? "");
   const [phone, setPhone] = useState(profile?.phone ?? "");
   const [completed, setCompleted] = useState<number>(0);
+  const [rating, setRating] = useState<{ average: number, count: number } | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (user) fetchUserCompletedCount(user.id).then(setCompleted);
+    if (user) {
+      fetchUserCompletedCount(user.id).then(setCompleted);
+      fetchUserAverageRating(user.id).then(setRating);
+    }
   }, [user?.id]);
 
   const handleLogout = async () => {
@@ -157,11 +161,18 @@ export default function Me() {
                   </span>
                 )}
               </div>
-              <div className="text-xs text-muted-foreground mt-1" dir="ltr">{user?.email}</div>
+              <div className="flex items-center gap-3 mt-1.5">
+                <div className="text-xs text-muted-foreground" dir="ltr">{user?.email}</div>
+                {rating && (
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-amber-500">
+                    ⭐ {rating.average} ({rating.count})
+                  </div>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="text-[11px] text-primary mt-1 font-semibold"
+                className="text-[11px] text-primary mt-1.5 font-semibold"
               >
                 {profile?.avatar_url ? "تغيير الصورة" : "إضافة صورة شخصية"}
               </button>

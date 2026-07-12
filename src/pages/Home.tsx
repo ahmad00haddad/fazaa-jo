@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff } from "lucide-react";
+import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff, Map as MapIcon, List } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import {
   type FazaaRequest,
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
+import { FazaaMap } from "@/components/fazaa/FazaaMap";
 
 function badgeClass(v: "primary" | "accent" | "secondary") {
   if (v === "primary") return "bg-primary/12 text-primary";
@@ -29,6 +30,7 @@ export default function Home() {
   const { profile, user } = useAuth();
   const queryClient = useQueryClient();
   const [watchCity, setWatchCity] = useState<string>(profile?.city ?? "عمّان");
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
   const { data: feed = [], isLoading: loadingFeed } = useQuery({
     queryKey: ['fazaa_feed'],
@@ -187,7 +189,21 @@ export default function Home() {
               <h2 className="font-display text-base font-bold">آخر الفزعات</h2>
               <p className="text-xs text-muted-foreground mt-1">اضغط "أنا جاهز" لتعرض استجابتك</p>
             </div>
-            <button onClick={() => nav("/fazaa")} className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
+            <div className="flex gap-1 bg-secondary rounded-2xl p-1">
+              <button 
+                onClick={() => setViewMode("list")} 
+                className={`p-1.5 rounded-xl transition-colors ${viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
+              >
+                <List className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => setViewMode("map")} 
+                className={`p-1.5 rounded-xl transition-colors ${viewMode === "map" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
+              >
+                <MapIcon className="w-5 h-5" />
+              </button>
+            </div>
+            <button onClick={() => nav("/fazaa")} className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center mr-1">
               <ArrowLeft className="w-4 h-4" />
             </button>
           </div>
@@ -198,16 +214,20 @@ export default function Home() {
             </div>
           )}
 
-          <div className="space-y-3">
-            {items.slice(0, 4).map((item) => (
-              <PreviewCard key={item.id} item={item} onOpen={() => nav("/fazaa")} />
-            ))}
-            {!loading && items.length === 0 && (
-              <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground text-center">
-                لا توجد فزعات حالياً. كن أول من ينشر.
-              </div>
-            )}
-          </div>
+          {!loading && viewMode === "map" ? (
+            <FazaaMap items={items} onOpen={(item) => nav("/fazaa")} />
+          ) : (
+            <div className="space-y-3">
+              {items.slice(0, 4).map((item) => (
+                <PreviewCard key={item.id} item={item} onOpen={() => nav("/fazaa")} />
+              ))}
+              {!loading && items.length === 0 && (
+                <div className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground text-center">
+                  لا توجد فزعات حالياً. كن أول من ينشر.
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="rounded-3xl bg-card shadow-card p-4">

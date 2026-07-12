@@ -111,6 +111,20 @@ export async function submitRating(requestId: string, raterId: string, responder
   if (error) throw error;
 }
 
+export async function fetchUserAverageRating(userId: string): Promise<{ average: number; count: number } | null> {
+  const { data, error } = await supabase
+    .from("user_ratings")
+    .select("rating")
+    .eq("responder_id", userId);
+  
+  if (error || !data || data.length === 0) return null;
+  const sum = data.reduce((acc, r) => acc + r.rating, 0);
+  return {
+    average: Number((sum / data.length).toFixed(1)),
+    count: data.length
+  };
+}
+
 export interface NewFazaaInput {
   need: string;
   category: FazaaCategory;
