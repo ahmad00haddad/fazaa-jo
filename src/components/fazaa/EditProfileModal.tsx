@@ -56,14 +56,9 @@ export function EditProfileModal({ open, onOpenChange }: EditProfileModalProps) 
       return;
     }
 
-    if (error) {
-      toast.error("حدث خطأ أثناء التحديث");
-    } else {
-      toast.success("تم تحديث حسابك بنجاح");
-      queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
-      // Force page reload to reflect context changes if necessary
-      window.location.reload();
-    }
+    toast.success("تم تحديث حسابك بنجاح");
+    queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
+    window.location.reload();
   };
 
   return (
