@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
 import { CheckCircle2, Clock, Loader2, ShieldCheck, XCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchMyResponses, formatTimeAgo, type FazaaRequest } from "@/lib/fazaa";
+import { useQuery } from "@tanstack/react-query";
 
 type Tab = "requests" | "responses";
 
@@ -12,23 +13,27 @@ export default function History() {
   const { user } = useAuth();
   const nav = useNavigate();
   const [tab, setTab] = useState<Tab>("requests");
-  const [mine, setMine] = useState<FazaaRequest[]>([]);
-  const [responses, setResponses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
-    setLoading(true);
-    Promise.all([
-      supabase
+  const { data: mine = [], isLoading: loadingMine } = useQuery({
+    queryKey: ['my_requests_history', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
         .from("fazaa_requests")
         .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .then(({ data }) => setMine((data ?? []) as FazaaRequest[])),
-      fetchMyResponses(user.id).then(setResponses),
-    ]).finally(() => setLoading(false));
-  }, [user?.id]);
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      return (data ?? []) as FazaaRequest[];
+    },
+    enabled: !!user?.id,
+  });
+
+  const { data: responses = [], isLoading: loadingResponses } = useQuery({
+    queryKey: ['my_responses_history', user?.id],
+    queryFn: () => fetchMyResponses(user!.id),
+    enabled: !!user?.id,
+  });
+
+  const loading = loadingMine || loadingResponses;
 
   return (
     <div className="animate-fade-in pb-28">

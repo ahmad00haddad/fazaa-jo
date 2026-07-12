@@ -119,7 +119,7 @@ export default function Me() {
               aria-label="تغيير الصورة الشخصية"
             >
               {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="صورتي" className="w-full h-full object-cover" />
+                <img src={profile.avatar_url} alt="Profile picture" className="w-full h-full object-cover" />
               ) : (
                 <UserIcon className="w-7 h-7" />
               )}

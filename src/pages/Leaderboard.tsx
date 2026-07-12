@@ -1,32 +1,24 @@
-import { useEffect, useState } from "react";
 import PageHeader from "@/components/PageHeader";
 import { Crown, Loader2, Medal, ShieldCheck, Trophy } from "lucide-react";
-import { toast } from "sonner";
 import {
   VERIFIED_HELPER_THRESHOLD,
   fetchMonthlyTopHelper,
   fetchWeeklyLeaderboard,
-  type LeaderRow,
 } from "@/lib/fazaa";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Leaderboard() {
-  const [rows, setRows] = useState<LeaderRow[]>([]);
-  const [topMonthly, setTopMonthly] = useState<Awaited<ReturnType<typeof fetchMonthlyTopHelper>>>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: rows = [], isLoading: loadingRows } = useQuery({
+    queryKey: ['weekly_leaderboard'],
+    queryFn: () => fetchWeeklyLeaderboard(20),
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [w, m] = await Promise.all([fetchWeeklyLeaderboard(20), fetchMonthlyTopHelper()]);
-        setRows(w);
-        setTopMonthly(m);
-      } catch (e: any) {
-        toast.error(e?.message ?? "تعذر تحميل اللوحة");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const { data: topMonthly = null, isLoading: loadingTop } = useQuery({
+    queryKey: ['monthly_top_helper'],
+    queryFn: fetchMonthlyTopHelper,
+  });
+
+  const loading = loadingRows || loadingTop;
 
   return (
     <div className="min-h-screen pb-28 animate-fade-in">

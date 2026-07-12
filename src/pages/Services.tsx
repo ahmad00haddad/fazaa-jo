@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import { Heart, Loader2, LocateFixed, MapPin, Plus, Search, ShieldCheck, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 import {
   FAZAA_CATEGORIES,
   JORDAN_CITIES,
@@ -27,20 +28,16 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 export default function Services() {
   const nav = useNavigate();
   const { user, profile } = useAuth();
-  const [items, setItems] = useState<FazaaRequest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: items = [], isLoading: loading } = useQuery({
+    queryKey: ['fazaa_feed'],
+    queryFn: fetchFeed,
+  });
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("الكل");
   const [city, setCity] = useState<string>("");
   const [radius, setRadius] = useState<number>(0);
   const [myLoc, setMyLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
-
-  useEffect(() => {
-    fetchFeed()
-      .then(setItems)
-      .finally(() => setLoading(false));
-  }, []);
 
   const locate = () => {
     if (!navigator.geolocation) return toast.error("الموقع غير مدعوم");

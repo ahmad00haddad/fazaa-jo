@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const Auth = lazy(() => import("./pages/Auth"));
 const Chat = lazy(() => import("./pages/Chat"));
@@ -29,41 +30,43 @@ const PageLoader = () => (
 );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner position="top-center" />
-      <BrowserRouter>
-        <AuthProvider>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/complete-profile" element={<CompleteProfile />} />
-              <Route
-                path="*"
-                element={
-                  <ProtectedRoute>
-                    <MobileLayout>
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/services" element={<Services />} />
-                        <Route path="/chat" element={<Chat />} />
-                        <Route path="/fazaa" element={<Fazaa />} />
-                        <Route path="/me" element={<Me />} />
-                        <Route path="/history" element={<History />} />
-                        <Route path="/leaderboard" element={<Leaderboard />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </MobileLayout>
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </Suspense>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner position="top-center" />
+        <BrowserRouter>
+          <AuthProvider>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/complete-profile" element={<CompleteProfile />} />
+                <Route
+                  path="*"
+                  element={
+                    <ProtectedRoute>
+                      <MobileLayout>
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/services" element={<Services />} />
+                          <Route path="/chat" element={<Chat />} />
+                          <Route path="/fazaa" element={<Fazaa />} />
+                          <Route path="/me" element={<Me />} />
+                          <Route path="/history" element={<History />} />
+                          <Route path="/leaderboard" element={<Leaderboard />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </MobileLayout>
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

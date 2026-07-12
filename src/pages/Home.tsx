@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MessageCircleMore, Plus, Siren, ArrowLeft, MapPin, Loader2, UserCheck, Activity, Trophy, Users as UsersIcon, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchFeed,
   filterActiveFeed,
@@ -14,8 +15,6 @@ import {
   stopAreaWatch,
   JORDAN_CITIES,
   type FazaaRequest,
-  type JordanStats,
-  type AreaWatcher,
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
 
@@ -28,53 +27,56 @@ function badgeClass(v: "primary" | "accent" | "secondary") {
 export default function Home() {
   const nav = useNavigate();
   const { profile, user } = useAuth();
-  const [items, setItems] = useState<FazaaRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<JordanStats | null>(null);
-  const [myWatch, setMyWatch] = useState<AreaWatcher | null>(null);
+  const queryClient = useQueryClient();
   const [watchCity, setWatchCity] = useState<string>(profile?.city ?? "عمّان");
-  const [watchBusy, setWatchBusy] = useState(false);
 
-  const loadAll = async () => {
-    const [feed, s] = await Promise.all([fetchFeed(), fetchJordanStats()]);
-    setItems(filterActiveFeed(feed, { viewerGender: profile?.gender, viewerId: user?.id }));
-    setStats(s);
-    if (user) setMyWatch(await fetchMyActiveWatch(user.id));
-  };
+  const { data: feed = [], isLoading: loadingFeed } = useQuery({
+    queryKey: ['fazaa_feed'],
+    queryFn: fetchFeed,
+  });
 
-  useEffect(() => {
-    loadAll().finally(() => setLoading(false));
-  }, [user?.id, profile?.gender]);
+  const { data: stats, isLoading: loadingStats } = useQuery({
+    queryKey: ['jordan_stats'],
+    queryFn: fetchJordanStats,
+  });
 
-  useRealtimeFazaa((req) => {
-    setItems((prev) => (prev.find((p) => p.id === req.id) ? prev : [req, ...prev]));
+  const { data: myWatch, isLoading: loadingWatch } = useQuery({
+    queryKey: ['my_watch', user?.id],
+    queryFn: () => user ? fetchMyActiveWatch(user.id) : null,
+    enabled: !!user?.id,
+  });
+
+  const items = filterActiveFeed(feed, { viewerGender: profile?.gender, viewerId: user?.id });
+  const loading = loadingFeed || loadingStats || loadingWatch;
+
+  useRealtimeFazaa(() => {
+    queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
   });
 
   useEffect(() => {
     if (profile?.city && !myWatch) setWatchCity(profile.city);
   }, [profile?.city, myWatch]);
 
-  const toggleWatch = async () => {
-    if (!user || !profile) return;
-    setWatchBusy(true);
-    try {
+  const toggleWatchMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !profile) throw new Error("Not authenticated");
       if (myWatch) {
         await stopAreaWatch(user.id);
-        setMyWatch(null);
-        toast.success("تم إيقاف وضع التواجد");
+        return "تم إيقاف وضع التواجد";
       } else {
-        const w = await startAreaWatch(user.id, profile.name, watchCity);
-        setMyWatch(w);
-        toast.success(`أنت الآن متواجد في ${watchCity} لمدة 4 ساعات`);
+        await startAreaWatch(user.id, profile.name, watchCity);
+        return `أنت الآن متواجد في ${watchCity} لمدة 4 ساعات`;
       }
-      const s = await fetchJordanStats();
-      setStats(s);
-    } catch (e: any) {
+    },
+    onSuccess: (msg) => {
+      toast.success(msg);
+      queryClient.invalidateQueries({ queryKey: ['my_watch', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['jordan_stats'] });
+    },
+    onError: (e: any) => {
       toast.error(e?.message ?? "تعذر التحديث");
-    } finally {
-      setWatchBusy(false);
     }
-  };
+  });
 
   return (
     <div className="min-h-screen pb-28 animate-fade-in">
@@ -149,11 +151,11 @@ export default function Home() {
           )}
           <button
             type="button"
-            onClick={toggleWatch}
-            disabled={watchBusy || !profile}
+            onClick={() => toggleWatchMutation.mutate()}
+            disabled={toggleWatchMutation.isPending || !profile}
             className={`mt-3 w-full rounded-2xl py-3 text-sm font-semibold disabled:opacity-50 ${myWatch ? "bg-destructive/10 text-destructive" : "bg-primary text-primary-foreground"}`}
           >
-            {watchBusy ? "..." : myWatch ? "إيقاف التواجد" : "أنا متواجد الآن (4 ساعات)"}
+            {toggleWatchMutation.isPending ? "..." : myWatch ? "إيقاف التواجد" : "أنا متواجد الآن (4 ساعات)"}
           </button>
         </div>
 
