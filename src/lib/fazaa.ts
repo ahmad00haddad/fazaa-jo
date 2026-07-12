@@ -544,7 +544,9 @@ export async function confirmPhoneVerification(userId: string, phone: string, co
   if (data.phone !== phone) return false;
   if (new Date(data.expires_at).getTime() < Date.now()) return false;
   if (data.code !== code.trim()) return false;
-  await supabase.from("profiles").update({ phone_verified: true }).eq("id", userId);
+  await (supabase as any)
+    .from("user_private_data")
+    .upsert({ user_id: userId, phone, phone_verified: true }, { onConflict: "user_id" });
   await supabase.from("phone_verifications").delete().eq("user_id", userId);
   return true;
 }
