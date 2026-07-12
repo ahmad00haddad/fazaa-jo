@@ -117,6 +117,7 @@ export async function fetchFeed(): Promise<FazaaRequest[]> {
   const { data, error } = await supabase
     .from("fazaa_requests")
     .select("*")
+    .eq("status", "active")
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as FazaaRequest[];
@@ -201,6 +202,17 @@ export async function createRequest(
   gender: string,
   input: NewFazaaInput,
 ): Promise<FazaaRequest> {
+  const { count, error: countErr } = await supabase
+    .from("fazaa_requests")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "active");
+
+  if (countErr) throw countErr;
+  if (count && count >= 3) {
+    throw new Error("تجاوزت الحد الأقصى (3 طلبات نشطة). أغلق طلباتك السابقة أولاً.");
+  }
+
   const { data, error } = await supabase
     .from("fazaa_requests")
     .insert({
@@ -270,12 +282,14 @@ export async function fetchMyResponses(userId: string) {
   return data ?? [];
 }
 
-export async function acceptResponse(responseId: string) {
+export async function acceptResponse(responseId: string, requestId: string) {
   const { error } = await supabase
     .from("fazaa_responses")
     .update({ accepted: true })
     .eq("id", responseId);
   if (error) throw error;
+
+  await supabase.from("fazaa_requests").update({ status: "completed" }).eq("id", requestId);
 }
 
 export async function declineResponse(responseId: string) {

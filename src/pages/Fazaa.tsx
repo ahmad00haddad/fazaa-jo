@@ -112,10 +112,11 @@ export default function Fazaa() {
   });
 
   const acceptMutation = useMutation({
-    mutationFn: acceptResponse,
+    mutationFn: ({ rid, reqId }: { rid: string; reqId: string }) => acceptResponse(rid, reqId),
     onSuccess: () => {
-      toast.success("تم قبول الاستجابة، يمكنك التواصل الآن");
+      toast.success("تم قبول الاستجابة بنجاح وإغلاق الفزعة، يمكنك التواصل الآن");
       queryClient.invalidateQueries({ queryKey: ['fazaa_responses_all'] });
+      queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
     }
   });
 
@@ -169,7 +170,7 @@ export default function Fazaa() {
                 onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
                 onDelete={() => handleDelete(item.id)}
                 onComplete={() => completeMutation.mutate(item.id)}
-                onAccept={(rid) => acceptMutation.mutate(rid)}
+                onAccept={(rid) => acceptMutation.mutate({ rid, reqId: item.id })}
                 onDecline={(rid) => declineMutation.mutate(rid)}
               />
             ))}
