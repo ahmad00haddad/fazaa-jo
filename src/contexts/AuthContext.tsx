@@ -45,14 +45,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
-        .select("*")
+        .select("id, name, gender, city, points, avatar_url, verified")
         .eq("id", userId)
         .maybeSingle();
 
       if (profileError) {
         console.error("[auth] profile fetch error:", profileError.message);
         await new Promise(r => setTimeout(r, 2000));
-        const retry = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+        const retry = await supabase.from("profiles").select("id, name, gender, city, points, avatar_url, verified").eq("id", userId).maybeSingle();
         if (retry.error || !retry.data) {
           setProfile(null);
           return;
