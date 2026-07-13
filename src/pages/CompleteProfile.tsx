@@ -62,7 +62,16 @@ export default function CompleteProfile() {
       // هنا الحل الجذري: إجبار المتصفح على الانتقال وإعادة التحميل لقتل أي تعليق
       window.location.replace("/");
     } catch (e: any) {
-      toast.error(e?.message ?? "تعذر الحفظ");
+      console.error("================ ERROR SAVING PROFILE ================");
+      console.error("RPC Error:", e);
+      console.error("Message:", e?.message);
+      console.error("Details:", e?.details);
+      console.error("Hint:", e?.hint);
+      console.error("======================================================");
+      
+      const errMsg = e?.message ?? "تعذر الحفظ";
+      toast.error(errMsg);
+      alert("حدث خطأ في قاعدة البيانات يمنع الحفظ!\nالخطأ: " + errMsg + "\nيرجى التحقق من الكونسول لمعرفة التفاصيل، وتأكد من تشغيل ملف setup_database.sql الأخير في Supabase!");
       setBusy(false);
     }
   };
