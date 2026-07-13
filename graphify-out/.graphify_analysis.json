@@ -1,0 +1,422 @@
+{
+  "communities": {
+    "0": [
+      "src_components_errorboundary_errorboundary"
+    ],
+    "1": [
+      "src_components_fazaa_editprofilemodal_editprofilemodal"
+    ],
+    "2": [
+      "src_components_fazaa_requestcomposer_requestcomposer"
+    ],
+    "3": [
+      "src_components_fazaa_utils_badgeclass"
+    ],
+    "4": [
+      "src_components_fazaa_utils_formatprice"
+    ],
+    "5": [
+      "src_components_mobilelayout_mobilelayout"
+    ],
+    "6": [
+      "src_components_protectedroute_protectedroute"
+    ],
+    "7": [
+      "src_components_themetoggle_themetoggle"
+    ],
+    "8": [
+      "src_components_ui_badge_badgeprops"
+    ],
+    "9": [
+      "src_components_ui_button_buttonprops"
+    ],
+    "10": [
+      "src_components_ui_calendar_calendarprops"
+    ],
+    "11": [
+      "src_components_ui_chart_chartconfig"
+    ],
+    "12": [
+      "src_components_ui_textarea_textareaprops"
+    ],
+    "13": [
+      "src_components_ui_toaster_toaster"
+    ],
+    "14": [
+      "src_contexts_authcontext_authprovider"
+    ],
+    "15": [
+      "src_contexts_authcontext_profile"
+    ],
+    "16": [
+      "src_contexts_authcontext_useauth"
+    ],
+    "17": [
+      "src_contexts_themecontext_themeprovider"
+    ],
+    "18": [
+      "src_contexts_themecontext_usetheme"
+    ],
+    "19": [
+      "src_hooks_use_mobile_useismobile"
+    ],
+    "20": [
+      "src_hooks_userealtimefazaa_requestnotificationpermission"
+    ],
+    "21": [
+      "src_hooks_userealtimefazaa_userealtimefazaa"
+    ],
+    "22": [
+      "src_integrations_supabase_types_compositetypes"
+    ],
+    "23": [
+      "src_integrations_supabase_types_database"
+    ],
+    "24": [
+      "src_integrations_supabase_types_enums"
+    ],
+    "25": [
+      "src_integrations_supabase_types_json"
+    ],
+    "26": [
+      "src_integrations_supabase_types_tables"
+    ],
+    "27": [
+      "src_integrations_supabase_types_tablesinsert"
+    ],
+    "28": [
+      "src_integrations_supabase_types_tablesupdate"
+    ],
+    "29": [
+      "src_lib_ai_callai"
+    ],
+    "30": [
+      "src_lib_ai_streamchat"
+    ],
+    "31": [
+      "src_lib_fazaa_acceptresponse"
+    ],
+    "32": [
+      "src_lib_fazaa_areawatcher"
+    ],
+    "33": [
+      "src_lib_fazaa_buildmapsurl"
+    ],
+    "34": [
+      "src_lib_fazaa_buildwhatsappurl"
+    ],
+    "35": [
+      "src_lib_fazaa_confirmfazaacompletion"
+    ],
+    "36": [
+      "src_lib_fazaa_confirmphoneverification"
+    ],
+    "37": [
+      "src_lib_fazaa_createphoneverification"
+    ],
+    "38": [
+      "src_lib_fazaa_createrequest"
+    ],
+    "39": [
+      "src_lib_fazaa_declineresponse"
+    ],
+    "40": [
+      "src_lib_fazaa_deleterequest"
+    ],
+    "41": [
+      "src_lib_fazaa_distancekm"
+    ],
+    "42": [
+      "src_lib_fazaa_fazaacategory"
+    ],
+    "43": [
+      "src_lib_fazaa_fazaarequest"
+    ],
+    "44": [
+      "src_lib_fazaa_fazaaresponse"
+    ],
+    "45": [
+      "src_lib_fazaa_fazaastatus"
+    ],
+    "46": [
+      "src_lib_fazaa_fazaasuggestion"
+    ],
+    "47": [
+      "src_lib_fazaa_fazaaurgency"
+    ],
+    "48": [
+      "src_lib_fazaa_fetchactivewatchers"
+    ],
+    "49": [
+      "src_lib_fazaa_fetchfeed"
+    ],
+    "50": [
+      "src_lib_fazaa_fetchjordanstats"
+    ],
+    "51": [
+      "src_lib_fazaa_fetchmonthlytophelper"
+    ],
+    "52": [
+      "src_lib_fazaa_fetchmyactivewatch"
+    ],
+    "53": [
+      "src_lib_fazaa_fetchmyresponses"
+    ],
+    "54": [
+      "src_lib_fazaa_fetchnotifications"
+    ],
+    "55": [
+      "src_lib_fazaa_fetchresponderphone"
+    ],
+    "56": [
+      "src_lib_fazaa_fetchresponsesforrequest"
+    ],
+    "57": [
+      "src_lib_fazaa_fetchuseraveragerating"
+    ],
+    "58": [
+      "src_lib_fazaa_fetchusercompletedcount"
+    ],
+    "59": [
+      "src_lib_fazaa_fetchweeklyleaderboard"
+    ],
+    "60": [
+      "src_lib_fazaa_filteractivefeed"
+    ],
+    "61": [
+      "src_lib_fazaa_formattimeago"
+    ],
+    "62": [
+      "src_lib_fazaa_isfazaaexpired"
+    ],
+    "63": [
+      "src_lib_fazaa_jordancity"
+    ],
+    "64": [
+      "src_lib_fazaa_jordanstats"
+    ],
+    "65": [
+      "src_lib_fazaa_leaderrow"
+    ],
+    "66": [
+      "src_lib_fazaa_markallnotificationsread"
+    ],
+    "67": [
+      "src_lib_fazaa_marknotificationread"
+    ],
+    "68": [
+      "src_lib_fazaa_markselfverified"
+    ],
+    "69": [
+      "src_lib_fazaa_newfazaainput"
+    ],
+    "70": [
+      "src_lib_fazaa_notification"
+    ],
+    "71": [
+      "src_lib_fazaa_offerhelp"
+    ],
+    "72": [
+      "src_lib_fazaa_startareawatch"
+    ],
+    "73": [
+      "src_lib_fazaa_stopareawatch"
+    ],
+    "74": [
+      "src_lib_fazaa_submitrating"
+    ],
+    "75": [
+      "src_lib_fazaa_suggestfazaatags"
+    ],
+    "76": [
+      "src_lib_fazaa_updaterequeststatus"
+    ],
+    "77": [
+      "src_lib_fazaa_uploadavatar"
+    ],
+    "78": [
+      "src_lib_fazaa_urgencyvariant"
+    ],
+    "79": [
+      "src_lib_fazaa_validatenewfazaainput"
+    ],
+    "80": [
+      "src_lib_phone_buildjordanwhatsappurl"
+    ],
+    "81": [
+      "src_lib_phone_formatjordanphonedisplay"
+    ],
+    "82": [
+      "src_lib_phone_generateverificationcode"
+    ],
+    "83": [
+      "src_lib_phone_isvalidjordanphone"
+    ],
+    "84": [
+      "src_lib_phone_normalizejordanphone"
+    ],
+    "85": [
+      "src_lib_utils_cn"
+    ],
+    "86": [
+      "src_pages_auth_auth"
+    ],
+    "87": [
+      "src_pages_privacy_privacy"
+    ],
+    "88": [
+      "src_pages_terms_terms"
+    ]
+  },
+  "cohesion": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_components_errorboundary_errorboundary",
+      "label": "ErrorBoundary",
+      "degree": 0
+    },
+    {
+      "id": "src_components_mobilelayout_mobilelayout",
+      "label": "MobileLayout",
+      "degree": 0
+    },
+    {
+      "id": "src_components_protectedroute_protectedroute",
+      "label": "ProtectedRoute",
+      "degree": 0
+    },
+    {
+      "id": "src_components_themetoggle_themetoggle",
+      "label": "ThemeToggle",
+      "degree": 0
+    },
+    {
+      "id": "src_components_fazaa_editprofilemodal_editprofilemodal",
+      "label": "EditProfileModal",
+      "degree": 0
+    },
+    {
+      "id": "src_components_fazaa_requestcomposer_requestcomposer",
+      "label": "RequestComposer",
+      "degree": 0
+    },
+    {
+      "id": "src_components_fazaa_utils_badgeclass",
+      "label": "badgeClass",
+      "degree": 0
+    },
+    {
+      "id": "src_components_fazaa_utils_formatprice",
+      "label": "formatPrice",
+      "degree": 0
+    },
+    {
+      "id": "src_components_ui_badge_badgeprops",
+      "label": "BadgeProps",
+      "degree": 0
+    },
+    {
+      "id": "src_components_ui_button_buttonprops",
+      "label": "ButtonProps",
+      "degree": 0
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `ErrorBoundary`, `MobileLayout`, `ProtectedRoute` to the rest of the system?",
+      "why": "89 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

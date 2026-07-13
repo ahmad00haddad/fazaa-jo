@@ -15,6 +15,8 @@ import { AnimatePresence, motion } from "framer-motion";
 const Auth            = lazy(() => import("./pages/Auth"));
 const Chat            = lazy(() => import("./pages/Chat"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const Privacy         = lazy(() => import("./pages/Privacy"));
+const Terms           = lazy(() => import("./pages/Terms"));
 const Fazaa           = lazy(() => import("./pages/Fazaa"));
 const Favorites       = lazy(() => import("./pages/Favorites"));
 const History         = lazy(() => import("./pages/History"));
@@ -93,18 +95,20 @@ const App = () => (
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/auth" element={<Auth />} />
-                  <Route path="/complete-profile" element={<CompleteProfile />} />
-                <Route
-                  path="*"
-                  element={
-                    <ProtectedRoute>
-                      <MobileLayout>
-                        <InnerRoutes />
-                      </MobileLayout>
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
+                  <Route path="/complete-profile" element={<ProtectedRoute><CompleteProfile /></ProtectedRoute>} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route
+                    path="*"
+                    element={
+                      <ProtectedRoute>
+                        <MobileLayout>
+                          <InnerRoutes />
+                        </MobileLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
             </Suspense>
           </AuthProvider>
         </BrowserRouter>

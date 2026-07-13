@@ -48,7 +48,8 @@ export interface FazaaRequest {
   latitude: number | null;
   longitude: number | null;
   created_at: string;
-  female_only: boolean;
+  female_only: boolean; // deprecated
+  gender_visibility: "all" | "female_only" | "male_only";
   city: string | null;
   status: FazaaStatus;
   requester_verified: boolean;
@@ -140,7 +141,8 @@ export interface NewFazaaInput {
   location?: string;
   latitude?: number;
   longitude?: number;
-  female_only?: boolean;
+  female_only?: boolean; // deprecated
+  gender_visibility?: "all" | "female_only" | "male_only";
   city?: string | null;
   price_jod: number;
 }
@@ -305,10 +307,11 @@ export async function createRequest(
       need: input.need,
       category: input.category,
       urgency: input.urgency,
+      female_only: input.gender_visibility === "female_only" || !!input.female_only,
+      gender_visibility: input.gender_visibility ?? "all",
       location: input.location ?? null,
       latitude: input.latitude ?? null,
       longitude: input.longitude ?? null,
-      female_only: !!input.female_only,
       city: input.city ?? null,
       price_jod: input.price_jod ?? 0,
     })

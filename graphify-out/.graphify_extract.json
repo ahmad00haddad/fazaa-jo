@@ -1,0 +1,2441 @@
+{
+  "nodes": [
+    {
+      "id": "src_components_errorboundary_errorboundary",
+      "label": "ErrorBoundary",
+      "file_type": "code",
+      "source_file": "src/components/ErrorBoundary.tsx",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_mobilelayout_mobilelayout",
+      "label": "MobileLayout",
+      "file_type": "code",
+      "source_file": "src/components/MobileLayout.tsx",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_protectedroute_protectedroute",
+      "label": "ProtectedRoute",
+      "file_type": "code",
+      "source_file": "src/components/ProtectedRoute.tsx",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_themetoggle_themetoggle",
+      "label": "ThemeToggle",
+      "file_type": "code",
+      "source_file": "src/components/ThemeToggle.tsx",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_fazaa_editprofilemodal_editprofilemodal",
+      "label": "EditProfileModal",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/EditProfileModal.tsx",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_fazaa_requestcomposer_requestcomposer",
+      "label": "RequestComposer",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_fazaa_utils_badgeclass",
+      "label": "badgeClass",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/utils.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_fazaa_utils_formatprice",
+      "label": "formatPrice",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/utils.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_badge_badgeprops",
+      "label": "BadgeProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/badge.tsx",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_button_buttonprops",
+      "label": "ButtonProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/button.tsx",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_calendar_calendarprops",
+      "label": "CalendarProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/calendar.tsx",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_chart_chartconfig",
+      "label": "ChartConfig",
+      "file_type": "code",
+      "source_file": "src/components/ui/chart.tsx",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_textarea_textareaprops",
+      "label": "TextareaProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/textarea.tsx",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_ui_toaster_toaster",
+      "label": "Toaster",
+      "file_type": "code",
+      "source_file": "src/components/ui/toaster.tsx",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_contexts_authcontext_profile",
+      "label": "Profile",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_contexts_authcontext_authprovider",
+      "label": "AuthProvider",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_contexts_authcontext_useauth",
+      "label": "useAuth",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L115",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_contexts_themecontext_themeprovider",
+      "label": "ThemeProvider",
+      "file_type": "code",
+      "source_file": "src/contexts/ThemeContext.tsx",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_contexts_themecontext_usetheme",
+      "label": "useTheme",
+      "file_type": "code",
+      "source_file": "src/contexts/ThemeContext.tsx",
+      "source_location": "L41",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_hooks_use_mobile_useismobile",
+      "label": "useIsMobile",
+      "file_type": "code",
+      "source_file": "src/hooks/use-mobile.tsx",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_hooks_userealtimefazaa_userealtimefazaa",
+      "label": "useRealtimeFazaa",
+      "file_type": "code",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_hooks_userealtimefazaa_requestnotificationpermission",
+      "label": "requestNotificationPermission",
+      "file_type": "code",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L63",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_json",
+      "label": "Json",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_database",
+      "label": "Database",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_tables",
+      "label": "Tables",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L401",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_tablesinsert",
+      "label": "TablesInsert",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L430",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_tablesupdate",
+      "label": "TablesUpdate",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L455",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_enums",
+      "label": "Enums",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L480",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_integrations_supabase_types_compositetypes",
+      "label": "CompositeTypes",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L497",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_ai_callai",
+      "label": "callAI",
+      "file_type": "code",
+      "source_file": "src/lib/ai.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_ai_streamchat",
+      "label": "streamChat",
+      "file_type": "code",
+      "source_file": "src/lib/ai.ts",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaacategory",
+      "label": "FazaaCategory",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaaurgency",
+      "label": "FazaaUrgency",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaastatus",
+      "label": "FazaaStatus",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_jordancity",
+      "label": "JordanCity",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L37",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaarequest",
+      "label": "FazaaRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L39",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaaresponse",
+      "label": "FazaaResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L59",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_notification",
+      "label": "Notification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L70",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchnotifications",
+      "label": "fetchNotifications",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L80",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_marknotificationread",
+      "label": "markNotificationRead",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L91",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_markallnotificationsread",
+      "label": "markAllNotificationsRead",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L97",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_submitrating",
+      "label": "submitRating",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L107",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_confirmfazaacompletion",
+      "label": "confirmFazaaCompletion",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L116",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchuseraveragerating",
+      "label": "fetchUserAverageRating",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L123",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_newfazaainput",
+      "label": "NewFazaaInput",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L137",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_isfazaaexpired",
+      "label": "isFazaaExpired",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L167",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_filteractivefeed",
+      "label": "filterActiveFeed",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L173",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchfeed",
+      "label": "fetchFeed",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L188",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fazaasuggestion",
+      "label": "FazaaSuggestion",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L199",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_suggestfazaatags",
+      "label": "suggestFazaaTags",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L204",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_uploadavatar",
+      "label": "uploadAvatar",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L253",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_validatenewfazaainput",
+      "label": "validateNewFazaaInput",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L271",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_createrequest",
+      "label": "createRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L282",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_deleterequest",
+      "label": "deleteRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L324",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_updaterequeststatus",
+      "label": "updateRequestStatus",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L329",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_offerhelp",
+      "label": "offerHelp",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L334",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchresponsesforrequest",
+      "label": "fetchResponsesForRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L353",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchmyresponses",
+      "label": "fetchMyResponses",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L363",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_acceptresponse",
+      "label": "acceptResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L373",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_declineresponse",
+      "label": "declineResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L382",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchresponderphone",
+      "label": "fetchResponderPhone",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L387",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_areawatcher",
+      "label": "AreaWatcher",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L394",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_startareawatch",
+      "label": "startAreaWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L403",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_stopareawatch",
+      "label": "stopAreaWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L415",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchactivewatchers",
+      "label": "fetchActiveWatchers",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L420",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchmyactivewatch",
+      "label": "fetchMyActiveWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L430",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_jordanstats",
+      "label": "JordanStats",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L441",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchjordanstats",
+      "label": "fetchJordanStats",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L448",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_markselfverified",
+      "label": "markSelfVerified",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L480",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_formattimeago",
+      "label": "formatTimeAgo",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L486",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_buildwhatsappurl",
+      "label": "buildWhatsAppUrl",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L495",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_leaderrow",
+      "label": "LeaderRow",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L500",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchweeklyleaderboard",
+      "label": "fetchWeeklyLeaderboard",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L508",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchmonthlytophelper",
+      "label": "fetchMonthlyTopHelper",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L520",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_fetchusercompletedcount",
+      "label": "fetchUserCompletedCount",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L534",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_createphoneverification",
+      "label": "createPhoneVerification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L543",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_confirmphoneverification",
+      "label": "confirmPhoneVerification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L551",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_buildmapsurl",
+      "label": "buildMapsUrl",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L570",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_urgencyvariant",
+      "label": "urgencyVariant",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L580",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_fazaa_distancekm",
+      "label": "distanceKm",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L587",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_phone_normalizejordanphone",
+      "label": "normalizeJordanPhone",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_phone_isvalidjordanphone",
+      "label": "isValidJordanPhone",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_phone_formatjordanphonedisplay",
+      "label": "formatJordanPhoneDisplay",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_phone_buildjordanwhatsappurl",
+      "label": "buildJordanWhatsAppUrl",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L32",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_phone_generateverificationcode",
+      "label": "generateVerificationCode",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L38",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_utils_cn",
+      "label": "cn",
+      "file_type": "code",
+      "source_file": "src/lib/utils.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_pages_auth_auth",
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "src/pages/Auth.tsx",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_pages_privacy_privacy",
+      "label": "Privacy",
+      "file_type": "code",
+      "source_file": "src/pages/Privacy.tsx",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_pages_terms_terms",
+      "label": "Terms",
+      "file_type": "code",
+      "source_file": "src/pages/Terms.tsx",
+      "source_location": "L3",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "src_components_ui_use_toast",
+      "target": "src_hooks_use_toast",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/use-toast.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_ui_toaster_toaster",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_mobilelayout_mobilelayout",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_protectedroute_protectedroute",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_contexts_authcontext_authprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_contexts_themecontext_themeprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_errorboundary_errorboundary",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_mobilelayout",
+      "target": "src_hooks_userealtimefazaa_userealtimefazaa",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MobileLayout.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navlink",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/NavLink.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pageheader",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/PageHeader.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pageheader",
+      "target": "src_lib_fazaa_fetchnotifications",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/PageHeader.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_protectedroute",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProtectedRoute.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_protectedroute",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ProtectedRoute.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_themetoggle",
+      "target": "src_contexts_themecontext_usetheme",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ThemeToggle.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_editprofilemodal",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/EditProfileModal.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_fazaamap",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/FazaaMap.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_fazaamap",
+      "target": "src_lib_fazaa_buildmapsurl",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/FazaaMap.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_fazaamap",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/FazaaMap.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_fazaamap",
+      "target": "src_components_fazaa_utils_badgeclass",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/FazaaMap.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_metabadges",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MetaBadges.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_metabadges",
+      "target": "src_components_fazaa_utils_formatprice",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MetaBadges.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_buildmapsurl",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_fazaaresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_urgencyvariant",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_lib_fazaa_confirmfazaacompletion",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_myrequestcard",
+      "target": "src_components_fazaa_utils_badgeclass",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/MyRequestCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_otherrequestcard",
+      "target": "src_lib_fazaa_buildmapsurl",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/OtherRequestCard.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_otherrequestcard",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/OtherRequestCard.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_otherrequestcard",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/OtherRequestCard.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_otherrequestcard",
+      "target": "src_lib_fazaa_urgencyvariant",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/OtherRequestCard.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_otherrequestcard",
+      "target": "src_components_fazaa_utils_badgeclass",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/OtherRequestCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_requestcomposer",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_requestcomposer",
+      "target": "src_lib_fazaa_suggestfazaatags",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_requestcomposer",
+      "target": "src_lib_fazaa_newfazaainput",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_requestcomposer",
+      "target": "src_lib_fazaa_fazaacategory",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_requestcomposer",
+      "target": "src_lib_fazaa_fazaaurgency",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_responserow",
+      "target": "src_lib_fazaa_fetchresponderphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/ResponseRow.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_responserow",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/ResponseRow.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_responserow",
+      "target": "src_lib_fazaa_buildwhatsappurl",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/ResponseRow.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_responserow",
+      "target": "src_lib_fazaa_fazaaresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/ResponseRow.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_fazaa_responserow",
+      "target": "src_components_fazaa_utils_formatprice",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/fazaa/ResponseRow.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_accordion",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/accordion.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_alert_dialog",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/alert-dialog.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_alert",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/alert.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_avatar",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/avatar.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_badge",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/badge.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_breadcrumb",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/breadcrumb.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_button",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/button.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_calendar",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/calendar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_card",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/card.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_carousel",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/carousel.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_chart",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/chart.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_checkbox",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/checkbox.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_command",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/command.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_context_menu",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/context-menu.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_dialog",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/dialog.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_drawer",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/drawer.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_dropdown_menu",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/dropdown-menu.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_form",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/form.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_hover_card",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/hover-card.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_input_otp",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/input-otp.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_input",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/input.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_label",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/label.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_menubar",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/menubar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_navigation_menu",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/navigation-menu.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_pagination",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/pagination.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_pagination",
+      "target": "src_components_ui_button_buttonprops",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/pagination.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_popover",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/popover.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_progress",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/progress.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_radio_group",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/radio-group.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_resizable",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/resizable.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_scroll_area",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/scroll-area.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_select",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/select.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_separator",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/separator.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_sheet",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/sheet.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_sidebar",
+      "target": "src_hooks_use_mobile_useismobile",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/sidebar.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_sidebar",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/sidebar.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_skeleton",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/skeleton.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_slider",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/slider.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_switch",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/switch.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_table",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/table.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_tabs",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/tabs.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_textarea",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/textarea.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_toast",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/toast.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_toggle_group",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/toggle-group.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_toggle",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/toggle.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_tooltip",
+      "target": "src_lib_utils_cn",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui/tooltip.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_hooks_userealtimefazaa",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_hooks_userealtimefazaa",
+      "target": "src_lib_fazaa_isfazaaexpired",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_hooks_userealtimefazaa",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_integrations_supabase_client",
+      "target": "src_integrations_supabase_types_database",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/integrations/supabase/client.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa_filterfeed_test",
+      "target": "src_lib_fazaa_filteractivefeed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.filterFeed.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa_filterfeed_test",
+      "target": "src_lib_fazaa_isfazaaexpired",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.filterFeed.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa_filterfeed_test",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.filterFeed.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa_test",
+      "target": "src_lib_fazaa_distancekm",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_fazaa",
+      "target": "src_lib_phone_buildjordanwhatsappurl",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_phone_test",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/phone.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_phone_test",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/phone.test.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_auth",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Auth.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_auth",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Auth.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_auth",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Auth.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_chat",
+      "target": "src_lib_ai_streamchat",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Chat.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_completeprofile",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/CompleteProfile.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_completeprofile",
+      "target": "src_lib_phone_formatjordanphonedisplay",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/CompleteProfile.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_completeprofile",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/CompleteProfile.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_completeprofile",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/CompleteProfile.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_favorites",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Favorites.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_acceptresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_confirmfazaacompletion",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_createrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_declineresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_deleterequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_fetchfeed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_fetchresponsesforrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_offerhelp",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_updaterequeststatus",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_isfazaaexpired",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_submitrating",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_newfazaainput",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_lib_fazaa_fazaaresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_hooks_userealtimefazaa_userealtimefazaa",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_fazaa",
+      "target": "src_components_fazaa_requestcomposer_requestcomposer",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Fazaa.tsx",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_history",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/History.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_history",
+      "target": "src_lib_fazaa_fetchmyresponses",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/History.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_history",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/History.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_history",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/History.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_fetchfeed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_filteractivefeed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_urgencyvariant",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_fetchjordanstats",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_fetchmyactivewatch",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_startareawatch",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_stopareawatch",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_hooks_userealtimefazaa_userealtimefazaa",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_home",
+      "target": "src_components_themetoggle_themetoggle",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.tsx",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_leaderboard",
+      "target": "src_lib_fazaa_fetchmonthlytophelper",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Leaderboard.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_leaderboard",
+      "target": "src_lib_fazaa_fetchweeklyleaderboard",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Leaderboard.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_fazaa_fetchusercompletedcount",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_fazaa_fetchuseraveragerating",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_fazaa_markselfverified",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_fazaa_uploadavatar",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_phone_formatjordanphonedisplay",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_me",
+      "target": "src_hooks_userealtimefazaa_requestnotificationpermission",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_notifications",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Notifications.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_notifications",
+      "target": "src_lib_fazaa_fetchnotifications",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Notifications.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_notifications",
+      "target": "src_lib_fazaa_markallnotificationsread",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Notifications.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_notifications",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Notifications.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_contexts_authcontext_useauth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_distancekm",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_fetchfeed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_formattimeago",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_offerhelp",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_urgencyvariant",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_services",
+      "target": "src_lib_fazaa_fazaarequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_chat_send",
+      "target": "src_lib_ai_streamchat",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Chat.tsx",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_me_handleverify",
+      "target": "src_lib_fazaa_markselfverified",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_me_handleenablenotifs",
+      "target": "src_hooks_userealtimefazaa_requestnotificationpermission",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_me_saveprofile",
+      "target": "src_lib_phone_isvalidjordanphone",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_me_saveprofile",
+      "target": "src_lib_phone_normalizejordanphone",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_me_onavatarpick",
+      "target": "src_lib_fazaa_uploadavatar",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Me.tsx",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_ahmad_gemini_antigravity_scratch_fazaa_jo_src_pages_services_handleoffer",
+      "target": "src_lib_fazaa_offerhelp",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Services.tsx",
+      "source_location": "L89",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

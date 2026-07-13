@@ -25,7 +25,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { OtherRequestCard } from "@/components/fazaa/OtherRequestCard";
 import { MyRequestCard } from "@/components/fazaa/MyRequestCard";
 import { RequestComposer } from "@/components/fazaa/RequestComposer";
-import { RatingModal } from "@/components/fazaa/RatingModal";
+import FazaaMap from "@/components/fazaa/FazaaMap";
 
 export default function Fazaa() {
   const { user, profile } = useAuth();
@@ -33,6 +33,7 @@ export default function Fazaa() {
   const [showComposer, setShowComposer] = useState(false);
   const [openResponses, setOpenResponses] = useState<string | null>(null);
   const [ratingRequest, setRatingRequest] = useState<{ reqId: string; responderId: string; responderName: string } | null>(null);
+  const [viewMode, setViewMode] = useState<"map" | "list">("map");
 
   const { data: feed = [], isLoading } = useQuery({
     queryKey: ['fazaa_feed'],
@@ -75,12 +76,47 @@ export default function Fazaa() {
       if (!user || !profile) throw new Error("Not authenticated");
       return createRequest(user.id, profile.name, profile.gender, payload);
     },
-    onSuccess: () => {
+    onMutate: async (payload: NewFazaaInput) => {
+      await queryClient.cancelQueries({ queryKey: ['fazaa_feed'] });
+      const previousFeed = queryClient.getQueryData(['fazaa_feed']);
+      
+      const optimisticFazaa: FazaaRequest = {
+        id: `temp-${Date.now()}`,
+        user_id: user!.id,
+        requester_name: profile!.name,
+        requester_gender: profile!.gender,
+        need: payload.need,
+        category: payload.category,
+        urgency: payload.urgency,
+        location: payload.location ?? null,
+        latitude: payload.latitude ?? null,
+        longitude: payload.longitude ?? null,
+        created_at: new Date().toISOString(),
+        female_only: payload.gender_visibility === "female_only" || !!payload.female_only,
+        gender_visibility: payload.gender_visibility ?? "all",
+        city: payload.city ?? null,
+        status: "active",
+        requester_verified: profile?.phone_verified ?? false,
+        price_jod: payload.price_jod ?? 0,
+      };
+
+      queryClient.setQueryData(['fazaa_feed'], (old: any) => {
+        return [optimisticFazaa, ...(old || [])];
+      });
+
       setShowComposer(false);
-      toast.success("تم نشر طلب الفزعة");
+      return { previousFeed };
+    },
+    onError: (err, newFazaa, context) => {
+      queryClient.setQueryData(['fazaa_feed'], context?.previousFeed);
+      toast.error(err?.message ?? "تعذر النشر");
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['fazaa_feed'] });
     },
-    onError: (e: any) => toast.error(e?.message ?? "تعذر النشر")
+    onSuccess: () => {
+      toast.success("تم نشر طلب الفزعة");
+    }
   });
 
   const deleteMutation = useMutation({
@@ -181,7 +217,13 @@ export default function Fazaa() {
           </p>
           <button
             type="button"
-            onClick={() => setShowComposer(true)}
+            onClick={() => {
+              if (!profile?.phone_verified) {
+                toast.error("عذراً، يجب توثيق رقم هاتفك أولاً في صفحة (حسابي) لتتمكن من إنشاء فزعة.", { duration: 5000 });
+                return;
+              }
+              setShowComposer(true);
+            }}
             className="mt-4 w-full rounded-2xl bg-white/15 py-3 font-semibold flex items-center justify-center gap-2 active:scale-[0.99] transition"
           >
             <Plus className="w-5 h-5" />
@@ -189,13 +231,34 @@ export default function Fazaa() {
           </button>
         </section>
 
-        {isLoading && (
+        <div className="flex justify-center bg-zinc-200/50 p-1 rounded-xl mb-2">
+          <button
+            onClick={() => setViewMode("map")}
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${viewMode === "map" ? "bg-white shadow text-primary" : "text-zinc-500"}`}
+          >
+            الخريطة الحية
+          </button>
+          <button
+            onClick={() => setViewMode("list")}
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${viewMode === "list" ? "bg-white shadow text-primary" : "text-zinc-500"}`}
+          >
+            القائمة
+          </button>
+        </div>
+
+        {viewMode === "map" && (
+          <div className="-mx-4 -mb-32 overflow-hidden rounded-t-3xl shadow-inner border-t border-zinc-200/50">
+            <FazaaMap />
+          </div>
+        )}
+
+        {viewMode === "list" && isLoading && (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
           </div>
         )}
 
-        {!isLoading && myItems.length > 0 && (
+        {viewMode === "list" && !isLoading && myItems.length > 0 && (
           <section className="space-y-3">
             <h3 className="font-display font-bold text-sm px-1">طلباتي ({myItems.length})</h3>
             {myItems.map((item) => {
@@ -231,7 +294,7 @@ export default function Fazaa() {
           </section>
         )}
 
-        {!isLoading && (
+        {viewMode === "list" && !isLoading && (
           <section className="space-y-3">
             <h3 className="font-display font-bold text-sm px-1">فزعات تحتاج استجابة</h3>
             {otherItems.length === 0 && (

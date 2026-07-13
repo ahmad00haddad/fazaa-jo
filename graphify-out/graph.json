@@ -1,0 +1,900 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "ErrorBoundary",
+      "file_type": "code",
+      "source_file": "src/components/ErrorBoundary.tsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "src_components_errorboundary_errorboundary",
+      "community": 0,
+      "norm_label": "errorboundary"
+    },
+    {
+      "label": "MobileLayout",
+      "file_type": "code",
+      "source_file": "src/components/MobileLayout.tsx",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_components_mobilelayout_mobilelayout",
+      "community": 5,
+      "norm_label": "mobilelayout"
+    },
+    {
+      "label": "ProtectedRoute",
+      "file_type": "code",
+      "source_file": "src/components/ProtectedRoute.tsx",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "src_components_protectedroute_protectedroute",
+      "community": 6,
+      "norm_label": "protectedroute"
+    },
+    {
+      "label": "ThemeToggle",
+      "file_type": "code",
+      "source_file": "src/components/ThemeToggle.tsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_components_themetoggle_themetoggle",
+      "community": 7,
+      "norm_label": "themetoggle"
+    },
+    {
+      "label": "EditProfileModal",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/EditProfileModal.tsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "src_components_fazaa_editprofilemodal_editprofilemodal",
+      "community": 1,
+      "norm_label": "editprofilemodal"
+    },
+    {
+      "label": "RequestComposer",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/RequestComposer.tsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "src_components_fazaa_requestcomposer_requestcomposer",
+      "community": 2,
+      "norm_label": "requestcomposer"
+    },
+    {
+      "label": "badgeClass",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/utils.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_fazaa_utils_badgeclass",
+      "community": 3,
+      "norm_label": "badgeclass"
+    },
+    {
+      "label": "formatPrice",
+      "file_type": "code",
+      "source_file": "src/components/fazaa/utils.ts",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "src_components_fazaa_utils_formatprice",
+      "community": 4,
+      "norm_label": "formatprice"
+    },
+    {
+      "label": "BadgeProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/badge.tsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_components_ui_badge_badgeprops",
+      "community": 8,
+      "norm_label": "badgeprops"
+    },
+    {
+      "label": "ButtonProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/button.tsx",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "src_components_ui_button_buttonprops",
+      "community": 9,
+      "norm_label": "buttonprops"
+    },
+    {
+      "label": "CalendarProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/calendar.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_components_ui_calendar_calendarprops",
+      "community": 10,
+      "norm_label": "calendarprops"
+    },
+    {
+      "label": "ChartConfig",
+      "file_type": "code",
+      "source_file": "src/components/ui/chart.tsx",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "src_components_ui_chart_chartconfig",
+      "community": 11,
+      "norm_label": "chartconfig"
+    },
+    {
+      "label": "TextareaProps",
+      "file_type": "code",
+      "source_file": "src/components/ui/textarea.tsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_components_ui_textarea_textareaprops",
+      "community": 12,
+      "norm_label": "textareaprops"
+    },
+    {
+      "label": "Toaster",
+      "file_type": "code",
+      "source_file": "src/components/ui/toaster.tsx",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_components_ui_toaster_toaster",
+      "community": 13,
+      "norm_label": "toaster"
+    },
+    {
+      "label": "Profile",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_contexts_authcontext_profile",
+      "community": 15,
+      "norm_label": "profile"
+    },
+    {
+      "label": "AuthProvider",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "src_contexts_authcontext_authprovider",
+      "community": 14,
+      "norm_label": "authprovider"
+    },
+    {
+      "label": "useAuth",
+      "file_type": "code",
+      "source_file": "src/contexts/AuthContext.tsx",
+      "source_location": "L115",
+      "_origin": "ast",
+      "id": "src_contexts_authcontext_useauth",
+      "community": 16,
+      "norm_label": "useauth"
+    },
+    {
+      "label": "ThemeProvider",
+      "file_type": "code",
+      "source_file": "src/contexts/ThemeContext.tsx",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "src_contexts_themecontext_themeprovider",
+      "community": 17,
+      "norm_label": "themeprovider"
+    },
+    {
+      "label": "useTheme",
+      "file_type": "code",
+      "source_file": "src/contexts/ThemeContext.tsx",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "src_contexts_themecontext_usetheme",
+      "community": 18,
+      "norm_label": "usetheme"
+    },
+    {
+      "label": "useIsMobile",
+      "file_type": "code",
+      "source_file": "src/hooks/use-mobile.tsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_hooks_use_mobile_useismobile",
+      "community": 19,
+      "norm_label": "useismobile"
+    },
+    {
+      "label": "useRealtimeFazaa",
+      "file_type": "code",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_hooks_userealtimefazaa_userealtimefazaa",
+      "community": 21,
+      "norm_label": "userealtimefazaa"
+    },
+    {
+      "label": "requestNotificationPermission",
+      "file_type": "code",
+      "source_file": "src/hooks/useRealtimeFazaa.ts",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "src_hooks_userealtimefazaa_requestnotificationpermission",
+      "community": 20,
+      "norm_label": "requestnotificationpermission"
+    },
+    {
+      "label": "Json",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_json",
+      "community": 25,
+      "norm_label": "json"
+    },
+    {
+      "label": "Database",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_database",
+      "community": 23,
+      "norm_label": "database"
+    },
+    {
+      "label": "Tables",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L401",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_tables",
+      "community": 26,
+      "norm_label": "tables"
+    },
+    {
+      "label": "TablesInsert",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L430",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_tablesinsert",
+      "community": 27,
+      "norm_label": "tablesinsert"
+    },
+    {
+      "label": "TablesUpdate",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L455",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_tablesupdate",
+      "community": 28,
+      "norm_label": "tablesupdate"
+    },
+    {
+      "label": "Enums",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L480",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_enums",
+      "community": 24,
+      "norm_label": "enums"
+    },
+    {
+      "label": "CompositeTypes",
+      "file_type": "code",
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L497",
+      "_origin": "ast",
+      "id": "src_integrations_supabase_types_compositetypes",
+      "community": 22,
+      "norm_label": "compositetypes"
+    },
+    {
+      "label": "callAI",
+      "file_type": "code",
+      "source_file": "src/lib/ai.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_lib_ai_callai",
+      "community": 29,
+      "norm_label": "callai"
+    },
+    {
+      "label": "streamChat",
+      "file_type": "code",
+      "source_file": "src/lib/ai.ts",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "src_lib_ai_streamchat",
+      "community": 30,
+      "norm_label": "streamchat"
+    },
+    {
+      "label": "FazaaCategory",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaacategory",
+      "community": 42,
+      "norm_label": "fazaacategory"
+    },
+    {
+      "label": "FazaaUrgency",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaaurgency",
+      "community": 47,
+      "norm_label": "fazaaurgency"
+    },
+    {
+      "label": "FazaaStatus",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaastatus",
+      "community": 45,
+      "norm_label": "fazaastatus"
+    },
+    {
+      "label": "JordanCity",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_jordancity",
+      "community": 63,
+      "norm_label": "jordancity"
+    },
+    {
+      "label": "FazaaRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaarequest",
+      "community": 43,
+      "norm_label": "fazaarequest"
+    },
+    {
+      "label": "FazaaResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaaresponse",
+      "community": 44,
+      "norm_label": "fazaaresponse"
+    },
+    {
+      "label": "Notification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_notification",
+      "community": 70,
+      "norm_label": "notification"
+    },
+    {
+      "label": "fetchNotifications",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchnotifications",
+      "community": 54,
+      "norm_label": "fetchnotifications"
+    },
+    {
+      "label": "markNotificationRead",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_marknotificationread",
+      "community": 67,
+      "norm_label": "marknotificationread"
+    },
+    {
+      "label": "markAllNotificationsRead",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_markallnotificationsread",
+      "community": 66,
+      "norm_label": "markallnotificationsread"
+    },
+    {
+      "label": "submitRating",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_submitrating",
+      "community": 74,
+      "norm_label": "submitrating"
+    },
+    {
+      "label": "confirmFazaaCompletion",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L116",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_confirmfazaacompletion",
+      "community": 35,
+      "norm_label": "confirmfazaacompletion"
+    },
+    {
+      "label": "fetchUserAverageRating",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L123",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchuseraveragerating",
+      "community": 57,
+      "norm_label": "fetchuseraveragerating"
+    },
+    {
+      "label": "NewFazaaInput",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L137",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_newfazaainput",
+      "community": 69,
+      "norm_label": "newfazaainput"
+    },
+    {
+      "label": "isFazaaExpired",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L167",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_isfazaaexpired",
+      "community": 62,
+      "norm_label": "isfazaaexpired"
+    },
+    {
+      "label": "filterActiveFeed",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L173",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_filteractivefeed",
+      "community": 60,
+      "norm_label": "filteractivefeed"
+    },
+    {
+      "label": "fetchFeed",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L188",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchfeed",
+      "community": 49,
+      "norm_label": "fetchfeed"
+    },
+    {
+      "label": "FazaaSuggestion",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L199",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fazaasuggestion",
+      "community": 46,
+      "norm_label": "fazaasuggestion"
+    },
+    {
+      "label": "suggestFazaaTags",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L204",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_suggestfazaatags",
+      "community": 75,
+      "norm_label": "suggestfazaatags"
+    },
+    {
+      "label": "uploadAvatar",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L253",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_uploadavatar",
+      "community": 77,
+      "norm_label": "uploadavatar"
+    },
+    {
+      "label": "validateNewFazaaInput",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L271",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_validatenewfazaainput",
+      "community": 79,
+      "norm_label": "validatenewfazaainput"
+    },
+    {
+      "label": "createRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L282",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_createrequest",
+      "community": 38,
+      "norm_label": "createrequest"
+    },
+    {
+      "label": "deleteRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L324",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_deleterequest",
+      "community": 40,
+      "norm_label": "deleterequest"
+    },
+    {
+      "label": "updateRequestStatus",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L329",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_updaterequeststatus",
+      "community": 76,
+      "norm_label": "updaterequeststatus"
+    },
+    {
+      "label": "offerHelp",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L334",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_offerhelp",
+      "community": 71,
+      "norm_label": "offerhelp"
+    },
+    {
+      "label": "fetchResponsesForRequest",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L353",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchresponsesforrequest",
+      "community": 56,
+      "norm_label": "fetchresponsesforrequest"
+    },
+    {
+      "label": "fetchMyResponses",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L363",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchmyresponses",
+      "community": 53,
+      "norm_label": "fetchmyresponses"
+    },
+    {
+      "label": "acceptResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L373",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_acceptresponse",
+      "community": 31,
+      "norm_label": "acceptresponse"
+    },
+    {
+      "label": "declineResponse",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L382",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_declineresponse",
+      "community": 39,
+      "norm_label": "declineresponse"
+    },
+    {
+      "label": "fetchResponderPhone",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L387",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchresponderphone",
+      "community": 55,
+      "norm_label": "fetchresponderphone"
+    },
+    {
+      "label": "AreaWatcher",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L394",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_areawatcher",
+      "community": 32,
+      "norm_label": "areawatcher"
+    },
+    {
+      "label": "startAreaWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L403",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_startareawatch",
+      "community": 72,
+      "norm_label": "startareawatch"
+    },
+    {
+      "label": "stopAreaWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L415",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_stopareawatch",
+      "community": 73,
+      "norm_label": "stopareawatch"
+    },
+    {
+      "label": "fetchActiveWatchers",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L420",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchactivewatchers",
+      "community": 48,
+      "norm_label": "fetchactivewatchers"
+    },
+    {
+      "label": "fetchMyActiveWatch",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L430",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchmyactivewatch",
+      "community": 52,
+      "norm_label": "fetchmyactivewatch"
+    },
+    {
+      "label": "JordanStats",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L441",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_jordanstats",
+      "community": 64,
+      "norm_label": "jordanstats"
+    },
+    {
+      "label": "fetchJordanStats",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L448",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchjordanstats",
+      "community": 50,
+      "norm_label": "fetchjordanstats"
+    },
+    {
+      "label": "markSelfVerified",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L480",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_markselfverified",
+      "community": 68,
+      "norm_label": "markselfverified"
+    },
+    {
+      "label": "formatTimeAgo",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L486",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_formattimeago",
+      "community": 61,
+      "norm_label": "formattimeago"
+    },
+    {
+      "label": "buildWhatsAppUrl",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L495",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_buildwhatsappurl",
+      "community": 34,
+      "norm_label": "buildwhatsappurl"
+    },
+    {
+      "label": "LeaderRow",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L500",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_leaderrow",
+      "community": 65,
+      "norm_label": "leaderrow"
+    },
+    {
+      "label": "fetchWeeklyLeaderboard",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L508",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchweeklyleaderboard",
+      "community": 59,
+      "norm_label": "fetchweeklyleaderboard"
+    },
+    {
+      "label": "fetchMonthlyTopHelper",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L520",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchmonthlytophelper",
+      "community": 51,
+      "norm_label": "fetchmonthlytophelper"
+    },
+    {
+      "label": "fetchUserCompletedCount",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L534",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_fetchusercompletedcount",
+      "community": 58,
+      "norm_label": "fetchusercompletedcount"
+    },
+    {
+      "label": "createPhoneVerification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L543",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_createphoneverification",
+      "community": 37,
+      "norm_label": "createphoneverification"
+    },
+    {
+      "label": "confirmPhoneVerification",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L551",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_confirmphoneverification",
+      "community": 36,
+      "norm_label": "confirmphoneverification"
+    },
+    {
+      "label": "buildMapsUrl",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L570",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_buildmapsurl",
+      "community": 33,
+      "norm_label": "buildmapsurl"
+    },
+    {
+      "label": "urgencyVariant",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L580",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_urgencyvariant",
+      "community": 78,
+      "norm_label": "urgencyvariant"
+    },
+    {
+      "label": "distanceKm",
+      "file_type": "code",
+      "source_file": "src/lib/fazaa.ts",
+      "source_location": "L587",
+      "_origin": "ast",
+      "id": "src_lib_fazaa_distancekm",
+      "community": 41,
+      "norm_label": "distancekm"
+    },
+    {
+      "label": "normalizeJordanPhone",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_lib_phone_normalizejordanphone",
+      "community": 84,
+      "norm_label": "normalizejordanphone"
+    },
+    {
+      "label": "isValidJordanPhone",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "src_lib_phone_isvalidjordanphone",
+      "community": 83,
+      "norm_label": "isvalidjordanphone"
+    },
+    {
+      "label": "formatJordanPhoneDisplay",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "src_lib_phone_formatjordanphonedisplay",
+      "community": 81,
+      "norm_label": "formatjordanphonedisplay"
+    },
+    {
+      "label": "buildJordanWhatsAppUrl",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_lib_phone_buildjordanwhatsappurl",
+      "community": 80,
+      "norm_label": "buildjordanwhatsappurl"
+    },
+    {
+      "label": "generateVerificationCode",
+      "file_type": "code",
+      "source_file": "src/lib/phone.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "src_lib_phone_generateverificationcode",
+      "community": 82,
+      "norm_label": "generateverificationcode"
+    },
+    {
+      "label": "cn",
+      "file_type": "code",
+      "source_file": "src/lib/utils.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_lib_utils_cn",
+      "community": 85,
+      "norm_label": "cn"
+    },
+    {
+      "label": "Auth",
+      "file_type": "code",
+      "source_file": "src/pages/Auth.tsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "src_pages_auth_auth",
+      "community": 86,
+      "norm_label": "auth"
+    },
+    {
+      "label": "Privacy",
+      "file_type": "code",
+      "source_file": "src/pages/Privacy.tsx",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_pages_privacy_privacy",
+      "community": 87,
+      "norm_label": "privacy"
+    },
+    {
+      "label": "Terms",
+      "file_type": "code",
+      "source_file": "src/pages/Terms.tsx",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_pages_terms_terms",
+      "community": 88,
+      "norm_label": "terms"
+    }
+  ],
+  "links": [],
+  "hyperedges": [],
+  "built_at_commit": "9b75a3e688a226a416c67acb66ebac2292469618"
+}

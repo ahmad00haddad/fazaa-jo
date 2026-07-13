@@ -15,6 +15,7 @@ import {
   startAreaWatch,
   stopAreaWatch,
   JORDAN_CITIES,
+  FAZAA_CATEGORIES,
   type FazaaRequest,
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
@@ -34,6 +35,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [watchCity, setWatchCity] = useState<string>(profile?.city ?? "عمّان");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
+  const [selectedCategory, setSelectedCategory] = useState<string>("الكل");
 
   const { data: feed = [], isLoading: loadingFeed } = useQuery({
     queryKey: ['fazaa_feed'],
@@ -51,7 +53,8 @@ export default function Home() {
     enabled: !!user?.id,
   });
 
-  const items = filterActiveFeed(feed, { viewerGender: profile?.gender, viewerId: user?.id });
+  const allActiveItems = filterActiveFeed(feed, { viewerGender: profile?.gender, viewerId: user?.id });
+  const items = selectedCategory === "الكل" ? allActiveItems : allActiveItems.filter(i => i.category === selectedCategory);
   const loading = loadingFeed || loadingStats || loadingWatch;
 
   useRealtimeFazaa(() => {
@@ -219,6 +222,28 @@ export default function Home() {
             <button onClick={() => nav("/fazaa")} className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center mr-1">
               <ArrowLeft className="w-4 h-4" />
             </button>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button
+              onClick={() => setSelectedCategory("الكل")}
+              className={`whitespace-nowrap px-4 py-2 rounded-2xl text-[11px] font-bold transition-all ${
+                selectedCategory === "الكل" ? "bg-primary text-primary-foreground shadow-glow scale-105" : "bg-secondary text-foreground/80 hover:bg-secondary/80"
+              }`}
+            >
+              الكل
+            </button>
+            {FAZAA_CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`whitespace-nowrap px-4 py-2 rounded-2xl text-[11px] font-bold transition-all ${
+                  selectedCategory === cat ? "bg-primary text-primary-foreground shadow-glow scale-105" : "bg-secondary text-foreground/80 hover:bg-secondary/80"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
 
           {loading && (
