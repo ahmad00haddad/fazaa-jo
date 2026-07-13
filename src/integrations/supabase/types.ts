@@ -68,6 +68,7 @@ export type Database = {
           city: string | null
           created_at: string
           female_only: boolean
+          gender_visibility: string | null
           id: string
           latitude: number | null
           location: string | null
@@ -86,6 +87,7 @@ export type Database = {
           city?: string | null
           created_at?: string
           female_only?: boolean
+          gender_visibility?: string | null
           id?: string
           latitude?: number | null
           location?: string | null
@@ -104,6 +106,7 @@ export type Database = {
           city?: string | null
           created_at?: string
           female_only?: boolean
+          gender_visibility?: string | null
           id?: string
           latitude?: number | null
           location?: string | null
@@ -368,6 +371,39 @@ export type Database = {
       request_is_female_only: {
         Args: { _request_id: string }
         Returns: boolean
+      }
+      requests_in_view: {
+        Args: {
+          max_lat: number
+          max_long: number
+          min_lat: number
+          min_long: number
+        }
+        Returns: {
+          category: string
+          city: string | null
+          created_at: string
+          female_only: boolean
+          gender_visibility: string | null
+          id: string
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          need: string
+          price_jod: number
+          requester_gender: string
+          requester_name: string
+          requester_verified: boolean
+          status: string
+          urgency: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "fazaa_requests"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       submit_rating: {
         Args: { p_rating: number; p_request_id: string; p_responder_id: string }
