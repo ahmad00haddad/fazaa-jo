@@ -41,6 +41,27 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          created_at: string
+          favorite_user_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          favorite_user_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          favorite_user_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       fazaa_requests: {
         Row: {
           category: string
@@ -305,10 +326,15 @@ export type Database = {
         Returns: undefined
       }
       active_watchers_count: { Args: never; Returns: number }
+      complete_my_profile: {
+        Args: { p_gender: string; p_name: string; p_phone: string }
+        Returns: undefined
+      }
       confirm_fazaa_completion: {
         Args: { p_request_id: string }
         Returns: undefined
       }
+      ensure_user_private_data: { Args: never; Returns: undefined }
       expire_urgent_fazaa_requests: { Args: never; Returns: number }
       get_my_phone: { Args: never; Returns: string }
       get_responder_phone: { Args: { _responder_id: string }; Returns: string }
