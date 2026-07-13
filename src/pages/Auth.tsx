@@ -10,7 +10,7 @@ import { isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 type Mode = "login" | "signup";
 
 export default function Auth() {
-  const { session, loading } = useAuth();
+  const { session, user, loading } = useAuth();
   const nav = useNavigate();
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ export default function Auth() {
     );
   }
 
-  if (session) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/" replace />;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
