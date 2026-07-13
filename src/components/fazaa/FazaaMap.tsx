@@ -32,6 +32,16 @@ export default function FazaaMap() {
     }, 300); // 300ms debounce
   }, []);
 
+  const updateBoundsFromMap = useCallback((map: any) => {
+    const b = map.getBounds();
+    setBounds({
+      minLng: b.getWest(),
+      minLat: b.getSouth(),
+      maxLng: b.getEast(),
+      maxLat: b.getNorth(),
+    });
+  }, []);
+
   const { requests, isLoading } = useMapRealtime(bounds);
   
   // Convert requests to GeoJSON
@@ -85,6 +95,7 @@ export default function FazaaMap() {
           zoom: 12,
         }}
         mapStyle={`https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`}
+        onLoad={(e) => updateBoundsFromMap(e.target)}
         onMoveEnd={onMoveEnd}
         onClick={onMapClick}
         interactiveLayerIds={["unclustered-point"]}
