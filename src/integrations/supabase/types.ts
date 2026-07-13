@@ -68,6 +68,7 @@ export type Database = {
           city: string | null
           created_at: string
           female_only: boolean
+          gender_visibility: string | null
           id: string
           latitude: number | null
           location: string | null
@@ -86,6 +87,7 @@ export type Database = {
           city?: string | null
           created_at?: string
           female_only?: boolean
+          gender_visibility?: string | null
           id?: string
           latitude?: number | null
           location?: string | null
@@ -104,6 +106,7 @@ export type Database = {
           city?: string | null
           created_at?: string
           female_only?: boolean
+          gender_visibility?: string | null
           id?: string
           latitude?: number | null
           location?: string | null
