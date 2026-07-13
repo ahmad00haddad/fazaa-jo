@@ -57,19 +57,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .from("profiles")
           .select("id, name, gender, city, points, avatar_url, verified")
           .eq("id", userId)
-          .neq("avatar_url", `cache_buster_${Date.now()}`) // Cache-buster
+          .neq("avatar_url", `cache_buster_${Date.now()}`)
           .maybeSingle();
         if (retry.error || !retry.data) {
           setProfile(null);
           return;
         }
-        const phone = await fetchPhone();
+        const phone = await fetchPhone(userId);
         setProfile(buildProfile(retry.data, phone));
         return;
       }
 
       if (profileData) {
-        const phone = await fetchPhone();
+        const phone = await fetchPhone(userId);
         setProfile(buildProfile(profileData, phone));
       } else {
         setProfile(null);
@@ -82,15 +82,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  async function fetchPhone(): Promise<string> {
+  async function fetchPhone(userId: string): Promise<string> {
+    // 1. Try the new RPC (works for updated DBs)
     try {
       const { data, error } = await supabase.rpc("get_my_phone");
-      if (error) throw error;
-      return data ?? "";
-    } catch (e: any) {
-      console.error("[auth] get_my_phone error:", e.message);
-      return "";
+      if (!error && data != null) return data;
+    } catch (e) {
+      // Ignore RPC error
     }
+
+    // 2. Try querying user_private_data directly (works if RPC is missing but table exists)
+    try {
+      const { data, error } = await supabase.from("user_private_data").select("phone").eq("user_id", userId).maybeSingle();
+      if (!error && data) return data.phone ?? "";
+    } catch (e) {}
+
+    // 3. Try querying profiles table (works for very old DBs where phone was a column)
+    try {
+      const { data, error } = await supabase.from("profiles").select("phone").eq("id", userId).maybeSingle();
+      if (!error && data) return data.phone ?? "";
+    } catch (e) {}
+
+    return "";
   }
 
   function buildProfile(raw: any, phone: string): Profile {
