@@ -55,19 +55,22 @@ export default function CompleteProfile() {
     if (!name.trim()) return toast.error("الاسم مطلوب");
     if (!phoneValid) return toast.error("أدخل رقماً أردنياً صحيحاً (مثال: 0791234567)");
     setBusy(true);
+
     try {
       const { error } = await supabase.rpc("complete_my_profile", {
         p_name: name.trim(),
         p_gender: gender,
         p_phone: normalized,
       });
+
       if (error) throw error;
-      await refreshProfile();
-      toast.success("تم حفظ بياناتك");
-      nav("/", { replace: true });
+
+      toast.success("تم حفظ بياناتك بنجاح!");
+
+      // هنا الحل الجذري: إجبار المتصفح على الانتقال وإعادة التحميل لقتل أي تعليق
+      window.location.replace("/");
     } catch (e: any) {
       toast.error(e?.message ?? "تعذر الحفظ");
-    } finally {
       setBusy(false);
     }
   };
