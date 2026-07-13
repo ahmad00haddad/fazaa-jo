@@ -33,20 +33,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadingRef = useRef(false);
 
   const loadProfile = async (userId: string) => {
-    // منع تشغيل متوازي للنفس المستخدم
     if (loadingRef.current) return;
     loadingRef.current = true;
 
     try {
-      // الخطوة 1: ensure_user_private_data — اختيارية تماماً
-      // فشلها لا يوقف تسجيل الدخول
       try {
         await supabase.rpc("ensure_user_private_data");
       } catch {
-        console.warn("[auth] ensure_user_private_data failed silently — continuing");
+        // Silently continue
       }
 
-      // الخطوة 2: جلب البروفايل
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("*")
@@ -54,12 +50,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (profileError) {
-        // خطأ RLS أو schema — حاول مرة واحدة بعد ثانيتين بدل إظهار خطأ
         console.error("[auth] profile fetch error:", profileError.message);
         await new Promise(r => setTimeout(r, 2000));
         const retry = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
         if (retry.error || !retry.data) {
-          console.error("[auth] profile retry failed:", retry.error?.message);
+          setProfile(null);
           return;
         }
         const phone = await fetchPhone();
@@ -67,33 +62,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // لا بروفايل → مستخدم جديد حقاً → أكمل بياناته
-      if (!profileData) {
-        console.warn("[auth] no profile — redirecting to /complete-profile");
-        if (!window.location.pathname.includes("complete-profile")) {
-          window.location.href = "/complete-profile";
-        }
-        return;
+      if (profileData) {
+        const phone = await fetchPhone();
+        setProfile(buildProfile(profileData, phone));
+      } else {
+        setProfile(null);
       }
-
-      // الخطوة 3: get_my_phone — اختيارية
-      const phone = await fetchPhone();
-      setProfile(buildProfile(profileData, phone));
-
     } catch (err: any) {
-      // لا Toast هنا — فقط تسجيل هادئ في الـ console
       console.error("[auth] unexpected error in loadProfile:", err?.message);
+      setProfile(null);
     } finally {
-      setLoading(false);
       loadingRef.current = false;
     }
   };
 
   async function fetchPhone(): Promise<string> {
     try {
-      const { data } = await supabase.rpc("get_my_phone");
+      const { data, error } = await supabase.rpc("get_my_phone");
+      if (error) throw error;
       return data ?? "";
-    } catch {
+    } catch (e: any) {
+      console.error("[auth] get_my_phone error:", e.message);
       return "";
     }
   }
@@ -107,37 +96,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       verified: raw.verified ?? false,
       city: raw.city ?? null,
       points: raw.points ?? 0,
-      // دعم كلا التسميتين للتوافق مع DB القديم والجديد
       phone_verified: raw.phone_verified ?? raw.verified ?? false,
       avatar_url: raw.avatar_url ?? null,
     };
   }
 
   useEffect(() => {
-    // getSession أولاً ثم onAuthStateChange
-    supabase.auth.getSession().then(({ data }) => {
-      const s = data.session;
-      setSession(s);
-      setUser(s?.user ?? null);
-      if (s?.user) {
-        loadProfile(s.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
+    let mounted = true;
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const initializeAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+        
+        if (data.session?.user) {
+          await loadProfile(data.session.user.id);
+        } else {
+          setProfile(null);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (!mounted) return;
+      
+      // لا نغير loading إلى true هنا لتجنب وميض الشاشة عند كل تجديد للتوكن
       setSession(newSession);
       setUser(newSession?.user ?? null);
+      
       if (newSession?.user) {
-        loadProfile(newSession.user.id);
+        await loadProfile(newSession.user.id);
       } else {
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
     });
 
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {

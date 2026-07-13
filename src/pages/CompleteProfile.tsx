@@ -42,14 +42,9 @@ export default function CompleteProfile() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
-  if (
-    profile &&
-    profile.name &&
-    profile.name !== "مستخدم" &&
-    isValidJordanPhone(profile.phone ?? "")
-  ) {
-    return <Navigate to="/" replace />;
-  }
+  // We intentionally DO NOT redirect away if profile exists here.
+  // We let the user stay on the page to complete/update their profile if they somehow landed here.
+  // ProtectedRoute handles sending them away if they are already fully complete and try to access a protected page.
 
   const save = async () => {
     if (busy) return;
