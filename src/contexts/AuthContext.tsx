@@ -23,6 +23,11 @@ interface AuthContextValue {
   refreshProfile: () => Promise<void>;
 }
 
+interface PrivateProfileData {
+  phone: string;
+  phone_verified: boolean;
+}
+
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -57,14 +62,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(null);
           return;
         }
-        const phone = await fetchPhone();
-        setProfile(buildProfile(retry.data, phone));
+        const privateData = await fetchPrivateProfileData();
+        setProfile(buildProfile(retry.data, privateData));
         return;
       }
 
       if (profileData) {
-        const phone = await fetchPhone();
-        setProfile(buildProfile(profileData, phone));
+        const privateData = await fetchPrivateProfileData();
+        setProfile(buildProfile(profileData, privateData));
       } else {
         setProfile(null);
       }
@@ -76,27 +81,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  async function fetchPhone(): Promise<string> {
+  async function fetchPrivateProfileData(): Promise<PrivateProfileData> {
     try {
-      const { data, error } = await supabase.rpc("get_my_phone");
+      const { data, error } = await (supabase as any)
+        .from("user_private_data")
+        .select("phone, phone_verified")
+        .maybeSingle();
       if (error) throw error;
-      return data ?? "";
+      return {
+        phone: data?.phone ?? "",
+        phone_verified: data?.phone_verified ?? false,
+      };
     } catch (e: any) {
-      console.error("[auth] get_my_phone error:", e.message);
-      return "";
+      console.error("[auth] private profile fetch error:", e.message);
+      try {
+        const { data, error } = await supabase.rpc("get_my_phone");
+        if (error) throw error;
+        return { phone: data ?? "", phone_verified: !!data };
+      } catch (fallbackError: any) {
+        console.error("[auth] get_my_phone fallback error:", fallbackError.message);
+        return { phone: "", phone_verified: false };
+      }
     }
   }
 
-  function buildProfile(raw: any, phone: string): Profile {
+  function buildProfile(raw: any, privateData: PrivateProfileData): Profile {
     return {
       id: raw.id,
       name: raw.name ?? "",
-      phone,
+      phone: privateData.phone,
       gender: (raw.gender as "male" | "female") ?? "male",
       verified: raw.verified ?? false,
       city: raw.city ?? null,
       points: raw.points ?? 0,
-      phone_verified: raw.phone_verified ?? raw.verified ?? false,
+      phone_verified: privateData.phone_verified,
       avatar_url: raw.avatar_url ?? null,
     };
   }
