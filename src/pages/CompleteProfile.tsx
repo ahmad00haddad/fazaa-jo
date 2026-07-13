@@ -4,11 +4,7 @@ import { CheckCircle2, Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  formatJordanPhoneDisplay,
-  isValidJordanPhone,
-  normalizeJordanPhone,
-} from "@/lib/phone";
+import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
 
 export default function CompleteProfile() {
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
@@ -35,10 +31,7 @@ export default function CompleteProfile() {
 
   // If profile is already complete, send the user to home immediately.
   const alreadyComplete =
-    !!profile &&
-    !!profile.name &&
-    profile.name !== "مستخدم" &&
-    isValidJordanPhone(profile.phone ?? "");
+    !!profile && !!profile.name && profile.name !== "مستخدم" && isValidJordanPhone(profile.phone ?? "");
 
   useEffect(() => {
     if (!loading && alreadyComplete) {
@@ -66,7 +59,7 @@ export default function CompleteProfile() {
       const { error } = await supabase.rpc("complete_my_profile", {
         p_name: name.trim(),
         p_gender: gender,
-        p_phone: normalized
+        p_phone: normalized,
       });
       if (error) throw error;
       await refreshProfile();
@@ -78,7 +71,6 @@ export default function CompleteProfile() {
       setBusy(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5">
       <div className="w-full max-w-[420px] rounded-3xl bg-card shadow-elevated p-6">
@@ -88,7 +80,9 @@ export default function CompleteProfile() {
             نحتاج رقم الواتساب لكي يصلك التواصل عند قبول الفزعة. رقمك يبقى مخفياً.
           </p>
           {user.email && (
-            <p className="text-xs text-muted-foreground mt-2" dir="ltr">{user.email}</p>
+            <p className="text-xs text-muted-foreground mt-2" dir="ltr">
+              {user.email}
+            </p>
           )}
         </div>
 
@@ -112,9 +106,7 @@ export default function CompleteProfile() {
             />
             {phone && (
               <p className="text-[11px] mt-1.5 text-muted-foreground px-1" dir="ltr">
-                {phoneValid
-                  ? `✓ ${formatJordanPhoneDisplay(phone)}`
-                  : "رقم غير صالح — استخدم رقم أردني (يبدأ بـ 07)"}
+                {phoneValid ? `✓ ${formatJordanPhoneDisplay(phone)}` : "رقم غير صالح — استخدم رقم أردني (يبدأ بـ 07)"}
               </p>
             )}
           </div>
