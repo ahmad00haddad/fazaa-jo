@@ -95,10 +95,14 @@ export default function Auth() {
     if (busy) return;
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) throw result.error;
-      if (result.redirected) return;
-      nav("/", { replace: true });
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+      // Browser will redirect to Google immediately, no further code executes here
     } catch (err: any) {
       toast.error(err?.message ?? "تعذر الدخول عبر حساب جوجل");
       setBusy(false);
