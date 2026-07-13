@@ -129,8 +129,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (mounted) setLoading(false);
     }, 2000);
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
+      if (event === 'INITIAL_SESSION') return;
       
       // لا نغير loading إلى true هنا لتجنب وميض الشاشة عند كل تجديد للتوكن
       setSession(newSession);
@@ -141,7 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setProfile(null);
       }
-      setLoading(false);
+      if (mounted) setLoading(false);
     });
 
     return () => {
