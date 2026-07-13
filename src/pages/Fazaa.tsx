@@ -25,6 +25,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { OtherRequestCard } from "@/components/fazaa/OtherRequestCard";
 import { MyRequestCard } from "@/components/fazaa/MyRequestCard";
 import { RequestComposer } from "@/components/fazaa/RequestComposer";
+import { RatingModal } from "@/components/fazaa/RatingModal";
 import FazaaMap from "@/components/fazaa/FazaaMap";
 
 export default function Fazaa() {

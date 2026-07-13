@@ -314,7 +314,7 @@ export async function createRequest(
       longitude: input.longitude ?? null,
       city: input.city ?? null,
       price_jod: input.price_jod ?? 0,
-    })
+    } as any)
     .select()
     .single();
   if (error) throw error;

@@ -4,7 +4,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useMapRealtime } from "@/hooks/useMapRealtime";
 import { useLiveTracking } from "@/hooks/useLiveTracking";
 import { motion } from "framer-motion";
-import { BottomSheet } from "@/components/BottomSheet"; // Assume we have one, or use Vaul Drawer
 import { Drawer } from "vaul";
 import { FazaaRequest } from "@/lib/fazaa";
 import { Loader2 } from "lucide-react";

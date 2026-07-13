@@ -15,6 +15,7 @@ function makeReq(overrides: Partial<FazaaRequest> = {}): FazaaRequest {
     longitude: null,
     created_at: new Date().toISOString(),
     female_only: false,
+    gender_visibility: "all",
     city: null,
     status: "active",
     requester_verified: false,

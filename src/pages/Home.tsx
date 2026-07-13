@@ -268,7 +268,7 @@ export default function Home() {
           )}
 
           {!loading && viewMode === "map" ? (
-            <FazaaMap items={items} onOpen={(item) => nav("/fazaa")} />
+            <FazaaMap />
           ) : (
             <div className="space-y-3">
               {items.slice(0, 4).map((item) => (

@@ -11,7 +11,7 @@ export function useMapRealtime(bounds: { minLat: number; maxLat: number; minLng:
     if (!bounds) return;
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.rpc("requests_in_view", {
+      const { data, error } = await supabase.rpc("requests_in_view" as any, {
         min_lat: bounds.minLat,
         min_long: bounds.minLng,
         max_lat: bounds.maxLat,
