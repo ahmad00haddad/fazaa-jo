@@ -4,7 +4,11 @@ import { CheckCircle2, Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { formatJordanPhoneDisplay, isValidJordanPhone, normalizeJordanPhone } from "@/lib/phone";
+import {
+  formatJordanPhoneDisplay,
+  isValidJordanPhone,
+  normalizeJordanPhone,
+} from "@/lib/phone";
 
 export default function CompleteProfile() {
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
@@ -29,16 +33,6 @@ export default function CompleteProfile() {
   const normalized = useMemo(() => normalizeJordanPhone(phone), [phone]);
   const phoneValid = isValidJordanPhone(phone);
 
-  // If profile is already complete, send the user to home immediately.
-  const alreadyComplete =
-    !!profile && !!profile.name && profile.name !== "مستخدم" && isValidJordanPhone(profile.phone ?? "");
-
-  useEffect(() => {
-    if (!loading && alreadyComplete) {
-      nav("/", { replace: true });
-    }
-  }, [loading, alreadyComplete, nav]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -48,32 +42,32 @@ export default function CompleteProfile() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
-  if (alreadyComplete) return <Navigate to="/" replace />;
+  // We intentionally DO NOT redirect away if profile exists here.
+  // We let the user stay on the page to complete/update their profile if they somehow landed here.
+  // ProtectedRoute handles sending them away if they are already fully complete and try to access a protected page.
 
   const save = async () => {
     if (busy) return;
     if (!name.trim()) return toast.error("الاسم مطلوب");
     if (!phoneValid) return toast.error("أدخل رقماً أردنياً صحيحاً (مثال: 0791234567)");
     setBusy(true);
-
     try {
       const { error } = await supabase.rpc("complete_my_profile", {
         p_name: name.trim(),
         p_gender: gender,
-        p_phone: normalized,
+        p_phone: normalized
       });
-
       if (error) throw error;
-
-      toast.success("تم حفظ بياناتك بنجاح!");
-
-      // هنا الحل الجذري: إجبار المتصفح على الانتقال وإعادة التحميل لقتل أي تعليق
-      window.location.replace("/");
+      await refreshProfile();
+      toast.success("تم حفظ بياناتك");
+      nav("/", { replace: true });
     } catch (e: any) {
       toast.error(e?.message ?? "تعذر الحفظ");
+    } finally {
       setBusy(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5">
       <div className="w-full max-w-[420px] rounded-3xl bg-card shadow-elevated p-6">
@@ -83,9 +77,7 @@ export default function CompleteProfile() {
             نحتاج رقم الواتساب لكي يصلك التواصل عند قبول الفزعة. رقمك يبقى مخفياً.
           </p>
           {user.email && (
-            <p className="text-xs text-muted-foreground mt-2" dir="ltr">
-              {user.email}
-            </p>
+            <p className="text-xs text-muted-foreground mt-2" dir="ltr">{user.email}</p>
           )}
         </div>
 
@@ -109,7 +101,9 @@ export default function CompleteProfile() {
             />
             {phone && (
               <p className="text-[11px] mt-1.5 text-muted-foreground px-1" dir="ltr">
-                {phoneValid ? `✓ ${formatJordanPhoneDisplay(phone)}` : "رقم غير صالح — استخدم رقم أردني (يبدأ بـ 07)"}
+                {phoneValid
+                  ? `✓ ${formatJordanPhoneDisplay(phone)}`
+                  : "رقم غير صالح — استخدم رقم أردني (يبدأ بـ 07)"}
               </p>
             )}
           </div>

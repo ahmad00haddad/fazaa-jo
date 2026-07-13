@@ -1,18 +1,14 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { FazaaRequest } from "@/lib/fazaa";
 
 export function useMapRealtime(bounds: { minLat: number; maxLat: number; minLng: number; maxLng: number } | null) {
   const [requests, setRequests] = useState<FazaaRequest[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const channelIdRef = useRef(`public:fazaa_requests:map:${Math.random().toString(36).slice(2)}`);
+  const [isLoading, setIsLoading] = useState(true);
 
   // جلب الطلبات ضمن الإطار المرئي
   const fetchRequestsInView = useCallback(async () => {
-    if (!bounds) {
-      setIsLoading(false);
-      return;
-    }
+    if (!bounds) return;
     setIsLoading(true);
     try {
       const { data, error } = await supabase.rpc("requests_in_view" as any, {
@@ -42,7 +38,7 @@ export function useMapRealtime(bounds: { minLat: number; maxLat: number; minLng:
   // الاشتراك في التحديثات الحية (Realtime)
   useEffect(() => {
     const channel = supabase
-      .channel(channelIdRef.current)
+      .channel("public:fazaa_requests:map")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "fazaa_requests" },
