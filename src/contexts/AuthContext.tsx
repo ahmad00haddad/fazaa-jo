@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error("فشل تحميل رقم الهاتف:", phoneError.message);
       }
 
-      setProfile({ ...profileData, phone: phoneData ?? "" });
+      setProfile({ ...profileData, gender: (profileData.gender as "male" | "female"), phone: phoneData ?? "", phone_verified: (profileData as any).phone_verified ?? false });
     } catch (err: any) {
       console.error("خطأ غير متوقع عند تحميل البروفايل:", err?.message);
       toast.error("حدث خطأ غير متوقع، حاول مرة أخرى");
