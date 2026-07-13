@@ -49,17 +49,39 @@ export default function CompleteProfile() {
     setBusy(true);
 
     try {
-      const { error } = await supabase.rpc("complete_my_profile", {
+      let rpcError = null;
+
+      // 1. محاولة استخدام الدالة الجديدة (3 متغيرات)
+      const res = await supabase.rpc("complete_my_profile", {
         p_name: name.trim(),
         p_gender: gender,
         p_phone: normalized,
       });
 
-      if (error) throw error;
+      if (res.error && res.error.message.includes("function") && res.error.message.includes("does not exist")) {
+        // 2. إذا لم يجد الدالة الجديدة (قاعدة بيانات قديمة)، جرب الدالة القديمة (متغيرين)
+        const fallback = await supabase.rpc("complete_my_profile", {
+          p_name: name.trim(),
+          p_phone: normalized,
+        });
+        rpcError = fallback.error;
+        
+        // ثم قم بتحديث الجنس بشكل منفصل
+        if (!rpcError) {
+          await supabase.from("profiles").update({ gender }).eq("id", user.id);
+        }
+      } else {
+        rpcError = res.error;
+      }
+
+      if (rpcError) throw rpcError;
 
       toast.success("تم حفظ بياناتك بنجاح!");
+      
+      // التحديث المحلي لمنع أي كاش
+      await refreshProfile();
 
-      // هنا الحل الجذري: إجبار المتصفح على الانتقال وإعادة التحميل لقتل أي تعليق
+      // إجبار الانتقال
       window.location.replace("/");
     } catch (e: any) {
       console.error("================ ERROR SAVING PROFILE ================");

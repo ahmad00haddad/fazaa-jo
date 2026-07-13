@@ -47,12 +47,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from("profiles")
         .select("id, name, gender, city, points, avatar_url, verified")
         .eq("id", userId)
+        .neq("avatar_url", `cache_buster_${Date.now()}`) // Cache-buster
         .maybeSingle();
 
       if (profileError) {
         console.error("[auth] profile fetch error:", profileError.message);
         await new Promise(r => setTimeout(r, 2000));
-        const retry = await supabase.from("profiles").select("id, name, gender, city, points, avatar_url, verified").eq("id", userId).maybeSingle();
+        const retry = await supabase
+          .from("profiles")
+          .select("id, name, gender, city, points, avatar_url, verified")
+          .eq("id", userId)
+          .neq("avatar_url", `cache_buster_${Date.now()}`) // Cache-buster
+          .maybeSingle();
         if (retry.error || !retry.data) {
           setProfile(null);
           return;
