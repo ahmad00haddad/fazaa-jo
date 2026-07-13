@@ -124,6 +124,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth();
 
+    // Safety fallback to kill loading state if Supabase hangs
+    const safetyTimeout = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 2000);
+
     const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
       if (!mounted) return;
       
@@ -141,6 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimeout);
       sub.subscription.unsubscribe();
     };
   }, []);
