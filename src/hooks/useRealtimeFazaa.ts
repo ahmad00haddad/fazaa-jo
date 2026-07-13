@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,12 +8,13 @@ import { useQueryClient } from "@tanstack/react-query";
 export function useRealtimeFazaa(_onUpdate?: () => void) {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
+  const channelIdRef = useRef(`fazaa_global_${Math.random().toString(36).slice(2)}`);
 
   useEffect(() => {
     if (!user) return;
     const city = profile?.city ?? "عمّان";
     const channel = supabase
-      .channel(`fazaa_global_${user.id}`)
+      .channel(`${channelIdRef.current}_${user.id}_${city}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "fazaa_requests", filter: `city=eq.${city}` },
