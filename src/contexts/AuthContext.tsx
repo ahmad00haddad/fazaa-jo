@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!profileData) {
         console.error("لا يوجد بروفايل لهذا المستخدم");
-        toast.error("لم يتم إيجاد حسابك، يرجى التواصل مع الدعم");
+        window.location.href = "/complete-profile";
         setLoading(false);
         return;
       }
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(newSession);
       setUser(newSession?.user ?? null);
       if (newSession?.user) {
-        setTimeout(() => loadProfile(newSession.user.id), 0);
+        loadProfile(newSession.user.id);
       } else {
         setProfile(null);
       }
