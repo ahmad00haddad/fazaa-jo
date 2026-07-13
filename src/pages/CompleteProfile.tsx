@@ -33,6 +33,19 @@ export default function CompleteProfile() {
   const normalized = useMemo(() => normalizeJordanPhone(phone), [phone]);
   const phoneValid = isValidJordanPhone(phone);
 
+  // If profile is already complete, send the user to home immediately.
+  const alreadyComplete =
+    !!profile &&
+    !!profile.name &&
+    profile.name !== "مستخدم" &&
+    isValidJordanPhone(profile.phone ?? "");
+
+  useEffect(() => {
+    if (!loading && alreadyComplete) {
+      nav("/", { replace: true });
+    }
+  }, [loading, alreadyComplete, nav]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -42,9 +55,7 @@ export default function CompleteProfile() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
-  // We intentionally DO NOT redirect away if profile exists here.
-  // We let the user stay on the page to complete/update their profile if they somehow landed here.
-  // ProtectedRoute handles sending them away if they are already fully complete and try to access a protected page.
+  if (alreadyComplete) return <Navigate to="/" replace />;
 
   const save = async () => {
     if (busy) return;
