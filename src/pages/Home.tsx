@@ -19,7 +19,7 @@ import {
   type FazaaRequest,
 } from "@/lib/fazaa";
 import { useRealtimeFazaa } from "@/hooks/useRealtimeFazaa";
-import { FazaaMap } from "@/components/fazaa/FazaaMap";
+import FazaaMap from "@/components/fazaa/FazaaMap";
 import InstallPWAButton from "@/components/InstallPWAButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
