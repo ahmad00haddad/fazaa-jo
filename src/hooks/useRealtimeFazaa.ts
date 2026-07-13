@@ -13,7 +13,7 @@ export function useRealtimeFazaa(_onUpdate?: () => void) {
     if (!user) return;
     const city = profile?.city ?? "عمّان";
     const channel = supabase
-      .channel(`fazaa_global_${user.id}_${Math.random().toString(36).slice(2)}`)
+      .channel(`fazaa_global_${user.id}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "fazaa_requests", filter: `city=eq.${city}` },

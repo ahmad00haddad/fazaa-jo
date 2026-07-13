@@ -61,7 +61,7 @@ export default function Fazaa() {
   const otherItems = useMemo(() => visibleItems.filter((i) => i.user_id !== user?.id), [visibleItems, user?.id]);
 
   const { data: responsesByRequest = {} } = useQuery({
-    queryKey: ['fazaa_responses_all', myItems.map(m => m.id)],
+    queryKey: ['fazaa_responses_all', myItems.map(m => m.id).join(',')],
     queryFn: async () => {
       const map: Record<string, FazaaResponse[]> = {};
       for (const req of myItems) {

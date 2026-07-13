@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState, useRef, useEffect } from "react"
 import Map, { Source, Layer, MapRef, Marker } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useMapRealtime } from "@/hooks/useMapRealtime";
-import { useLiveTracking } from "@/hooks/useLiveTracking";
 import { motion } from "framer-motion";
 import { Drawer } from "vaul";
 import { FazaaRequest } from "@/lib/fazaa";
@@ -39,20 +38,22 @@ export default function FazaaMap() {
   const geojson = useMemo(() => {
     return {
       type: "FeatureCollection",
-      features: requests.map((req) => ({
-        type: "Feature",
-        properties: {
-          id: req.id,
-          category: req.category,
-          urgency: req.urgency,
-          status: req.status,
-          price_jod: req.price_jod,
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [req.longitude, req.latitude],
-        },
-      })),
+      features: requests
+        .filter((req) => req.longitude != null && req.latitude != null)
+        .map((req) => ({
+          type: "Feature",
+          properties: {
+            id: req.id,
+            category: req.category,
+            urgency: req.urgency,
+            status: req.status,
+            price_jod: req.price_jod,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [req.longitude!, req.latitude!],
+          },
+        })),
     };
   }, [requests]);
 
