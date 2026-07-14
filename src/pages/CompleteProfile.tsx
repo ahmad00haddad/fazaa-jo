@@ -60,10 +60,10 @@ export default function CompleteProfile() {
 
       if (res.error && res.error.message.includes("function") && res.error.message.includes("does not exist")) {
         // 2. إذا لم يجد الدالة الجديدة (قاعدة بيانات قديمة)، جرب الدالة القديمة (متغيرين)
-        const fallback = await supabase.rpc("complete_my_profile", {
+        const fallback = await supabase.rpc("complete_my_profile" as any, {
           p_name: name.trim(),
           p_phone: normalized,
-        });
+        } as any);
         rpcError = fallback.error;
         
         // ثم قم بتحديث الجنس بشكل منفصل

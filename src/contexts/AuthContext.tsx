@@ -99,8 +99,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // 3. Try querying profiles table (works for very old DBs where phone was a column)
     try {
-      const { data, error } = await supabase.from("profiles").select("phone").eq("id", userId).maybeSingle();
-      if (!error && data) return data.phone ?? "";
+      const { data, error } = await (supabase.from("profiles") as any).select("phone").eq("id", userId).maybeSingle();
+      if (!error && data) return (data as any).phone ?? "";
     } catch (e) {}
 
     return "";
