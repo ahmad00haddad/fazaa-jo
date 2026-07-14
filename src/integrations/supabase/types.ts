@@ -336,6 +336,10 @@ export type Database = {
         Returns: undefined
       }
       active_watchers_count: { Args: never; Returns: number }
+      can_respond_to_request: {
+        Args: { _request_id: string; _responder_id: string }
+        Returns: boolean
+      }
       complete_my_profile: {
         Args: { p_gender: string; p_name: string; p_phone: string }
         Returns: undefined
