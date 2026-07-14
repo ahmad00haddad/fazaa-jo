@@ -7,7 +7,7 @@ import './index.css'
 // It will also show an alert if it detects the exact error we are looking for.
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
-  const url = typeof args[0] === 'string' ? args[0] : args[0]?.url;
+  const url = typeof args[0] === 'string' ? args[0] : (args[0] instanceof URL ? args[0].href : args[0]?.url);
   const method = args[1]?.method || 'GET';
   
   if (url?.includes('supabase.co/rest/v1/')) {
