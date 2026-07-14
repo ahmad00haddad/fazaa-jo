@@ -68,9 +68,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       let phone = "";
       try {
         const { data: phoneData, error: phoneError } = await supabase.rpc("get_my_phone");
-        if (!phoneError && phoneData) phone = phoneData;
+        if (!phoneError && phoneData != null) phone = phoneData;
       } catch {
-        // RPC may not exist on very old DBs — fall back silently
+        // Ignore RPC error
+      }
+
+      if (!phone) {
+        try {
+          const { data } = await supabase.from("user_private_data").select("phone").eq("user_id", userId).maybeSingle();
+          if (data) phone = data.phone ?? "";
+        } catch (e) {}
+      }
+
+      if (!phone) {
+        try {
+          const { data } = await supabase.from("profiles").select("phone").eq("id", userId).maybeSingle();
+          if (data) phone = (data as any).phone ?? "";
+        } catch (e) {}
       }
 
       setProfile(buildProfile(profileData, phone));
@@ -118,13 +132,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         console.error("[auth] init error:", err);
       } finally {
-        // ✅ FIX #1: Only flip loading=false AFTER loadProfile finishes
-        // No more 2-second arbitrary timeout that caused the redirect loop
         if (mounted) setLoading(false);
       }
     };
 
     initializeAuth();
+
+    // Safety fallback to kill loading state if Supabase hangs (very common in dev/HMR)
+    const safetyTimeout = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 2000);
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
@@ -147,6 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimeout);
       sub.subscription.unsubscribe();
     };
   }, []);
