@@ -124,7 +124,7 @@ export type Database = {
       }
       fazaa_responses: {
         Row: {
-          accepted: boolean
+          accepted: boolean | null
           created_at: string
           id: string
           message: string | null
@@ -134,7 +134,7 @@ export type Database = {
           responder_name: string
         }
         Insert: {
-          accepted?: boolean
+          accepted?: boolean | null
           created_at?: string
           id?: string
           message?: string | null
@@ -144,7 +144,7 @@ export type Database = {
           responder_name: string
         }
         Update: {
-          accepted?: boolean
+          accepted?: boolean | null
           created_at?: string
           id?: string
           message?: string | null
@@ -159,6 +159,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "fazaa_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fazaa_responses_responder_id_fkey"
+            columns: ["responder_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -260,21 +267,21 @@ export type Database = {
         Row: {
           created_at: string
           phone: string
-          phone_verified: boolean
+          phone_verified: boolean | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          phone?: string
-          phone_verified?: boolean
+          phone: string
+          phone_verified?: boolean | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           phone?: string
-          phone_verified?: boolean
+          phone_verified?: boolean | null
           updated_at?: string
           user_id?: string
         }
@@ -353,6 +360,7 @@ export type Database = {
           city: string
           completed_count: number
           name: string
+          points: number
           user_id: string
         }[]
       }
@@ -416,6 +424,7 @@ export type Database = {
           city: string
           completed_count: number
           name: string
+          points: number
           user_id: string
           verified: boolean
         }[]
