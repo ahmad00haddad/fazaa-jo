@@ -22,6 +22,7 @@ WHERE id NOT IN (SELECT user_id FROM public.user_private_data)
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 3) تأكد أن دالة handle_new_user_registration موجودة وتعمل
+DROP FUNCTION IF EXISTS public.handle_new_user_registration() CASCADE;
 CREATE OR REPLACE FUNCTION public.handle_new_user_registration()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -51,6 +52,7 @@ AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE FUNCTION public.handle_new_user_registration();
 
 -- 5) تأكد أن ensure_user_private_data موجودة
+DROP FUNCTION IF EXISTS public.ensure_user_private_data() CASCADE;
 CREATE OR REPLACE FUNCTION public.ensure_user_private_data()
 RETURNS void
 LANGUAGE plpgsql
@@ -74,6 +76,7 @@ BEGIN
 END $$;
 
 -- 6) تأكد أن get_my_phone موجودة
+DROP FUNCTION IF EXISTS public.get_my_phone() CASCADE;
 CREATE OR REPLACE FUNCTION public.get_my_phone()
 RETURNS text
 LANGUAGE plpgsql
@@ -88,6 +91,11 @@ BEGIN
 END $$;
 
 -- 7) تأكد أن complete_my_profile موجودة بالـ signature الصحيح (3 args)
+--    ⚠️ لازم DROP أولاً لأن CREATE OR REPLACE ما يقدر يغيّر أسماء الـ parameters
+DROP FUNCTION IF EXISTS public.complete_my_profile(text, text, text) CASCADE;
+DROP FUNCTION IF EXISTS public.complete_my_profile(text, text) CASCADE;
+DROP FUNCTION IF EXISTS public.complete_my_profile(text) CASCADE;
+DROP FUNCTION IF EXISTS public.complete_my_profile() CASCADE;
 CREATE OR REPLACE FUNCTION public.complete_my_profile(p_name text, p_gender text, p_phone text)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE
