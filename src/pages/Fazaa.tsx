@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-import { Loader2, Plus } from "lucide-react";
+import { Plus, Filter, X } from "lucide-react";
 import { toast } from "sonner";
+import { Drawer } from "vaul";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   acceptResponse,
@@ -15,6 +16,8 @@ import {
   updateRequestStatus,
   isFazaaExpired,
   submitRating,
+  FAZAA_CATEGORIES,
+  FAZAA_URGENCY_OPTIONS,
   type NewFazaaInput,
   type FazaaRequest,
   type FazaaResponse
@@ -32,9 +35,14 @@ export default function Fazaa() {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const [showComposer, setShowComposer] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [openResponses, setOpenResponses] = useState<string | null>(null);
   const [ratingRequest, setRatingRequest] = useState<{ reqId: string; responderId: string; responderName: string } | null>(null);
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [viewMode, setViewMode] = useState<"map" | "list">("list"); // Changed default to list for better UX
+
+  // Filters state
+  const [filterCategory, setFilterCategory] = useState<string>("الكل");
+  const [filterUrgency, setFilterUrgency] = useState<string>("الكل");
 
   const { data: feed = [], isLoading } = useQuery({
     queryKey: ['fazaa_feed'],
@@ -45,17 +53,22 @@ export default function Fazaa() {
 
   const visibleItems = useMemo(() => {
     return feed.filter((r) => {
+      // 1. Ownership & Expiration logic
       if (r.user_id === user?.id) {
-        // Owner sees own active + in_progress items
-        return r.status === "active" || r.status === "in_progress";
+        if (r.status !== "active" && r.status !== "in_progress") return false;
+      } else {
+        if (isFazaaExpired(r)) return false;
+        if (r.status !== "active") return false;
+        if (r.female_only && profile?.gender !== "female") return false;
       }
-      if (isFazaaExpired(r)) return false;
-      if (r.status !== "active") return false;
-      // Female-only privacy: hide from males (and unknown gender). "هذه الفزعة للبنات فقط حفاظاً على الخصوصية"
-      if (r.female_only && profile?.gender !== "female") return false;
+
+      // 2. Filters Logic
+      if (filterCategory !== "الكل" && r.category !== filterCategory) return false;
+      if (filterUrgency !== "الكل" && r.urgency !== filterUrgency) return false;
+
       return true;
     });
-  }, [feed, user?.id, profile?.gender]);
+  }, [feed, user?.id, profile?.gender, filterCategory, filterUrgency]);
 
   const myItems = useMemo(() => visibleItems.filter((i) => i.user_id === user?.id), [visibleItems, user?.id]);
   const otherItems = useMemo(() => visibleItems.filter((i) => i.user_id !== user?.id), [visibleItems, user?.id]);
@@ -150,7 +163,6 @@ export default function Fazaa() {
   const submitRatingMutation = useMutation({
     mutationFn: async (rating: number) => {
       if (!ratingRequest) return;
-      // Complete the request first (atomic RPC), then rate
       await completeMutation.mutateAsync(ratingRequest.reqId);
       if (rating > 0) {
         await submitRating(ratingRequest.reqId, ratingRequest.responderId, rating).catch(() => {});
@@ -166,6 +178,7 @@ export default function Fazaa() {
   const offerMutation = useMutation({
     mutationFn: async ({ req, price }: { req: FazaaRequest; price: number | null }) => {
       if (!user || !profile) throw new Error("Not authenticated");
+      if (req.user_id === user.id) throw new Error("لا يمكنك التطوع لفزعتك الخاصة");
       if (req.female_only && profile.gender !== "female") throw new Error("هذه الفزعة للبنات فقط");
       const msg = price !== null && price !== Number(req.price_jod)
         ? `أنا جاهز للمساعدة. أقترح سعر ${price} د.أ`
@@ -208,75 +221,81 @@ export default function Fazaa() {
 
   return (
     <div className="min-h-screen pb-32 animate-fade-in">
-      <PageHeader title="فزعة المجتمع" subtitle="طلبات مباشرة قابلة للتنفيذ" back={false} />
+      <PageHeader title="الطلبات النشطة" subtitle="مجتمع الفزعة" back={false} />
 
       <div className="p-4 space-y-4">
-        <section className="rounded-3xl gradient-hero p-4 text-primary-foreground shadow-elevated">
-          <h2 className="font-display text-xl font-extrabold">إذا كنت بحاجة إلى مساعدة الآن</h2>
-          <p className="text-sm opacity-90 mt-2 leading-6">
-            اكتب حاجتك، وستظهر مباشرة. رقمك يبقى مخفياً، أنت من يبدأ التواصل مع من يقبل المساعدة.
-          </p>
+        {/* Actions & Filters Bar */}
+        <div className="flex gap-2 mb-4">
           <button
             type="button"
             onClick={() => {
               if (!profile?.phone_verified) {
-                toast.error("عذراً، يجب توثيق رقم هاتفك أولاً في صفحة (حسابي) لتتمكن من إنشاء فزعة.", { duration: 5000 });
+                toast.error("عذراً، يجب توثيق رقم هاتفك أولاً في صفحة (حسابي).", { duration: 5000 });
                 return;
               }
               setShowComposer(true);
             }}
-            className="mt-4 w-full rounded-2xl bg-white/15 py-3 font-semibold flex items-center justify-center gap-2 active:scale-[0.99] transition"
+            className="flex-1 bg-primary text-primary-foreground py-3 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
           >
             <Plus className="w-5 h-5" />
-            اطلب فزعة الآن
+            طلب فزعة
           </button>
-        </section>
 
-        <div className="flex justify-center bg-zinc-200/50 p-1 rounded-xl mb-2">
           <button
-            onClick={() => setViewMode("map")}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${viewMode === "map" ? "bg-white shadow text-primary" : "text-zinc-500"}`}
+            type="button"
+            onClick={() => setShowFilters(true)}
+            className="w-12 h-12 bg-secondary text-foreground flex items-center justify-center rounded-2xl active:scale-95 transition-transform relative"
           >
-            الخريطة الحية
+            <Filter className="w-5 h-5" />
+            {(filterCategory !== "الكل" || filterUrgency !== "الكل") && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+            )}
           </button>
+        </div>
+
+        <div className="flex justify-center bg-secondary p-1 rounded-xl mb-4">
           <button
             onClick={() => setViewMode("list")}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${viewMode === "list" ? "bg-white shadow text-primary" : "text-zinc-500"}`}
+            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-colors ${viewMode === "list" ? "bg-background shadow-soft text-foreground" : "text-muted-foreground"}`}
           >
             القائمة
+          </button>
+          <button
+            onClick={() => setViewMode("map")}
+            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-colors ${viewMode === "map" ? "bg-background shadow-soft text-foreground" : "text-muted-foreground"}`}
+          >
+            الخريطة
           </button>
         </div>
 
         {viewMode === "map" && (
-          <div className="-mx-4 -mb-32 overflow-hidden rounded-t-3xl shadow-inner border-t border-zinc-200/50">
+          <div className="-mx-4 -mb-32 overflow-hidden rounded-t-3xl shadow-inner border-t border-border/50">
             <FazaaMap />
           </div>
         )}
 
         {viewMode === "list" && isLoading && (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          <div className="space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-2xl border border-border bg-card p-4 animate-pulse">
+                <div className="flex gap-2 mb-3">
+                  <div className="h-4 w-24 rounded bg-muted" />
+                  <div className="h-4 w-16 rounded bg-muted" />
+                </div>
+                <div className="h-3 w-full rounded bg-muted mb-2" />
+                <div className="h-3 w-3/4 rounded bg-muted" />
+                <div className="mt-4 h-10 w-full rounded-xl bg-muted" />
+              </div>
+            ))}
           </div>
         )}
 
         {viewMode === "list" && !isLoading && myItems.length > 0 && (
-          <section className="space-y-3">
-            <h3 className="font-display font-bold text-sm px-1">طلباتي ({myItems.length})</h3>
+          <section className="space-y-3 mb-6">
+            <h3 className="font-display font-bold text-sm px-1 text-primary">طلباتي ({myItems.length})</h3>
             {myItems.map((item) => {
               const responses = responsesByRequest[item.id] ?? [];
               const accepted = responses.find(r => r.accepted);
-
-              const handleCompleteClick = () => {
-                if (accepted) {
-                  setRatingRequest({
-                    reqId: item.id,
-                    responderId: accepted.responder_id,
-                    responderName: accepted.responder_name
-                  });
-                } else {
-                  completeMutation.mutate(item.id);
-                }
-              };
 
               return (
                 <MyRequestCard
@@ -286,7 +305,7 @@ export default function Fazaa() {
                   open={openResponses === item.id}
                   onToggle={() => setOpenResponses((x) => (x === item.id ? null : item.id))}
                   onDelete={() => handleDelete(item.id, item.status)}
-                  onComplete={handleCompleteClick}
+                  onComplete={() => accepted ? setRatingRequest({ reqId: item.id, responderId: accepted.responder_id, responderName: accepted.responder_name }) : completeMutation.mutate(item.id)}
                   onAccept={(rid, responderId) => acceptMutation.mutate({ rid, reqId: item.id, respId: responderId })}
                   onDecline={(rid) => declineMutation.mutate(rid)}
                 />
@@ -297,10 +316,14 @@ export default function Fazaa() {
 
         {viewMode === "list" && !isLoading && (
           <section className="space-y-3">
-            <h3 className="font-display font-bold text-sm px-1">فزعات تحتاج استجابة</h3>
+            {otherItems.length > 0 && <h3 className="font-display font-bold text-sm px-1">طلب فزعة</h3>}
             {otherItems.length === 0 && (
-              <div className="rounded-2xl bg-card p-4 text-center text-sm text-muted-foreground">
-                لا توجد طلبات أخرى حالياً.
+              <div className="rounded-2xl border border-dashed border-border bg-secondary/50 p-8 text-center flex flex-col items-center gap-3">
+                <Filter className="w-8 h-8 text-muted-foreground opacity-50" />
+                <div className="text-sm text-muted-foreground font-medium">لا توجد طلبات تطابق الفلتر الحالي.</div>
+                {(filterCategory !== "الكل" || filterUrgency !== "الكل") && (
+                  <button onClick={() => { setFilterCategory("الكل"); setFilterUrgency("الكل"); }} className="text-primary text-xs font-bold">مسح الفلاتر</button>
+                )}
               </div>
             )}
             {otherItems.map((item) => (
@@ -309,6 +332,67 @@ export default function Fazaa() {
           </section>
         )}
       </div>
+
+      {/* Filter Drawer */}
+      <Drawer.Root open={showFilters} onOpenChange={setShowFilters}>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" />
+          <Drawer.Content className="bg-background flex flex-col rounded-t-[32px] mt-24 fixed bottom-0 left-0 right-0 z-50 max-h-[90vh]">
+            <div className="p-4 bg-background rounded-t-[32px] flex-1 overflow-y-auto no-scrollbar pb-8">
+              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mb-6" />
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-display text-xl font-bold">تصفية الطلبات</h2>
+                <button onClick={() => setShowFilters(false)} className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="text-sm font-bold block mb-3">الاستعجال</label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setFilterUrgency("الكل")}
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${filterUrgency === "الكل" ? "bg-primary text-white" : "bg-secondary text-foreground"}`}
+                    >الكل</button>
+                    {FAZAA_URGENCY_OPTIONS.map(opt => (
+                      <button
+                        key={opt}
+                        onClick={() => setFilterUrgency(opt)}
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${filterUrgency === opt ? "bg-primary text-white" : "bg-secondary text-foreground"}`}
+                      >{opt}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-bold block mb-3">الفئة</label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setFilterCategory("الكل")}
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${filterCategory === "الكل" ? "bg-primary text-white" : "bg-secondary text-foreground"}`}
+                    >الكل</button>
+                    {FAZAA_CATEGORIES.map(opt => (
+                      <button
+                        key={opt}
+                        onClick={() => setFilterCategory(opt)}
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${filterCategory === opt ? "bg-primary text-white" : "bg-secondary text-foreground"}`}
+                      >{opt}</button>
+                    ))}
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="w-full mt-4 bg-primary text-white py-3.5 rounded-2xl font-bold"
+                >
+                  تطبيق الفلتر
+                </button>
+              </div>
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
 
       {showComposer && <RequestComposer onClose={() => setShowComposer(false)} onSubmit={(payload) => createMutation.mutate(payload)} />}
 

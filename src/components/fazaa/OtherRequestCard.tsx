@@ -33,12 +33,10 @@ export function OtherRequestCard({ item, onOffer }: { item: FazaaRequest; onOffe
             <MetaBadges item={item} />
           </div>
           <p className="mt-2 text-sm leading-6">{item.need}</p>
-          {item.location && (
-            <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>{item.location}</span>
-            </div>
-          )}
+          <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+            <MapPin className="w-3.5 h-3.5" />
+            <span>{item.location || item.city || "الأردن"}</span>
+          </div>
         </div>
         <span className="text-[11px] text-muted-foreground shrink-0">{formatTimeAgo(item.created_at)}</span>
       </div>
