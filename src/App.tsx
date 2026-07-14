@@ -27,6 +27,7 @@ const Me              = lazy(() => import("./pages/Me"));
 const NotFound        = lazy(() => import("./pages/NotFound"));
 const Services        = lazy(() => import("./pages/Services"));
 const Notifications   = lazy(() => import("./pages/Notifications"));
+const ResetPassword   = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient();
 
@@ -96,6 +97,7 @@ const App = () => (
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/auth/reset-password" element={<ResetPassword />} />
                   <Route path="/complete-profile" element={<ProtectedRoute><CompleteProfile /></ProtectedRoute>} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
