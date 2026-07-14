@@ -19,10 +19,13 @@ export default function CompleteProfile() {
       setName(
         profile.name && profile.name !== "مستخدم"
           ? profile.name
-          : (user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? ""),
+          : (user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? "")
       );
       setPhone(profile.phone ?? "");
       setGender((profile.gender as "male" | "female") ?? "male");
+    } else if (user) {
+      // No profile yet — try to pull a default name from OAuth metadata
+      setName(user.user_metadata?.full_name ?? user.user_metadata?.name ?? "");
     }
   }, [profile, user]);
 
@@ -38,65 +41,46 @@ export default function CompleteProfile() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
-  // We intentionally DO NOT redirect away if profile exists here.
-  // We let the user stay on the page to complete/update their profile if they somehow landed here.
-  // ProtectedRoute handles sending them away if they are already fully complete and try to access a protected page.
 
   const save = async () => {
     if (busy) return;
-    if (!name.trim()) return toast.error("الاسم مطلوب");
-    if (!phoneValid) return toast.error("أدخل رقماً أردنياً صحيحاً (مثال: 0791234567)");
+    if (!name.trim()) {
+      toast.error("الاسم مطلوب");
+      return;
+    }
+    if (!phoneValid) {
+      toast.error("أدخل رقماً أردنياً صحيحاً (مثال: 0791234567)");
+      return;
+    }
     setBusy(true);
 
     try {
-      let rpcError = null;
-
-      // 1. محاولة استخدام الدالة الجديدة (3 متغيرات)
-      const res = await supabase.rpc("complete_my_profile", {
+      // ✅ FIX: single, clean RPC call. No more broken fallback that re-invokes
+      // the same function with a different signature.
+      const { error } = await supabase.rpc("complete_my_profile", {
         p_name: name.trim(),
         p_gender: gender,
         p_phone: normalized,
       });
 
-      if (res.error && res.error.message.includes("function") && res.error.message.includes("does not exist")) {
-        // 2. إذا لم يجد الدالة الجديدة (قاعدة بيانات قديمة)، جرب الدالة القديمة (متغيرين)
-        const fallback = await supabase.rpc("complete_my_profile" as any, {
-          p_name: name.trim(),
-          p_phone: normalized,
-        } as any);
-        rpcError = fallback.error;
-        
-        // ثم قم بتحديث الجنس بشكل منفصل
-        if (!rpcError) {
-          await supabase.from("profiles").update({ gender }).eq("id", user.id);
-        }
-      } else {
-        rpcError = res.error;
-      }
-
-      if (rpcError) throw rpcError;
+      if (error) throw error;
 
       toast.success("تم حفظ بياناتك بنجاح!");
-      
-      // التحديث المحلي لمنع أي كاش
+
+      // Refresh in-memory profile so ProtectedRoute no longer thinks it's incomplete
       await refreshProfile();
 
-      // إجبار الانتقال
-      window.location.replace("/");
+      // Use SPA navigation instead of full reload — avoids re-triggering the loop
+      nav("/", { replace: true });
     } catch (e: any) {
-      console.error("================ ERROR SAVING PROFILE ================");
-      console.error("RPC Error:", e);
-      console.error("Message:", e?.message);
-      console.error("Details:", e?.details);
-      console.error("Hint:", e?.hint);
-      console.error("======================================================");
-      
+      console.error("[complete-profile] save error:", e);
       const errMsg = e?.message ?? "تعذر الحفظ";
       toast.error(errMsg);
-      alert("حدث خطأ في قاعدة البيانات يمنع الحفظ!\nالخطأ: " + errMsg + "\nيرجى التحقق من الكونسول لمعرفة التفاصيل، وتأكد من تشغيل ملف setup_database.sql الأخير في Supabase!");
+    } finally {
       setBusy(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5">
       <div className="w-full max-w-[420px] rounded-3xl bg-card shadow-elevated p-6">

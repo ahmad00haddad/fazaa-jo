@@ -30,92 +30,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const loadingRef = useRef(false);
+  const loadingProfileFor = useRef<string | null>(null);
 
   const loadProfile = async (userId: string) => {
-    if (loadingRef.current) return;
-    loadingRef.current = true;
+    // Prevent duplicate concurrent loads for the same user
+    if (loadingProfileFor.current === userId) return;
+    loadingProfileFor.current = userId;
 
     try {
+      // 1) Defensive: ensure private data row exists (safe RPC, no-op if already there)
       try {
         await supabase.rpc("ensure_user_private_data");
       } catch {
-        // Silently continue
+        // Silently continue — function may not exist on very old DBs
       }
 
+      // 2) Fetch public profile (no bogus cache-buster filter)
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("id, name, gender, city, points, avatar_url, verified")
         .eq("id", userId)
-        .neq("avatar_url", `cache_buster_${Date.now()}`) // Cache-buster
         .maybeSingle();
 
       if (profileError) {
         console.error("[auth] profile fetch error:", profileError.message);
-        await new Promise(r => setTimeout(r, 2000));
-        const retry = await supabase
-          .from("profiles")
-          .select("id, name, gender, city, points, avatar_url, verified")
-          .eq("id", userId)
-          .neq("avatar_url", `cache_buster_${Date.now()}`)
-          .maybeSingle();
-        if (retry.error || !retry.data) {
-          setProfile(null);
-          return;
-        }
-        const phone = await fetchPhone(userId);
-        setProfile(buildProfile(retry.data, phone));
+        setProfile(null);
         return;
       }
 
-      if (profileData) {
-        const phone = await fetchPhone(userId);
-        setProfile(buildProfile(profileData, phone));
-      } else {
+      if (!profileData) {
+        // Trigger/handle_new_user hasn't created a profile yet — treat as no profile
         setProfile(null);
+        return;
       }
+
+      // 3) Fetch phone via the dedicated secure RPC
+      let phone = "";
+      try {
+        const { data: phoneData, error: phoneError } = await supabase.rpc("get_my_phone");
+        if (!phoneError && phoneData) phone = phoneData;
+      } catch {
+        // RPC may not exist on very old DBs — fall back silently
+      }
+
+      setProfile(buildProfile(profileData, phone));
     } catch (err: any) {
       console.error("[auth] unexpected error in loadProfile:", err?.message);
       setProfile(null);
     } finally {
-      loadingRef.current = false;
+      // Only clear the lock if it's still ours (prevents races)
+      if (loadingProfileFor.current === userId) {
+        loadingProfileFor.current = null;
+      }
     }
   };
-
-  async function fetchPhone(userId: string): Promise<string> {
-    // 1. Try the new RPC (works for updated DBs)
-    try {
-      const { data, error } = await supabase.rpc("get_my_phone");
-      if (!error && data != null) return data;
-    } catch (e) {
-      // Ignore RPC error
-    }
-
-    // 2. Try querying user_private_data directly (works if RPC is missing but table exists)
-    try {
-      const { data, error } = await supabase.from("user_private_data").select("phone").eq("user_id", userId).maybeSingle();
-      if (!error && data) return data.phone ?? "";
-    } catch (e) {}
-
-    // 3. Try querying profiles table (works for very old DBs where phone was a column)
-    try {
-      const { data, error } = await (supabase.from("profiles") as any).select("phone").eq("id", userId).maybeSingle();
-      if (!error && data) return (data as any).phone ?? "";
-    } catch (e) {}
-
-    return "";
-  }
 
   function buildProfile(raw: any, phone: string): Profile {
     return {
       id: raw.id,
       name: raw.name ?? "",
-      phone,
+      phone: phone ?? "",
       gender: (raw.gender as "male" | "female") ?? "male",
       verified: raw.verified ?? false,
       city: raw.city ?? null,
       points: raw.points ?? 0,
-      phone_verified: raw.phone_verified ?? raw.verified ?? false,
+      phone_verified: raw.verified ?? false,
       avatar_url: raw.avatar_url ?? null,
     };
   }
@@ -127,46 +106,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data } = await supabase.auth.getSession();
         if (!mounted) return;
-        
+
         setSession(data.session);
         setUser(data.session?.user ?? null);
-        
+
         if (data.session?.user) {
           await loadProfile(data.session.user.id);
         } else {
           setProfile(null);
         }
+      } catch (err) {
+        console.error("[auth] init error:", err);
       } finally {
+        // ✅ FIX #1: Only flip loading=false AFTER loadProfile finishes
+        // No more 2-second arbitrary timeout that caused the redirect loop
         if (mounted) setLoading(false);
       }
     };
 
     initializeAuth();
 
-    // Safety fallback to kill loading state if Supabase hangs
-    const safetyTimeout = setTimeout(() => {
-      if (mounted) setLoading(false);
-    }, 2000);
-
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
-      if (event === 'INITIAL_SESSION') return;
-      
-      // لا نغير loading إلى true هنا لتجنب وميض الشاشة عند كل تجديد للتوكن
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-      
+      if (event === "INITIAL_SESSION") return; // Already handled above
+
+      // Keep loading=true while we re-fetch profile to avoid premature redirects
       if (newSession?.user) {
+        setSession(newSession);
+        setUser(newSession.user);
+        setLoading(true);
         await loadProfile(newSession.user.id);
+        if (mounted) setLoading(false);
       } else {
+        setSession(null);
+        setUser(null);
         setProfile(null);
+        if (mounted) setLoading(false);
       }
-      if (mounted) setLoading(false);
     });
 
     return () => {
       mounted = false;
-      clearTimeout(safetyTimeout);
       sub.subscription.unsubscribe();
     };
   }, []);
@@ -177,7 +157,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshProfile = async () => {
-    if (user) await loadProfile(user.id);
+    if (user) {
+      await loadProfile(user.id);
+    }
   };
 
   return (
