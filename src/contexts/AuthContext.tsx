@@ -20,7 +20,7 @@ interface AuthContextValue {
   profile: Profile | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
+  refreshProfile: () => Promise<Profile | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -30,14 +30,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const loadingProfileFor = useRef<string | null>(null);
+  const profileLoadRef = useRef<{ userId: string; promise: Promise<Profile | null> } | null>(null);
 
-  const loadProfile = async (userId: string) => {
-    // Prevent duplicate concurrent loads for the same user
-    if (loadingProfileFor.current === userId) return;
-    loadingProfileFor.current = userId;
+  const loadProfile = async (userId: string, force = false): Promise<Profile | null> => {
+    if (!force && profileLoadRef.current?.userId === userId) {
+      return profileLoadRef.current.promise;
+    }
 
-    try {
+    const promise = (async () => {
       // 1) Defensive: ensure private data row exists (safe RPC, no-op if already there)
       try {
         await supabase.rpc("ensure_user_private_data");
@@ -55,13 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (profileError) {
         console.error("[auth] profile fetch error:", profileError.message);
         setProfile(null);
-        return;
+        return null;
       }
 
       if (!profileData) {
         // Trigger/handle_new_user hasn't created a profile yet — treat as no profile
         setProfile(null);
-        return;
+        return null;
       }
 
       // 3) Fetch phone via the dedicated secure RPC
@@ -87,14 +87,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (e) {}
       }
 
-      setProfile(buildProfile(profileData, phone));
+      const nextProfile = buildProfile(profileData, phone);
+      setProfile(nextProfile);
+      return nextProfile;
+    })();
+
+    profileLoadRef.current = { userId, promise };
+
+    try {
+      return await promise;
     } catch (err: any) {
       console.error("[auth] unexpected error in loadProfile:", err?.message);
       setProfile(null);
+      return null;
     } finally {
-      // Only clear the lock if it's still ours (prevents races)
-      if (loadingProfileFor.current === userId) {
-        loadingProfileFor.current = null;
+      if (profileLoadRef.current?.promise === promise) {
+        profileLoadRef.current = null;
       }
     }
   };
@@ -138,12 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth();
 
-    // Safety fallback to kill loading state if Supabase hangs (very common in dev/HMR)
-    const safetyTimeout = setTimeout(() => {
-      if (mounted) setLoading(false);
-    }, 2000);
-
-    const { data: sub } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
       if (!mounted) return;
       if (event === "INITIAL_SESSION") return; // Already handled above
 
@@ -152,8 +155,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(newSession);
         setUser(newSession.user);
         setLoading(true);
-        await loadProfile(newSession.user.id);
-        if (mounted) setLoading(false);
+        void loadProfile(newSession.user.id, true).finally(() => {
+          if (mounted) setLoading(false);
+        });
       } else {
         setSession(null);
         setUser(null);
@@ -164,20 +168,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
-      clearTimeout(safetyTimeout);
       sub.subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
+    profileLoadRef.current = null;
     await supabase.auth.signOut();
     setProfile(null);
   };
 
   const refreshProfile = async () => {
     if (user) {
-      await loadProfile(user.id);
+      return loadProfile(user.id, true);
     }
+    return null;
   };
 
   return (
