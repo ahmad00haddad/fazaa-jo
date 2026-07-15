@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
   }
   
   // 2) لا جلسة → صفحة الدخول
-  if (!session) return <Navigate to="/auth" replace />;
+  if (!session) return <Navigate to={`/auth?returnUrl=${encodeURIComponent(location.pathname + location.search)}`} replace />;
   
   // 3) جلسة بلا ملف (أو ملف غير مكتمل) → إكمال البيانات
   const needsProfile =

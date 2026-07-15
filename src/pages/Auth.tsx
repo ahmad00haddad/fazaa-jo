@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,6 +21,8 @@ type Mode = "login" | "signup" | "forgot";
 export default function Auth() {
   const { session, user, loading } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
+  const returnUrl = new URLSearchParams(location.search).get("returnUrl") || "/";
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +45,7 @@ export default function Auth() {
     );
   }
 
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to={returnUrl} replace />;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +76,7 @@ export default function Auth() {
           setMode("login");
         } else {
           toast.success("أهلاً بك في فزعة!");
-          nav("/", { replace: true });
+          nav(returnUrl, { replace: true });
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -90,7 +92,7 @@ export default function Auth() {
         }
 
         toast.success("أهلاً بعودتك!");
-        nav("/", { replace: true });
+        nav(returnUrl, { replace: true });
       }
     } catch (err: any) {
       console.error("Auth error:", err);

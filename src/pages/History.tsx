@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchMyResponses, formatTimeAgo, type FazaaRequest } from "@/lib/fazaa";
 import { useQuery } from "@tanstack/react-query";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 type Tab = "requests" | "responses";
 
@@ -120,10 +121,11 @@ export default function History() {
             {!loading && tab === "requests" && (
               <>
                 {mine.length === 0 && (
-                  <div className="rounded-2xl bg-card shadow-card p-8 text-center text-sm text-muted-foreground">
-                    <div className="text-3xl mb-2">🤲</div>
-                    لا توجد فزعات سابقة بعد.
-                  </div>
+                  <EmptyState 
+                    icon={HandHeart}
+                    title="لا توجد فزعات"
+                    description="لا توجد فزعات سابقة بعد."
+                  />
                 )}
                 {mine.map((r, i) => (
                   <motion.article
@@ -152,10 +154,11 @@ export default function History() {
             {!loading && tab === "responses" && (
               <>
                 {responses.length === 0 && (
-                  <div className="rounded-2xl bg-card shadow-card p-8 text-center text-sm text-muted-foreground">
-                    <div className="text-3xl mb-2">💪</div>
-                    لم تستجب لأي فزعة بعد.
-                  </div>
+                  <EmptyState 
+                    icon={CheckCircle2}
+                    title="لا توجد استجابات"
+                    description="لم تستجب لأي فزعة بعد."
+                  />
                 )}
                 {responses.map((r, i) => {
                   const req = r.fazaa_requests;

@@ -30,6 +30,8 @@ import { MyRequestCard } from "@/components/fazaa/MyRequestCard";
 import { RequestComposer } from "@/components/fazaa/RequestComposer";
 import { RatingModal } from "@/components/fazaa/RatingModal";
 import FazaaMap from "@/components/fazaa/FazaaMap";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default function Fazaa() {
   const { user, profile } = useAuth();
@@ -38,6 +40,7 @@ export default function Fazaa() {
   const [showFilters, setShowFilters] = useState(false);
   const [openResponses, setOpenResponses] = useState<string | null>(null);
   const [ratingRequest, setRatingRequest] = useState<{ reqId: string; responderId: string; responderName: string } | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean; id: string; type: "cancel" | "delete" } | null>(null);
   const [viewMode, setViewMode] = useState<"map" | "list">("list"); // Changed default to list for better UX
 
   // Filters state
@@ -213,9 +216,9 @@ export default function Fazaa() {
 
   const handleDelete = (id: string, status: string) => {
     if (status === "in_progress") {
-      if (confirm("الفزعة قيد التنفيذ — هل تريد إلغاءها؟")) cancelMutation.mutate(id);
+      setConfirmDialog({ isOpen: true, id, type: "cancel" });
     } else {
-      if (confirm("حذف هذا الطلب؟")) deleteMutation.mutate(id);
+      setConfirmDialog({ isOpen: true, id, type: "delete" });
     }
   };
 
@@ -318,13 +321,16 @@ export default function Fazaa() {
           <section className="space-y-3">
             {otherItems.length > 0 && <h3 className="font-display font-bold text-sm px-1">طلب فزعة</h3>}
             {otherItems.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-border bg-secondary/50 p-8 text-center flex flex-col items-center gap-3">
-                <Filter className="w-8 h-8 text-muted-foreground opacity-50" />
-                <div className="text-sm text-muted-foreground font-medium">لا توجد طلبات تطابق الفلتر الحالي.</div>
-                {(filterCategory !== "الكل" || filterUrgency !== "الكل") && (
-                  <button onClick={() => { setFilterCategory("الكل"); setFilterUrgency("الكل"); }} className="text-primary text-xs font-bold">مسح الفلاتر</button>
-                )}
-              </div>
+              <EmptyState 
+                icon={Filter}
+                title="لا توجد طلبات"
+                description="لا توجد طلبات فزعة تطابق الفلتر الحالي."
+                action={
+                  (filterCategory !== "الكل" || filterUrgency !== "الكل") ? (
+                    <button onClick={() => { setFilterCategory("الكل"); setFilterUrgency("الكل"); }} className="text-primary text-sm font-bold">مسح الفلاتر</button>
+                  ) : undefined
+                }
+              />
             )}
             {otherItems.map((item) => (
               <OtherRequestCard key={item.id} item={item} onOffer={(price) => offerMutation.mutate({ req: item, price })} />
@@ -402,6 +408,29 @@ export default function Fazaa() {
         loading={submitRatingMutation.isPending}
         onClose={() => setRatingRequest(null)}
         onSubmit={(rating) => submitRatingMutation.mutate(rating)}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog?.isOpen ?? false}
+        onClose={() => setConfirmDialog(null)}
+        onConfirm={() => {
+          if (!confirmDialog) return;
+          if (confirmDialog.type === "cancel") {
+            cancelMutation.mutate(confirmDialog.id);
+          } else {
+            deleteMutation.mutate(confirmDialog.id);
+          }
+          setConfirmDialog(null);
+        }}
+        title={confirmDialog?.type === "cancel" ? "إلغاء الفزعة" : "حذف الفزعة"}
+        description={
+          confirmDialog?.type === "cancel"
+            ? "الفزعة قيد التنفيذ حالياً، هل أنت متأكد من رغبتك في إلغائها؟"
+            : "هل أنت متأكد من رغبتك في حذف طلب الفزعة؟ لا يمكن التراجع عن هذا الإجراء."
+        }
+        confirmText={confirmDialog?.type === "cancel" ? "إلغاء الفزعة" : "حذف"}
+        isDestructive={true}
+        isLoading={confirmDialog?.type === "cancel" ? cancelMutation.isPending : deleteMutation.isPending}
       />
     </div>
   );
