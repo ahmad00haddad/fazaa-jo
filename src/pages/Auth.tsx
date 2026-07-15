@@ -127,13 +127,17 @@ export default function Auth() {
     if (busy) return;
     setBusy(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin,
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+        extraParams: {
+          prompt: "select_account",
         },
       });
-      if (error) throw error;
+
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+
+      nav("/", { replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "تعذر الدخول عبر حساب جوجل");
       setBusy(false);

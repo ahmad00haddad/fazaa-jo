@@ -67,8 +67,11 @@ export default function CompleteProfile() {
 
       toast.success("تم حفظ بياناتك بنجاح!");
 
-      // Refresh in-memory profile so ProtectedRoute no longer thinks it's incomplete
-      await refreshProfile();
+      // Refresh in-memory profile so ProtectedRoute no longer thinks it's incomplete.
+      const nextProfile = await refreshProfile();
+      if (!nextProfile || !isValidJordanPhone(nextProfile.phone ?? "")) {
+        throw new Error("تم الحفظ، لكن لم يتم تحديث الجلسة. أعد المحاولة بعد ثوانٍ.");
+      }
 
       // Use SPA navigation instead of full reload — avoids re-triggering the loop
       nav("/", { replace: true });

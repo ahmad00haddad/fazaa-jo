@@ -18,6 +18,15 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: false,
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        navigateFallbackDenylist: [/^\/auth/, /^\/complete-profile/, /^\/~oauth/],
+      },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'placeholder.svg'],
       manifest: {
         name: 'فزعة',
