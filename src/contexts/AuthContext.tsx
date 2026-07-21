@@ -80,12 +80,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (e) {}
       }
 
-      if (!phone) {
-        try {
-          const { data } = await supabase.from("profiles").select("phone").eq("id", userId).maybeSingle();
-          if (data) phone = (data as any).phone ?? "";
-        } catch (e) {}
-      }
+      // Note: profiles.phone does not exist; phone lives only in user_private_data.
+
+
 
       const nextProfile = buildProfile(profileData, phone);
       setProfile(nextProfile);
