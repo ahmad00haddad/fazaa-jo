@@ -28,8 +28,11 @@ export function useRealtimeFazaa(_onUpdate?: () => void) {
             if (req.user_id === user.id) return;
             if (req.status && req.status !== "active") return;
             if (isFazaaExpired(req)) return;
-            // Female-only: skip notifying males entirely
-            if (req.female_only && profile?.gender !== "female") return;
+            // Gender visibility: skip notifying excluded gender
+            const isFemaleOnly = req.female_only || (req as any).gender_visibility === "female_only";
+            const isMaleOnly = (req as any).gender_visibility === "male_only";
+            if (isFemaleOnly && profile?.gender !== "female") return;
+            if (isMaleOnly && profile?.gender !== "male") return;
             const title = `فزعة جديدة: ${req.category}`;
             const body = req.need.length > 90 ? req.need.slice(0, 90) + "…" : req.need;
             toast(title, { description: body });
