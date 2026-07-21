@@ -64,30 +64,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return null;
       }
 
-      // 3) Fetch phone via the dedicated secure RPC
+      // 3) Fetch phone + phone_verified from user_private_data (single source of truth)
       let phone = "";
+      let phoneVerified = false;
       try {
-        const { data: phoneData, error: phoneError } = await supabase.rpc("get_my_phone");
-        if (!phoneError && phoneData != null) phone = phoneData;
-      } catch {
-        // Ignore RPC error
+        const { data } = await supabase
+          .from("user_private_data")
+          .select("phone, phone_verified")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (data) {
+          phone = data.phone ?? "";
+          phoneVerified = data.phone_verified ?? false;
+        }
+      } catch (e) {
+        console.warn("[auth] user_private_data fetch failed:", e);
       }
 
+      // Fallback to secure RPC if RLS blocks direct read
       if (!phone) {
         try {
-          const { data } = await supabase.from("user_private_data").select("phone").eq("user_id", userId).maybeSingle();
-          if (data) phone = data.phone ?? "";
-        } catch (e) {}
+          const { data: phoneData } = await supabase.rpc("get_my_phone");
+          if (phoneData != null) phone = phoneData as string;
+        } catch (e) {
+          console.warn("[auth] get_my_phone RPC failed:", e);
+        }
       }
 
-      if (!phone) {
-        try {
-          const { data } = await supabase.from("profiles").select("phone").eq("id", userId).maybeSingle();
-          if (data) phone = (data as any).phone ?? "";
-        } catch (e) {}
-      }
-
-      const nextProfile = buildProfile(profileData, phone);
+      const nextProfile = buildProfile(profileData, phone, phoneVerified);
       setProfile(nextProfile);
       return nextProfile;
     })();
@@ -107,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  function buildProfile(raw: any, phone: string): Profile {
+  function buildProfile(raw: any, phone: string, phoneVerified: boolean): Profile {
     return {
       id: raw.id,
       name: raw.name ?? "",
@@ -116,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       verified: raw.verified ?? false,
       city: raw.city ?? null,
       points: raw.points ?? 0,
-      phone_verified: raw.verified ?? false,
+      phone_verified: phoneVerified,
       avatar_url: raw.avatar_url ?? null,
     };
   }

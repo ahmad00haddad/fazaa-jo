@@ -15,9 +15,10 @@ export default function CompleteProfile() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    const PLACEHOLDER_NAMES = ["", "مستخدم", "مستخدم جديد"];
     if (profile) {
       setName(
-        profile.name && profile.name !== "مستخدم"
+        profile.name && !PLACEHOLDER_NAMES.includes(profile.name)
           ? profile.name
           : (user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? "")
       );
