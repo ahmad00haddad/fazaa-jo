@@ -49,12 +49,24 @@ export function useMapRealtime(bounds: { minLat: number; maxLat: number; minLng:
         (payload) => {
           if (payload.eventType === "INSERT") {
             const newReq = payload.new as FazaaRequest;
-            if (newReq.status === "active" || newReq.status === "in_progress") {
-              // Optimistic insert (might be outside view, but that's okay for a moment)
-              setRequests((prev) => [newReq, ...prev]);
+            if (newReq.status !== "active" && newReq.status !== "in_progress") return;
+            // Only add if within current visible bounds
+            if (bounds && newReq.latitude != null && newReq.longitude != null) {
+              const inBounds =
+                newReq.latitude >= bounds.minLat &&
+                newReq.latitude <= bounds.maxLat &&
+                newReq.longitude >= bounds.minLng &&
+                newReq.longitude <= bounds.maxLng;
+              if (!inBounds) return;
             }
+            setRequests((prev) => (prev.some((r) => r.id === newReq.id) ? prev : [newReq, ...prev]));
           } else if (payload.eventType === "UPDATE") {
             const updatedReq = payload.new as FazaaRequest;
+            // Remove markers that transitioned out of active/in_progress
+            if (updatedReq.status !== "active" && updatedReq.status !== "in_progress") {
+              setRequests((prev) => prev.filter((r) => r.id !== updatedReq.id));
+              return;
+            }
             setRequests((prev) =>
               prev.map((r) => (r.id === updatedReq.id ? { ...r, ...updatedReq } : r))
             );
@@ -68,7 +80,7 @@ export function useMapRealtime(bounds: { minLat: number; maxLat: number; minLng:
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [bounds]);
 
   return { requests, isLoading, refresh: fetchRequestsInView };
 }
