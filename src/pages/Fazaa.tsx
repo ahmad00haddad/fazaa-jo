@@ -62,7 +62,11 @@ export default function Fazaa() {
       } else {
         if (isFazaaExpired(r)) return false;
         if (r.status !== "active") return false;
-        if (r.female_only && profile?.gender !== "female") return false;
+        // Gender visibility: respect both legacy female_only boolean AND gender_visibility enum
+        const isFemaleOnly = r.female_only || (r as any).gender_visibility === "female_only";
+        const isMaleOnly = (r as any).gender_visibility === "male_only";
+        if (isFemaleOnly && profile?.gender !== "female") return false;
+        if (isMaleOnly && profile?.gender !== "male") return false;
       }
 
       // 2. Filters Logic
