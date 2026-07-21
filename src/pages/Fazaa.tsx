@@ -186,7 +186,10 @@ export default function Fazaa() {
     mutationFn: async ({ req, price }: { req: FazaaRequest; price: number | null }) => {
       if (!user || !profile) throw new Error("Not authenticated");
       if (req.user_id === user.id) throw new Error("لا يمكنك التطوع لفزعتك الخاصة");
-      if (req.female_only && profile.gender !== "female") throw new Error("هذه الفزعة للبنات فقط");
+      const isFemaleOnly = req.female_only || (req as any).gender_visibility === "female_only";
+      const isMaleOnly = (req as any).gender_visibility === "male_only";
+      if (isFemaleOnly && profile.gender !== "female") throw new Error("هذه الفزعة للبنات فقط");
+      if (isMaleOnly && profile.gender !== "male") throw new Error("هذه الفزعة للشباب فقط");
       const msg = price !== null && price !== Number(req.price_jod)
         ? `أنا جاهز للمساعدة. أقترح سعر ${price} د.أ`
         : "أنا جاهز للمساعدة";
