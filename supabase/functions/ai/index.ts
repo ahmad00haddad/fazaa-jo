@@ -32,6 +32,20 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Rate Limiting: Max 5 requests per 1 minute
+    const { data: allowed, error: rlErr } = await supabase.rpc("check_rate_limit", {
+      p_endpoint: "ai",
+      p_max_requests: 5,
+      p_window_minutes: 1
+    });
+
+    if (rlErr || !allowed) {
+      return new Response(JSON.stringify({ error: "تم تجاوز الحد المسموح للطلبات. حاول بعد قليل." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { system, prompt, model } = await req.json();
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!lovableApiKey) throw new Error("LOVABLE_API_KEY not configured");
