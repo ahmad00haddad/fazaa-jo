@@ -14,7 +14,6 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Auth            = lazy(() => import("./pages/Auth"));
-const Chat            = lazy(() => import("./pages/Chat"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const Privacy         = lazy(() => import("./pages/Privacy"));
 const Terms           = lazy(() => import("./pages/Terms"));
@@ -72,7 +71,6 @@ function InnerRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
         <Route path="/services" element={<AnimatedPage><Services /></AnimatedPage>} />
-        <Route path="/chat" element={<AnimatedPage><Chat /></AnimatedPage>} />
         <Route path="/fazaa" element={<AnimatedPage><Fazaa /></AnimatedPage>} />
         <Route path="/me" element={<AnimatedPage><Me /></AnimatedPage>} />
         <Route path="/history" element={<AnimatedPage><History /></AnimatedPage>} />

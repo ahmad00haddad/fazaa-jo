@@ -3,7 +3,7 @@ import { X, Sparkles, Coins, Heart, Send, ArrowRight, ArrowLeft } from "lucide-r
 import { Drawer } from "vaul";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { FAZAA_CATEGORIES, FAZAA_URGENCY_OPTIONS, JORDAN_CITIES, suggestFazaaTags, NewFazaaInput, FazaaCategory, FazaaUrgency } from "@/lib/fazaa";
+import { FAZAA_CATEGORIES, FAZAA_URGENCY_OPTIONS, JORDAN_CITIES, NewFazaaInput, FazaaCategory, FazaaUrgency } from "@/lib/fazaa";
 
 const initialForm: NewFazaaInput = {
   need: "",
@@ -21,32 +21,11 @@ export function RequestComposer({ onClose, onSubmit }: { onClose: () => void; on
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<NewFazaaInput>({ ...initialForm, city: profile?.city ?? null });
   const [locating, setLocating] = useState(false);
-  const [suggesting, setSuggesting] = useState(false);
-  const [suggested, setSuggested] = useState(false);
+
 
   const update = <K extends keyof NewFazaaInput>(k: K, v: NewFazaaInput[K]) =>
     setForm((c) => ({ ...c, [k]: v }));
 
-  const runSuggest = async () => {
-    if (suggesting) return;
-    if (form.need.trim().length < 5) {
-      toast.info("اكتب وصف الحاجة أولاً");
-      return;
-    }
-    setSuggesting(true);
-    try {
-      const s = await suggestFazaaTags(form.need);
-      if (s) {
-        setForm((c) => ({ ...c, category: s.category, urgency: s.urgency }));
-        setSuggested(true);
-        toast.success(`اقتراح: ${s.category} · ${s.urgency}`);
-      } else {
-        toast.error("تعذّر الاقتراح. اختر يدوياً.");
-      }
-    } finally {
-      setSuggesting(false);
-    }
-  };
 
   const useCurrentLocation = () => {
     if (!navigator.geolocation) return toast.error("الموقع غير مدعوم");
@@ -112,26 +91,13 @@ export function RequestComposer({ onClose, onSubmit }: { onClose: () => void; on
                         value={form.need}
                         onChange={(e) => {
                             update("need", e.target.value);
-                            if (suggested) setSuggested(false);
                         }}
                         placeholder="اكتب حاجتك بدقة: ماذا تحتاج؟ متى؟ ومن أين؟"
                         rows={4}
                         className="w-full rounded-2xl bg-secondary px-4 py-4 text-sm font-medium outline-none resize-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground/70"
                     />
                     
-                    <button
-                        type="button"
-                        onClick={runSuggest}
-                        disabled={suggesting || form.need.trim().length < 5}
-                        className="w-full rounded-2xl bg-accent/10 text-accent py-3.5 text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50 transition-transform active:scale-[0.98]"
-                    >
-                        <Sparkles className="w-5 h-5" />
-                        {suggesting
-                        ? "جارٍ الاقتراح..."
-                        : suggested
-                        ? `✓ اقتراح ذكي: ${form.category} · ${form.urgency}`
-                        : "اقتراح التصنيف بالذكاء الاصطناعي"}
-                    </button>
+
 
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">

@@ -195,43 +195,6 @@ export async function fetchFeed(): Promise<FazaaRequest[]> {
   return (data ?? []) as FazaaRequest[];
 }
 
-// ---------- AI category/urgency suggestion ----------
-export interface FazaaSuggestion {
-  category: FazaaCategory;
-  urgency: FazaaUrgency;
-}
-
-export async function suggestFazaaTags(need: string): Promise<FazaaSuggestion | null> {
-  if (!need || need.trim().length < 5) return null;
-  const system = `أنت مصنّف لطلبات مساعدة مجتمعية في الأردن (تطبيق "فزعة").
-- صنّف الطلب إلى فئة واحدة من: ${FAZAA_CATEGORIES.join("، ")}.
-- صنّف درجة الاستعجال إلى واحدة من: حرجة، عاجلة اليوم، عادية.
-- "حرجة" = خطر على حياة أو صحة فورية (نزيف، حادث، مريض حرج، حريق).
-- "عاجلة اليوم" = يحتاج خلال ساعات (دواء اليوم، توصيل لمطار قريب، تعطل سيارة).
-- "عادية" = يمكن تأجيله أيام (مشتريات، مساعدة دراسية، خدمة غير طارئة) — هذا هو الافتراضي إذا لم يكن واضحاً.
-أعِد JSON فقط بهذا الشكل بدون أي شرح:
-{"category":"...","urgency":"..."}`;
-  try {
-    const { data, error } = await supabase.functions.invoke("ai", {
-      body: { system, prompt: need.trim() },
-    });
-    if (error || !data?.text) return null;
-    const raw = String(data.text).trim();
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) return null;
-    const parsed = JSON.parse(match[0]) as Partial<FazaaSuggestion>;
-    if (!parsed.category || !parsed.urgency) return null;
-    const category = (FAZAA_CATEGORIES as readonly string[]).includes(parsed.category)
-      ? (parsed.category as FazaaCategory)
-      : "أخرى";
-    const urgency = (FAZAA_URGENCY_OPTIONS as readonly string[]).includes(parsed.urgency)
-      ? (parsed.urgency as FazaaUrgency)
-      : "عادية";
-    return { category, urgency };
-  } catch {
-    return null;
-  }
-}
 
 // ---------- Avatar upload (compressed client-side) ----------
 async function compressImage(file: File, maxDim = 400, quality = 0.82): Promise<Blob> {

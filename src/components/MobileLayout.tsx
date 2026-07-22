@@ -9,14 +9,12 @@ interface Props {
 
 export default function MobileLayout({ children }: Props) {
   useRealtimeFazaa();
-  const location = useLocation();
-  const hideNav = location.pathname === "/chat";
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
-      <div className="relative min-h-screen w-full max-w-[480px] bg-background flex flex-col shadow-card">
-        <main className={`flex-1 ${hideNav ? "pb-0" : "pb-24"} no-scrollbar`}>{children}</main>
-        {!hideNav && <BottomTabBar />}
+      <div className="w-full max-w-md bg-card shadow-xl min-h-screen relative flex flex-col overflow-hidden">
+        <main className="flex-1 pb-24 no-scrollbar">{children}</main>
+        <BottomTabBar />
       </div>
     </div>
   );
